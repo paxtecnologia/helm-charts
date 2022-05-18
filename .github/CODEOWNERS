@@ -1,6 +1,6 @@
-# The repo admins team will be the default owners for everything in the repo.
-# Unless a later match takes precedence, they will be requested for review when someone opens a pull request.
-* @paxtecnologia/helm-charts-admins
+# The repo admins team will be the default owners for everything in the repo. Unless a later match takes precedence, they will be requested for review when someone opens a pull request.
+
+- @paxtecnologia/helm-charts-admins
 
 /charts/ms-java-spring-boot/ @pauloferreira25
 /charts/ms-nginx/ @pauloferreira25

@@ -22,7 +22,7 @@ jobs:
       - name: Install Helm
         uses: azure/setup-helm@v1
         with:
-          version: v3.5.2
+          version: v3.8.1
 
       - name: Prepare GPG key
         run: |
@@ -34,22 +34,17 @@ jobs:
 
           echo "CR_KEYRING=$keyring" >> "$GITHUB_ENV"
         env:
-          GPG_KEY_BASE64: "${{ secrets.GPG_KEY_BASE64 }}"
+          GPG_KEY_BASE64: '${{ secrets.GPG_KEY_BASE64 }}'
 
       - name: Add dependency chart repos
         run: |
-          # helm repo add paxtecnologia https://paxtecnologia.github.io/helm-charts
+          helm repo add paxtecnologia https://paxtecnologia.github.io/helm-charts
           helm repo add bitnami https://charts.bitnami.com/bitnami
 
       - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.2.0
+        uses: helm/chart-releaser-action@v1.4.0
         with:
           charts_dir: charts
           config: cr.yaml
         env:
-          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-      - name: Publish Helm charts
-        uses: stefanprodan/helm-gh-pages@master
-        with:
-          target_dir: charts
-          token: ${{ secrets.GITHUB_TOKEN }}
+          CR_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
