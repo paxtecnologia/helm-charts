@@ -38,6 +38,7 @@ jobs:
 
       - name: Add dependency chart repos
         run: |
+          helm repo add paxtecnologia https://paxtecnologia.github.io/helm-charts
           helm repo add bitnami https://charts.bitnami.com/bitnami
 
       - name: Run chart-releaser
