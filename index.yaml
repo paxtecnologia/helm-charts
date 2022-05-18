@@ -1,0 +1,25 @@
+apiVersion: v1
+entries:
+  ms-java-spring-boot:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2022-05-18T16:26:39.630736753Z"
+    description: A Helm chart for Kubernetes
+    digest: 7960657024dec0305826ac6a7b499e7a90a8bb51778dc2697aa3d939c3cb781a
+    name: ms-java-spring-boot
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/ms-java-spring-boot-0.1.0/ms-java-spring-boot-0.1.0.tgz
+    version: 0.1.0
+  ms-nginx:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2022-05-18T16:26:39.776902247Z"
+    description: A Helm chart for Kubernetes
+    digest: 78f4962873c991b021d49b6242dc4dd5b35e7663fc427793e5615d4382f4eba0
+    name: ms-nginx
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/ms-nginx-0.1.0/ms-nginx-0.1.0.tgz
+    version: 0.1.0
+generated: "2022-05-18T16:26:39.776907747Z"
