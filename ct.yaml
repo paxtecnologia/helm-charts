@@ -4,7 +4,7 @@ target-branch: main
 chart-dirs:
   - charts
 chart-repos:
-  - paxtecnologia=https://paxtecnologia.github.io/helm-charts
+  # - paxtecnologia=https://paxtecnologia.github.io/helm-charts
   - bitnami=https://charts.bitnami.com/bitnami
 helm-extra-args: --timeout 600s
 validate-maintainers: false
