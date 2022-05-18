@@ -11,4 +11,15 @@ entries:
     urls:
     - https://github.com/paxtecnologia/helm-charts/releases/download/ms-java-spring-boot-0.1.1/ms-java-spring-boot-0.1.1.tgz
     version: 0.1.1
-generated: "2022-05-18T17:05:50.007331707Z"
+  ms-nginx:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2022-05-18T17:27:05.114493906Z"
+    description: A Helm chart for Kubernetes
+    digest: 850b81a76fe98ae4256077f407ba4f435e388b12e8cdcc81cd9de4b82ea547d0
+    name: ms-nginx
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/ms-nginx-0.1.1/ms-nginx-0.1.1.tgz
+    version: 0.1.1
+generated: "2022-05-18T17:27:05.114506206Z"
