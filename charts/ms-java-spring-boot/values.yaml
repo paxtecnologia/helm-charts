@@ -18,7 +18,7 @@ probe:
   path: '/actuator/health'
   timeoutSeconds: 10
   periodSeconds: 10
-  successThreshold: 2
+  successThreshold: 1
   failureThreshold: 3
   initialDelaySeconds: 180
 
