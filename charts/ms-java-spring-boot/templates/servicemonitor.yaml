@@ -18,7 +18,7 @@ spec:
       scrapeTimeout: 30s
   namespaceSelector:
     matchNames:
-      - namespace: {{ template "common.names.namespace" $ }}
+      - {{ template "common.names.namespace" $ }}
   selector:
     matchLabels: {{- include "common.labels.matchLabels" $ | nindent 6 }}
 {{- end }}
