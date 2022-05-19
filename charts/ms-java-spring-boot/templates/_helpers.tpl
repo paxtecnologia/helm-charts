@@ -31,26 +31,6 @@ Create chart name and version as used by the chart label.
 {{- end }}
 
 {{/*
-Common labels
-*/}}
-{{- define "ms-java-spring-boot.labels" -}}
-helm.sh/chart: {{ include "ms-java-spring-boot.chart" . }}
-{{ include "ms-java-spring-boot.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end }}
-
-{{/*
-Selector labels
-*/}}
-{{- define "ms-java-spring-boot.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "ms-java-spring-boot.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end }}
-
-{{/*
 Create the name of the service account to use
 */}}
 {{- define "ms-java-spring-boot.serviceAccountName" -}}

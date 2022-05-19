@@ -1,24 +1,30 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "ms-java-spring-boot.fullname" . }}
-  labels:
-    {{- include "ms-java-spring-boot.labels" . | nindent 4 }}
+  name: {{ template "common.names.fullname" $ }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
-    matchLabels:
-      {{- include "ms-java-spring-boot.selectorLabels" . | nindent 6 }}
+    matchLabels: {{- include "common.labels.matchLabels" $ | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      labels:
-        {{- include "ms-java-spring-boot.selectorLabels" . | nindent 8 }}
+      labels: {{- include "common.labels.standard" . | nindent 8 }}
+        {{- if .Values.podLabels }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.podLabels "context" $) | nindent 8 }}
+        {{- end }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -31,20 +37,30 @@ spec:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.image.repository }}/{{ .Values.image.name }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: 80
+              containerPort: {{ .Values.container.port }}
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /
+              path: {{ .Values.probe.path }}
               port: http
+            timeoutSeconds: {{ .Values.probe.timeoutSeconds }}
+            periodSeconds: {{ .Values.probe.periodSeconds }}
+            successThreshold: {{ .Values.probe.successThreshold }}
+            failureThreshold: {{ .Values.probe.failureThreshold }}
+            initialDelaySeconds: {{ .Values.probe.initialDelaySeconds }}
           readinessProbe:
             httpGet:
-              path: /
+              path: {{ .Values.probe.path }}
               port: http
+            timeoutSeconds: {{ .Values.probe.timeoutSeconds }}
+            periodSeconds: {{ .Values.probe.periodSeconds }}
+            successThreshold: {{ .Values.probe.successThreshold }}
+            failureThreshold: {{ .Values.probe.failureThreshold }}
+            initialDelaySeconds: {{ .Values.probe.initialDelaySeconds }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}

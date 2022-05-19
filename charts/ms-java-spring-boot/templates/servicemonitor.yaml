@@ -1,0 +1,23 @@
+{{- if .Values.serviceMonitor.enabled -}}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    {{- include "ms-java-spring-boot.labels" . | nindent 4 }}
+  name: {{ include "ms-java-spring-boot.fullname" . }}
+  namespace: {{ include "ms-java-spring-boot.namespace" . }}
+spec:
+  endpoints:
+    - honorLabels: true
+      interval: {{ .Values.serviceMonitor.interval }}
+      path: {{ .Values.serviceMonitor.url }}
+      port: http
+      scheme: http
+      scrapeTimeout: 30s
+  namespaceSelector:
+    matchNames:
+      - {{ include "ms-java-spring-boot.namespace" . }}
+  selector:
+    matchLabels:
+      {{- include "ms-java-spring-boot.selectorLabels" . | nindent 6 }}
+{{- end }}
