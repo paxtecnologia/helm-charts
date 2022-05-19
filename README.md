@@ -18,9 +18,6 @@ helm repo add paxtecnologia https://paxtecnologia.github.io/helm-charts/
 
 You can then run `helm search repo paxtecnologia` to see the charts.
 
-<!-- Keep full URL links to repo files because this README syncs from main to gh-pages.  -->
-Chart documentation is available in [paxtecnologia directory](https://github.com/paxtecnologia/helm-charts/blob/main/charts/paxtecnologia/README.md).
-
 ## Contributing
 
 <!-- Keep full URL links to repo files because this README syncs from main to gh-pages.  -->
