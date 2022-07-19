@@ -110,6 +110,22 @@ entries:
   ms-nginx:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2022-07-19T20:39:57.520629832Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - bitnami-common
+      version: 1.x.x
+    description: A Helm chart for Kubernetes
+    digest: 1a3325ef5c4bc4d5f7ca48ee4799fbffc0d2b4f9d21a1d83b0cb72676746c089
+    name: ms-nginx
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/ms-nginx-0.1.3/ms-nginx-0.1.3.tgz
+    version: 0.1.3
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2022-07-19T20:31:14.638370407Z"
     dependencies:
     - name: common
@@ -134,4 +150,4 @@ entries:
     urls:
     - https://github.com/paxtecnologia/helm-charts/releases/download/ms-nginx-0.1.1/ms-nginx-0.1.1.tgz
     version: 0.1.1
-generated: "2022-07-19T20:31:14.638395008Z"
+generated: "2022-07-19T20:39:57.520977833Z"
