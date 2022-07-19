@@ -28,7 +28,7 @@ serviceMonitor:
   url: '/'
 
 container:
-  port: 8080
+  port: 80
 
 serviceAccount:
   # Specifies whether a service account should be created
