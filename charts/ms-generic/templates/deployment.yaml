@@ -60,6 +60,7 @@ spec:
             - configMapRef:
                 name: {{ . }}
             {{- end }}
+            {{- end }}
           {{- end }}
           ports:
             - name: http
