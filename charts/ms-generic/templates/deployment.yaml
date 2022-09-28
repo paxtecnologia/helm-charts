@@ -43,7 +43,7 @@ spec:
           envFrom:
             {{- if .Values.secrets.enabled }}
             - secretRef: 
-                name: {{ template "common.names.fullname" $ }}
+                name: {{ template "common.names.fullname" $ }}-helm
             {{- end }}
             {{- if .Values.extra.envfrom.existingSecrets.enabled }}
             {{- range .Values.extra.envfrom.existingSecrets.list }}
@@ -53,7 +53,7 @@ spec:
             {{- end }}
             {{- if .Values.configmap.enabled }}
             - configMapRef:
-                name: {{ template "common.names.fullname" $ }}
+                name: {{ template "common.names.fullname" $ }}-helm
             {{- end }}
             {{- if .Values.extra.envfrom.existingConfigmap.enabled }}
             {{- range .Values.extra.envfrom.existingConfigmap.list }}
