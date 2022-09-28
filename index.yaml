@@ -3,6 +3,22 @@ entries:
   ms-generic:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2022-09-28T15:58:18.270232897Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - bitnami-common
+      version: 1.x.x
+    description: A Helm chart for Kubernetes
+    digest: d550a58a5ffdcfb520182355f56b0e53f15a84aad1cbcedde829d6ace4af5c04
+    name: ms-generic
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/ms-generic-0.1.1/ms-generic-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2022-09-23T00:06:27.180434169Z"
     dependencies:
     - name: common
@@ -18,6 +34,22 @@ entries:
     - https://github.com/paxtecnologia/helm-charts/releases/download/ms-generic-0.1.0/ms-generic-0.1.0.tgz
     version: 0.1.0
   ms-java-spring-boot:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2022-09-28T15:58:18.462385846Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - bitnami-common
+      version: 1.x.x
+    description: A Helm chart for Kubernetes
+    digest: 74d1c608813de33ed2d87f8f3a8677b9f618aebb7d1c93cbe4a839b5b2ede93e
+    name: ms-java-spring-boot
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/ms-java-spring-boot-0.1.8/ms-java-spring-boot-0.1.8.tgz
+    version: 0.1.8
   - apiVersion: v2
     appVersion: 1.16.0
     created: "2022-05-19T22:03:25.216796999Z"
@@ -127,6 +159,22 @@ entries:
   ms-nginx:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2022-09-28T15:58:18.666094323Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - bitnami-common
+      version: 1.x.x
+    description: A Helm chart for Kubernetes
+    digest: 2141339719e4e70b2b428369eb10e9d353f285df854b9e67be5c83adbf07c06f
+    name: ms-nginx
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/ms-nginx-0.1.4/ms-nginx-0.1.4.tgz
+    version: 0.1.4
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2022-07-19T20:39:57.520629832Z"
     dependencies:
     - name: common
@@ -167,4 +215,4 @@ entries:
     urls:
     - https://github.com/paxtecnologia/helm-charts/releases/download/ms-nginx-0.1.1/ms-nginx-0.1.1.tgz
     version: 0.1.1
-generated: "2022-09-23T00:06:27.18045717Z"
+generated: "2022-09-28T15:58:18.666178327Z"
