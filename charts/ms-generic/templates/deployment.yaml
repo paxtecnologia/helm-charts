@@ -39,24 +39,24 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}/{{ .Values.image.name }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          {{- if or .Values.secret.enabled .Values.configMap.enabled .Values.extra.envfrom.existingConfigMaps.enabled .Values.extra.envfrom.existingSecrets.enabled }}
+          {{- if or .Values.secret.enabled .Values.configMap.enabled .Values.extra.envFrom.existingConfigMaps.enabled .Values.extra.envFrom.existingSecrets.enabled }}
           envFrom:
             {{- if .Values.secret.enabled }}
             - secretRef: 
                 name: {{ template "common.names.fullname" $ }}-helm
             {{- end }}
-            {{- if .Values.extra.envfrom.existingSecrets.enabled }}
-            {{- range .Values.extra.envfrom.existingSecrets.list }}
-            - secretRef:
-                name:  {{ . }}
-            {{- end }}
-            {{- end }}
             {{- if .Values.configMap.enabled }}
             - configMapRef:
                 name: {{ template "common.names.fullname" $ }}-helm
             {{- end }}
-            {{- if .Values.extra.envfrom.existingConfigMaps.enabled }}
-            {{- range .Values.extra.envfrom.existingConfigMaps.list }}
+            {{- if .Values.extra.envFrom.existingSecrets.enabled }}
+            {{- range .Values.extra.envFrom.existingSecrets.list }}
+            - secretRef:
+                name:  {{ . }}
+            {{- end }}
+            {{- end }}
+            {{- if .Values.extra.envFrom.existingConfigMaps.enabled }}
+            {{- range .Values.extra.envFrom.existingConfigMaps.list }}
             - configMapRef:
                 name: {{ . }}
             {{- end }}
