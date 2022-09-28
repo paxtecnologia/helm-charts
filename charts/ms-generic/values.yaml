@@ -31,12 +31,12 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-secrets:
+secret:
   enabled: false
   data:
     key: value
 
-configmap:
+configMap:
   enabled: false
   data:
     key: value
@@ -45,10 +45,10 @@ extra:
   env:
     secrets:
       enabled: false
-    configmap:
+    configMaps:
       enabled: false
   envFrom:
-    existingConfigmap:
+    existingConfigMaps:
       enabled: false
       list:
         - configMapName
@@ -56,6 +56,17 @@ extra:
       enabled: false
       list:
         - secretsName
+
+secretProviderClass:
+  enabled: false
+  provider: "type"
+  properties:
+    - key: "key"
+      objectName: "objectName"
+      objectType: "objectType"
+    - key: "key"
+      objectName: "objectName"
+      objectType: "objectType"
 
 serviceAccount:
   # Specifies whether a service account should be created
