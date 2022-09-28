@@ -114,6 +114,6 @@ spec:
             driver: secrets-store.csi.k8s.io
             readOnly: true
             volumeAttributes:
-              secretProviderClass: {{ template "common.names.fullname" $ }}-{{ .Values.secretProviderClass.provider }}
+              secretProviderClass: {{ template "common.names.fullname" $ }}
         {{- end }}
       {{- end }}
