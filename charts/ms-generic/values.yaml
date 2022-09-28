@@ -33,13 +33,13 @@ fullnameOverride: ""
 
 secret:
   enabled: false
-  data:
-    key: value
+  data: {}
+    # key: value
 
 configMap:
   enabled: false
-  data:
-    key: value
+  data: {}
+    # key: value
 
 extra:
   env:
@@ -50,23 +50,23 @@ extra:
   envFrom:
     existingConfigMaps:
       enabled: false
-      list:
-        - configMapName
+      list: []
+      #  - configMapName
     existingSecrets:
       enabled: false
-      list:
-        - secretsName
+      list: []
+       # - secretsName
 
 secretProviderClass:
   enabled: false
   provider: "type"
-  properties:
-    - key: "key"
-      objectName: "objectName"
-      objectType: "objectType"
-    - key: "key"
-      objectName: "objectName"
-      objectType: "objectType"
+  properties: []
+  #  - key: "key"
+  #    objectName: "objectName"
+  #    objectType: "objectType"
+  #  - key: "key"
+  #    objectName: "objectName"
+  #    objectType: "objectType"
 
 serviceAccount:
   # Specifies whether a service account should be created
