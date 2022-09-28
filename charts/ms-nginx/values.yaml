@@ -14,6 +14,32 @@ imagePullSecrets: []
 nameOverride: ''
 fullnameOverride: ''
 
+secrets:
+  enabled: false
+  data:
+    key: value
+
+configmap:
+  enabled: false
+  data:
+    key: value
+
+extra:
+  env:
+    secrets:
+      enabled: false
+    configmap:
+      enabled: false
+  envFrom:
+    existingConfigmap:
+      enabled: false
+      list:
+        - configMapName
+    existingSecrets:
+      enabled: false
+      list:
+        - secretsName
+
 probe:
   path: '/'
   timeoutSeconds: 10

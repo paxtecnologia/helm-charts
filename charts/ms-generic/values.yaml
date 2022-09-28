@@ -36,6 +36,27 @@ secrets:
   data:
     key: value
 
+configmap:
+  enabled: false
+  data:
+    key: value
+
+extra:
+  env:
+    secrets:
+      enabled: false
+    configmap:
+      enabled: false
+  envFrom:
+    existingConfigmap:
+      enabled: false
+      list:
+        - configMapName
+    existingSecrets:
+      enabled: false
+      list:
+        - secretsName
+
 serviceAccount:
   # Specifies whether a service account should be created
   create: true

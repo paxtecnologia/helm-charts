@@ -39,6 +39,28 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}/{{ .Values.image.name }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if or .Values.secrets.enabled .Values.configmap.enabled .Values.extra.envfrom.existingConfigmap.enabled .Values.extra.envfrom.existingSecrets.enabled }}
+          envFrom:
+            {{- if .Values.secrets.enabled }}
+            - secretRef: 
+                name: {{ template "common.names.fullname" $ }}
+            {{- end }}
+            {{- if .Values.extra.envfrom.existingSecrets.enabled }}
+            {{- range .Values.extra.envfrom.existingSecrets.list }}
+            - secretRef:
+                name:  {{ . }}
+            {{- end }}
+            {{- end }}
+            {{- if .Values.configmap.enabled }}
+            - configMapRef:
+                name: {{ template "common.names.fullname" $ }}
+            {{- end }}
+            {{- if .Values.extra.envfrom.existingConfigmap.enabled }}
+            {{- range .Values.extra.envfrom.existingConfigmap.list }}
+            - configMapRef:
+                name: {{ . }}
+            {{- end }}
+          {{- end }}
           ports:
             - name: http
               containerPort: {{ .Values.container.port }}
