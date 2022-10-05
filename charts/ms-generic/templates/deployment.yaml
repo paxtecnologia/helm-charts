@@ -64,13 +64,13 @@ spec:
             {{- end }}
           {{- end }}
           ports:
-            - name: http
+            - name: app
               containerPort: {{ .Values.container.port }}
               protocol: TCP
           livenessProbe:
             httpGet:
               path: {{ .Values.probe.path }}
-              port: http
+              port: app
             timeoutSeconds: {{ .Values.probe.timeoutSeconds }}
             periodSeconds: {{ .Values.probe.periodSeconds }}
             successThreshold: {{ .Values.probe.successThreshold }}
@@ -79,7 +79,7 @@ spec:
           readinessProbe:
             httpGet:
               path: {{ .Values.probe.path }}
-              port: http
+              port: app
             timeoutSeconds: {{ .Values.probe.timeoutSeconds }}
             periodSeconds: {{ .Values.probe.periodSeconds }}
             successThreshold: {{ .Values.probe.successThreshold }}
