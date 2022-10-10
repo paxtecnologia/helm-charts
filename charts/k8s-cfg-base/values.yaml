@@ -1,0 +1,25 @@
+secret:
+  basic: []
+#    - name: NOME_DA_SECRET
+#      namespaces:  # LISTA_DAS_NAMESPACES
+#        - NOME_DA_NAMESPACE
+#      data:
+#        KEY: VALUE
+
+configMap:
+  basic: []
+#    - name: NOME_DO_CONFIGMAP
+#      namespaces:  # LISTA_DAS_NAMESPACES
+#        - NOME_DA_NAMESPACE
+#      data:
+#        KEY: VALUE
+
+pvcs: []
+#  - name: NOME_DO_PVC
+#    namespace: NOME_DA_NAMESPACE
+#    accessModes: ReadWriteOnce|ReadOnlyMany|ReadWriteMany|ReadWriteOncePod
+#    resources:
+#      requests:
+#        storage: 50Gi
+#    storageClassName: NOME_DO_STORAGECLASS
+#    volumeMode: Filesystem|Block

@@ -1,0 +1,15 @@
+{{- $config := .Values.configMap.basic }}
+{{- range $i, $e := $config }}
+{{- range $j, $f := $e.namespaces }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $e.name }}
+  namespace: {{ $f }}
+{{- with $e.data }}
+data:
+  {{- toYaml . | nindent 2 }}
+{{- end }}
+{{- end }}
+{{- end }}

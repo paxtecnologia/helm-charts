@@ -1,0 +1,22 @@
+{{- $config := .Values.pvcs }}
+{{- range $i, $e := $config }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ $e.name }}
+  namespace: {{ $e.namespace }}
+spec:
+  accessModes:
+    - {{ default "ReadWriteMany" $e.accessModes }} 
+  resources:
+    requests:
+    {{ if ((($e.resources).requests).storage) }}
+      storage: {{ $e.resources.requests.storage }}
+    {{ else }}
+      storage: "50Gi"
+    {{ end }}
+      
+  storageClassName: {{ $e.storageClassName }}
+  volumeMode: {{ default "Filesystem" $e.volumeMode }} 
+{{- end}}
