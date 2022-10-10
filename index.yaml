@@ -3,6 +3,22 @@ entries:
   k8s-cfg-base:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2022-10-10T17:57:21.550731661Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - bitnami-common
+      version: 1.x.x
+    description: A Helm chart for Kubernetes
+    digest: dfb101950de57fcb505ad2b4fd77db241a576f82de570303c96f50b89ec78235
+    name: k8s-cfg-base
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/k8s-cfg-base-0.1.4/k8s-cfg-base-0.1.4.tgz
+    version: 0.1.4
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2022-10-10T17:45:02.985795876Z"
     dependencies:
     - name: common
@@ -472,4 +488,4 @@ entries:
     urls:
     - https://github.com/paxtecnologia/helm-charts/releases/download/ms-nginx-0.1.1/ms-nginx-0.1.1.tgz
     version: 0.1.1
-generated: "2022-10-10T17:45:02.985885879Z"
+generated: "2022-10-10T17:57:21.551055862Z"
