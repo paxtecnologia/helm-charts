@@ -40,6 +40,19 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}/{{ .Values.image.name }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: MY_POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: MY_POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: MY_POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
           {{- if or .Values.secret.enabled .Values.configMap.enabled .Values.extra.envFrom.existingConfigMaps.enabled .Values.extra.envFrom.existingSecrets.enabled }}
           envFrom:
             {{- if .Values.secret.enabled }}
@@ -69,7 +82,7 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: {{ .Values.probe.path }}
+              path: {{ .Values.probe.liveness || .Values.probe.path }}
               port: app
             timeoutSeconds: {{ .Values.probe.timeoutSeconds }}
             periodSeconds: {{ .Values.probe.periodSeconds }}
@@ -78,7 +91,7 @@ spec:
             initialDelaySeconds: {{ .Values.probe.initialDelaySeconds }}
           readinessProbe:
             httpGet:
-              path: {{ .Values.probe.path }}
+              path: {{ .Values.probe.readiness || .Values.probe.path }}
               port: app
             timeoutSeconds: {{ .Values.probe.timeoutSeconds }}
             periodSeconds: {{ .Values.probe.periodSeconds }}
