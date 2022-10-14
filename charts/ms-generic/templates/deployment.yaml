@@ -82,7 +82,7 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: {{ .Values.probe.liveness || .Values.probe.path }}
+              path: {{ or .Values.probe.liveness .Values.probe.path }}
               port: app
             timeoutSeconds: {{ .Values.probe.timeoutSeconds }}
             periodSeconds: {{ .Values.probe.periodSeconds }}
@@ -91,7 +91,7 @@ spec:
             initialDelaySeconds: {{ .Values.probe.initialDelaySeconds }}
           readinessProbe:
             httpGet:
-              path: {{ .Values.probe.readiness || .Values.probe.path }}
+              path: {{ or .Values.probe.readiness .Values.probe.path }}
               port: app
             timeoutSeconds: {{ .Values.probe.timeoutSeconds }}
             periodSeconds: {{ .Values.probe.periodSeconds }}
