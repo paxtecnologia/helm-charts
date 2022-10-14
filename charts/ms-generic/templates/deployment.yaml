@@ -53,11 +53,15 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
-          {{- if or .Values.secret.enabled .Values.configMap.enabled .Values.extra.envFrom.existingConfigMaps.enabled .Values.extra.envFrom.existingSecrets.enabled }}
+          {{- if or .Values.secret.enabled .Values.configMap.enabled .Values.extra.envFrom.existingConfigMaps.enabled .Values.extra.envFrom.existingSecrets.enabled  .Values.secretProviderClass.enabled }}
           envFrom:
             {{- if .Values.secret.enabled }}
             - secretRef: 
                 name: {{ template "common.names.fullname" $ }}-helm
+            {{- end }}
+            {{- if .Values.secretProviderClass.enabled }}
+            - secretRef: 
+                name: {{ template "common.names.fullname" $ }}-{{ .Values.secretProviderClass.provider }}
             {{- end }}
             {{- if .Values.configMap.enabled }}
             - configMapRef:
