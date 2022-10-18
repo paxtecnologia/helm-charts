@@ -357,6 +357,22 @@ entries:
   ms-java-spring-boot:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2022-10-18T02:04:39.461742323Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - bitnami-common
+      version: 1.x.x
+    description: A Helm chart for Kubernetes
+    digest: 16d227c6a2f55a79c5b0f7417bd66d06ddbe676a9af3c2eaf4b2e57097745d84
+    name: ms-java-spring-boot
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/ms-java-spring-boot-0.1.9/ms-java-spring-boot-0.1.9.tgz
+    version: 0.1.9
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2022-09-28T15:58:18.462385846Z"
     dependencies:
     - name: common
@@ -480,6 +496,22 @@ entries:
   ms-nginx:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2022-10-18T02:04:39.728148577Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - bitnami-common
+      version: 1.x.x
+    description: A Helm chart for Kubernetes
+    digest: 17620f72e19fd9a0475bbead25787db97751659467f09d54684bd886340a795e
+    name: ms-nginx
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/ms-nginx-0.1.5/ms-nginx-0.1.5.tgz
+    version: 0.1.5
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2022-09-28T15:58:18.666094323Z"
     dependencies:
     - name: common
@@ -536,4 +568,4 @@ entries:
     urls:
     - https://github.com/paxtecnologia/helm-charts/releases/download/ms-nginx-0.1.1/ms-nginx-0.1.1.tgz
     version: 0.1.1
-generated: "2022-10-14T19:50:22.240786582Z"
+generated: "2022-10-18T02:04:39.728282076Z"
