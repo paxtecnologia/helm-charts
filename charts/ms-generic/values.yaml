@@ -45,12 +45,14 @@ configMap:
   injectFile:
     enabled: false
     itens: []
-#     - name: application.yaml
-#       srcPath: application.yaml
-#       destPath: /app
-#     - name: application2.yaml
-#       srcPath: application2.yaml
-#       destPath: /app
+    # - name: application.yaml
+    #   content: |-
+    #     abc: xyz
+    #   destPath: /app
+    # - name: application2.yaml
+    #   content: |-
+    #     abc: xyz
+    #   destPath: /app
 
 extra:
   env:
