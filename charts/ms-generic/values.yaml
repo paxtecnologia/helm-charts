@@ -73,14 +73,16 @@ extra:
 
 secretProviderClass:
   enabled: false
-  provider: "type"
-  properties: []
-  #  - key: "key"
-  #    objectName: "objectName"
-  #    objectType: "objectType"
-  #  - key: "key"
-  #    objectName: "objectName"
-  #    objectType: "objectType"
+  list:
+    []
+    # provider: "type"
+    # properties: []
+    #   - key: "key"
+    #     objectName: "objectName"
+    #     objectType: "objectType"
+    #   - key: "key"
+    #     objectName: "objectName"
+    #     objectType: "objectType"
 
 serviceAccount:
   # Specifies whether a service account should be created

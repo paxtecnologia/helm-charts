@@ -71,4 +71,11 @@ Create ConfigMap injectFile name
 {{- printf "%s-%s-helm" (include "common.names.fullname" .context) $configMapName -}}
 {{- end }}
 
+{{/*
+Create secretProviderClass secretName name
+*/}}
+{{- define "ms-generic.names.secretProviderClass.secretName.name" -}}
+{{- printf "%s-secretProvider-%s" (include "common.names.fullname" .context) .provider -}}
+{{- end }}
+
 
