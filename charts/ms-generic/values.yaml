@@ -33,13 +33,24 @@ fullnameOverride: ""
 
 secret:
   enabled: false
-  data: {}
+  data:
+    {}
     # key: value
 
 configMap:
   enabled: false
-  data: {}
+  data:
+    {}
     # key: value
+  injectFile:
+    enabled: false
+    itens: []
+#     - name: application.yaml
+#       srcPath: application.yaml
+#       destPath: /app
+#     - name: application2.yaml
+#       srcPath: application2.yaml
+#       destPath: /app
 
 extra:
   env:
@@ -54,8 +65,9 @@ extra:
       #  - configMapName
     existingSecrets:
       enabled: false
-      list: []
-       # - secretsName
+      list:
+        []
+        # - secretsName
 
 secretProviderClass:
   enabled: false

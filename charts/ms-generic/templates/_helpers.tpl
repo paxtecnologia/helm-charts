@@ -60,3 +60,15 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+
+
+{{/*
+Create ConfigMap injectFile name
+*/}}
+{{- define "ms-generic.names.injectFile.name" -}}
+{{- $configMapName :=  regexReplaceAll "\\W+" .name "_" }}
+{{- printf "%s-%s-helm" (include "common.names.fullname" .context) $configMapName -}}
+{{- end }}
+
+

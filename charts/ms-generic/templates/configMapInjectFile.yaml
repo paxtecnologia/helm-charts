@@ -1,0 +1,20 @@
+{{- if .Values.configMap.injectFile.enabled }}
+{{- range .Values.configMap.injectFile.itens }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "ms-generic.names.injectFile.name" ( dict "name" .name "context" $)  }}
+  namespace: {{ template "common.names.namespace" $ }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    {{- if $.Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" $.Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+    injectFile.srcPath: {{ .srcPath }}
+  {{- if $.Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" $.Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+data:
+{{ ($.Files.Glob .srcPath).AsConfig | indent 2 }}
+{{- end }}
+{{- end }}

@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "common.names.fullname" $ }}
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ template "common.names.namespace" $ }}
   labels: {{- include "common.labels.standard" $ | nindent 4 }}
     {{- if .Values.commonLabels }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
@@ -63,7 +63,7 @@ spec:
             - secretRef: 
                 name: {{ template "common.names.fullname" $ }}-{{ .Values.secretProviderClass.provider }}
             {{- end }}
-            {{- if .Values.configMap.enabled }}
+            {{- if and .Values.configMap.enabled .Values.configMap.data }}
             - configMapRef:
                 name: {{ template "common.names.fullname" $ }}-helm
             {{- end }}
@@ -104,8 +104,13 @@ spec:
             initialDelaySeconds: {{ .Values.probe.initialDelaySeconds }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          {{- if .Values.secretProviderClass.enabled }}
+          {{- if or .Values.secretProviderClass.enabled .Values.configMap.injectFile.enabled }}
           volumeMounts:
+            {{- range .Values.configMap.injectFile.itens }}
+            - name: {{ include "ms-generic.names.injectFile.name" ( dict "name" .name "context" $)  }}
+              mountPath: {{ .destPath }}
+              readOnly: true
+            {{- end }}
             {{- if .Values.secretProviderClass.enabled }}
             - name: secrets-store-inline
               mountPath: "/mnt/secrets-store"
@@ -124,8 +129,13 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if .Values.secretProviderClass.enabled }}
+      {{- if or .Values.secretProviderClass.enabled .Values.configMap.injectFile.enabled }}
       volumes:
+        {{- range .Values.configMap.injectFile.itens }}
+        - name: {{ include "ms-generic.names.injectFile.name" ( dict "name" .name "context" $)  }}
+          configMap:
+            name: {{ include "ms-generic.names.injectFile.name" ( dict "name" .name "context" $)  }}
+        {{- end }}
         {{- if .Values.secretProviderClass.enabled }}
         - name: secrets-store-inline
           csi:
