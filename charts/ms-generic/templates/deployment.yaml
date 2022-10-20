@@ -60,8 +60,10 @@ spec:
                 name: {{ template "common.names.fullname" $ }}-helm
             {{- end }}
             {{- if .Values.secretProviderClass.enabled }}
+            {{- range .Values.secretProviderClass.itens }}
             - secretRef: 
-                name: {{ template "common.names.fullname" $ }}-{{ .Values.secretProviderClass.provider }}
+                name: {{ include "ms-generic.names.secretProviderClass.secretName.name" ( dict "provider" .provider "context" $)  }}
+            {{- end }}
             {{- end }}
             {{- if and .Values.configMap.enabled .Values.configMap.data }}
             - configMapRef:
@@ -112,9 +114,11 @@ spec:
               readOnly: true
             {{- end }}
             {{- if .Values.secretProviderClass.enabled }}
-            - name: secrets-store-inline
-              mountPath: "/mnt/secrets-store"
+            {{- range .Values.secretProviderClass.itens }}
+            - name: secrets-store-inline-{{ .provider }}
+              mountPath: /mnt/secrets-store
               readOnly: true
+            {{- end }}
             {{- end }}
           {{- end }}
       {{- with .Values.nodeSelector }}
@@ -137,11 +141,13 @@ spec:
             name: {{ include "ms-generic.names.injectFile.name" ( dict "name" .name "context" $)  }}
         {{- end }}
         {{- if .Values.secretProviderClass.enabled }}
-        - name: secrets-store-inline
+        {{- range .Values.secretProviderClass.itens }}
+        - name: secrets-store-inline-{{ .provider }}
           csi:
             driver: secrets-store.csi.k8s.io
             readOnly: true
             volumeAttributes:
-              secretProviderClass: {{ template "common.names.fullname" $ }}
+              secretProviderClass: {{ include "ms-generic.names.secretProviderClass.name" ( dict "provider" .provider "context" $)  }} 
+        {{- end }}
         {{- end }}
       {{- end }}

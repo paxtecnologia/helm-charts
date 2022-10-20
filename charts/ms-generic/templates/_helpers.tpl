@@ -84,7 +84,7 @@ Create secretProviderClass name
 Create secretProviderClass secretName name
 */}}
 {{- define "ms-generic.names.secretProviderClass.secretName.name" -}}
-{{- printf "%s-secretProvider-%s" (include "common.names.fullname" .context) .provider -}}
+{{- printf "%s-secpro-%s" (include "common.names.fullname" .context) .provider -}}
 {{- end }}
 
 
