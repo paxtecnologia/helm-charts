@@ -1,0 +1,8 @@
+{
+    "name": "Pax Helm Chart Dev Contariner",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": ".."
+    },
+    "postStartCommand": "git config --global --add safe.directory /workspaces/*",
+}
