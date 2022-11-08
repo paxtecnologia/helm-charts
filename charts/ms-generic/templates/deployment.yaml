@@ -53,6 +53,10 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
+            - name: DEPLOYMENT_NAME
+              valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['app.kubernetes.io/name']
           {{- if or .Values.secret.enabled .Values.configMap.enabled .Values.extra.envFrom.existingConfigMaps.enabled .Values.extra.envFrom.existingSecrets.enabled  .Values.secretProviderClass.enabled }}
           envFrom:
             {{- if .Values.secret.enabled }}
