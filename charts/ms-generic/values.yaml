@@ -59,9 +59,9 @@ extra:
     secret:
       enabled: false
       #data: {}
-        # Exemplo
-        # key: value
-      data: 
+      # Exemplo
+      # key: value
+      data:
         key: value
     ## TODO: Fazer o configMap
     configMap:
@@ -149,11 +149,26 @@ resources:
   #   memory: 128Mi
 
 autoscaling:
-  enabled: false
+  enabled: true
+  version: beta
   minReplicas: 1
   maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
+  metrics:
+    resources:
+      cpu: {}
+        # utilizationPercentage: 80
+      memory: {}
+        # utilizationPercentage: 80
+    pods:
+      metricName: sum_http_server_requests_seconds_count_filted
+      targetAverageValue: 20m
+  stabilizationWindowSeconds: 300
+  scaleDown:
+    value: 1
+    periodSeconds: 300
+  scaleUp:
+    value: 1
+    periodSeconds: 300
 
 nodeSelector: {}
 

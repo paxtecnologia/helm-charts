@@ -1,5 +1,5 @@
 {{- if .Values.autoscaling.enabled }}
-apiVersion: autoscaling/v2beta1
+apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "ms-generic.fullname" . }}
@@ -13,16 +13,43 @@ spec:
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:
-    {{- if .Values.autoscaling.targetCPUUtilizationPercentage }}
+    {{- if .Values.autoscaling.metrics.resources.cpu.utilizationPercentage }}
     - type: Resource
       resource:
         name: cpu
-        targetAverageUtilization: {{ .Values.autoscaling.targetCPUUtilizationPercentage }}
+        target:
+          averageUtilization: {{ .Values.autoscaling.metrics.resources.cpu.utilizationPercentage }}
+          type: Utilization
     {{- end }}
-    {{- if .Values.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- if .Values.autoscaling.metrics.resources.memory.utilizationPercentage }}
     - type: Resource
       resource:
         name: memory
-        targetAverageUtilization: {{ .Values.autoscaling.targetMemoryUtilizationPercentage }}
+        target:
+          averageUtilization: {{ .Values.autoscaling.metrics.resources.memory.utilizationPercentage }}
+          type: Utilization
+    {{- end }}  
+    {{- if and .Values.autoscaling.metrics.pods.metricName .Values.autoscaling.metrics.pods.targetAverageValue }}
+    - type: Pods
+      pods:
+        metric:
+          name: {{ .Values.autoscaling.metrics.pods.metricName }}
+        target:
+          type: AverageValue
+          averageValue: {{ .Values.autoscaling.metrics.pods.targetAverageValue }}
     {{- end }}
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: {{ .Values.autoscaling.stabilizationWindowSeconds }}
+      policies:
+      - type: Pods
+        value: {{ .Values.autoscaling.scaleDown.value }}
+        periodSeconds: {{ .Values.autoscaling.scaleDown.periodSeconds  }}
+    scaleUp:
+      stabilizationWindowSeconds: {{ .Values.autoscaling.stabilizationWindowSeconds }}
+      policies:
+      - type: Pods
+        value: {{ .Values.autoscaling.scaleUp.value }}
+        periodSeconds: {{ .Values.autoscaling.scaleUp.periodSeconds }}
+      selectPolicy: Max
 {{- end }}
