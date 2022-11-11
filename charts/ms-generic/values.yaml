@@ -56,9 +56,15 @@ configMap:
 
 extra:
   env:
-    secrets:
+    secret:
       enabled: false
-    configMaps:
+      #data: {}
+        # Exemplo
+        # key: value
+      data: 
+        key: value
+    ## TODO: Fazer o configMap
+    configMap:
       enabled: false
   envFrom:
     existingConfigMaps:

@@ -57,9 +57,9 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.labels['app.kubernetes.io/name']
-          {{- if or .Values.secret.enabled .Values.configMap.enabled .Values.extra.envFrom.existingConfigMaps.enabled .Values.extra.envFrom.existingSecrets.enabled  .Values.secretProviderClass.enabled }}
+          {{- if or .Values.extra.env.secret.enabled .Values.extra.env.configMap.enabled .Values.extra.envFrom.existingConfigMaps.enabled .Values.extra.envFrom.existingSecrets.enabled  .Values.secretProviderClass.enabled }}
           envFrom:
-            {{- if .Values.secret.enabled }}
+            {{- if .Values.extra.env.secret.enabled }}
             - secretRef: 
                 name: {{ template "common.names.fullname" $ }}-helm
             {{- end }}
@@ -69,7 +69,7 @@ spec:
                 name: {{ include "ms-generic.names.secretProviderClass.secretName.name" ( dict "provider" .provider "context" $)  }}
             {{- end }}
             {{- end }}
-            {{- if and .Values.configMap.enabled .Values.configMap.data }}
+            {{- if .Values.extra.env.configMap.enabled }}
             - configMapRef:
                 name: {{ template "common.names.fullname" $ }}-helm
             {{- end }}
