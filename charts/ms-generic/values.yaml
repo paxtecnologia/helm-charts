@@ -149,8 +149,7 @@ resources:
   #   memory: 128Mi
 
 autoscaling:
-  enabled: true
-  version: beta
+  enabled: false
   minReplicas: 1
   maxReplicas: 100
   metrics:
