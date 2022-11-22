@@ -54,28 +54,16 @@ configMap:
     #     abc: xyz
     #   destPath: /app
 
-extra:
-  env:
-    secret:
-      enabled: false
-      #data: {}
-      # Exemplo
-      # key: value
-      data:
-        key: value
-    ## TODO: Fazer o configMap
-    configMap:
-      enabled: false
-  envFrom:
-    existingConfigMaps:
-      enabled: false
-      list: []
-      #  - configMapName
-    existingSecrets:
-      enabled: false
-      list:
-        []
-        # - secretsName
+envFrom:
+  existingConfigMaps:
+    enabled: false
+    list: []
+    #  - configMapName
+  existingSecrets:
+    enabled: false
+    list:
+      []
+      # - secretsName
 
 secretProviderClass:
   enabled: false

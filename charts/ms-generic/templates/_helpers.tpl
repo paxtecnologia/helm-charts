@@ -88,3 +88,13 @@ Create secretProviderClass secretName name
 {{- end }}
 
 
+{{/*
+Create Service name
+*/}}
+{{- define "ms-generic.names.service.name" -}}
+{{- if .Values.serviceFullnameOverride }}
+{{- .Values.serviceFullnameOverride | trunc 63 | trimSuffix "-" }}
+{{- else }}
+{{- template "common.names.fullname" $ -}}
+{{- end }}
+{{- end }}

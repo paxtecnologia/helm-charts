@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: "{{ include "ms-generic.fullname" . }}-test-connection"
+  name: "{{ template "common.names.fullname" $ }}-test-connection"
   labels:
-    {{- include "ms-generic.labels" . | nindent 4 }}
+    {{- include "common.labels.standard" $ | nindent 4 }}
   annotations:
     "helm.sh/hook": test
 spec:
@@ -11,5 +11,5 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args: ['{{ include "ms-generic.fullname" . }}:{{ .Values.service.port }}']
+      args: ['{{ template "common.names.fullname" $ }}:{{ .Values.service.port }}']
   restartPolicy: Never
