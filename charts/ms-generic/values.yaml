@@ -58,6 +58,13 @@ configMap:
     #     abc: xyz
     #   destPath: /app
 
+volumes:
+  persistentVolumeClaim:
+    enabled: false
+    itens: []
+    # - name: nfsData
+    #   mountPath: /data
+    #   claimName: nfs-data-clain
 envFrom:
   existingConfigMaps:
     enabled: false

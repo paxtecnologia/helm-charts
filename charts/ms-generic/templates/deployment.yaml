@@ -114,8 +114,12 @@ spec:
             initialDelaySeconds: {{ .Values.probe.initialDelaySeconds }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          {{- if or .Values.secretProviderClass.enabled .Values.configMap.injectFile.enabled }}
+          {{- if or .Values.secretProviderClass.enabled .Values.configMap.injectFile.enabled .Values.volumes.persistentVolumeClaim.enabled }}
           volumeMounts:
+            {{- range .Values.volumes.persistentVolumeClaim.itens }}
+            - name: {{ .name }}
+              mountPath: {{ .mountPath }}
+            {{- end }}
             {{- range .Values.configMap.injectFile.itens }}
             - name: {{ include "ms-generic.names.injectFile.name" ( dict "name" .name "context" $)  }}
               mountPath: {{ .destPath }}
@@ -141,8 +145,13 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if or .Values.secretProviderClass.enabled .Values.configMap.injectFile.enabled }}
+      {{- if or .Values.secretProviderClass.enabled .Values.configMap.injectFile.enabled .Values.volumes.persistentVolumeClaim.enabled }}
       volumes:
+        {{- range .Values.volumes.persistentVolumeClaim.itens }}
+         - name: {{ .name }}
+           persistentVolumeClaim:
+            claimName: {{ .claimName }}
+        {{- end }}
         {{- range .Values.configMap.injectFile.itens }}
         - name: {{ include "ms-generic.names.injectFile.name" ( dict "name" .name "context" $)  }}
           configMap:
