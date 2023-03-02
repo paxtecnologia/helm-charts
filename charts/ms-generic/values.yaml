@@ -31,6 +31,10 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+env:
+  enabled: false
+  data: {}
+
 secret:
   enabled: false
   data:
@@ -143,9 +147,11 @@ autoscaling:
   maxReplicas: 100
   metrics:
     resources:
-      cpu: {}
+      cpu:
+        {}
         # utilizationPercentage: 80
-      memory: {}
+      memory:
+        {}
         # utilizationPercentage: 80
     pods:
       metricName: sum_http_server_requests_seconds_count_filted
@@ -163,6 +169,5 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
-
 # Força a troca do nome do service
 # serviceFullnameOverride: nomeDoService

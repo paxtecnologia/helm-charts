@@ -34,6 +34,7 @@ spec:
       serviceAccountName: {{ include "ms-generic.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+
       containers:
         - name: {{ template "common.names.fullname" $ }}
           securityContext:
@@ -57,7 +58,10 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.labels['app.kubernetes.io/name']
-          {{- if or .Values.secret.enabled .Values.configMap.enabled .Values.envFrom.existingConfigMaps.enabled .Values.envFrom.existingSecrets.enabled  .Values.secretProviderClass.enabled }}
+          {{- if .Values.env.enabled }}
+            {{- toYaml .Values.env.data | nindent 12 }}
+          {{- end }}
+          {{- if or .Values.secret.enabled .Values.configMap.enabled .Values.envFrom.existingConfigMaps.enabled .Values.envFrom.existingSecrets.enabled  .Values.secretProviderClass.enabled  }}
           envFrom:
             {{- if .Values.secret.enabled }}
             - secretRef: 
