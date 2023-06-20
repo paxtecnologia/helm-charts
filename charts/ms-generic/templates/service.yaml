@@ -26,4 +26,10 @@ spec:
       {{- if .Values.service.nodePort }}
       nodePort: {{ .Values.service.nodePort }}
       {{- end }}
+    {{- if .Values.service.extra.ports }}
+    {{- .Values.service.extra.ports | nindent 4 }}
+    {{- end }}
+
+
+    
   selector: {{- include "common.labels.matchLabels" $ | nindent 6 }}    

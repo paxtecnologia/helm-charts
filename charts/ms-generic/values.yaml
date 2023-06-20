@@ -117,6 +117,13 @@ service:
   type: ClusterIP
   port: 80
   #nodePort: 30000
+  # Permite o inject direto de configurações nas portas dos service
+  extra: {}
+    # ports:
+
+
+
+
 
 ingress:
   enabled: false
