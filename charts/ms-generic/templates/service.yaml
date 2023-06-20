@@ -29,7 +29,4 @@ spec:
     {{- if .Values.service.extra.ports }}
     {{- toYaml .Values.service.extra.ports | nindent 4 }}
     {{- end }}
-
-
-    
   selector: {{- include "common.labels.matchLabels" $ | nindent 6 }}    
