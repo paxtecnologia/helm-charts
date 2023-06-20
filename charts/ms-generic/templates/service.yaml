@@ -27,7 +27,7 @@ spec:
       nodePort: {{ .Values.service.nodePort }}
       {{- end }}
     {{- if .Values.service.extra.ports }}
-    {{- .Values.service.extra.ports | nindent 4 }}
+    {{- toYaml .Values.service.extra.ports | nindent 4 }}
     {{- end }}
 
 
