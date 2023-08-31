@@ -21,6 +21,8 @@ jobs:
 
       - name: Install Helm
         uses: azure/setup-helm@v3.5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Prepare GPG key
         run: |
