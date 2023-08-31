@@ -20,9 +20,9 @@ spec:
   type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.service.port }}
-      targetPort: app
+      targetPort: http-app
       protocol: TCP
-      name: app
+      name: http-app
       {{- if .Values.service.nodePort }}
       nodePort: {{ .Values.service.nodePort }}
       {{- end }}
