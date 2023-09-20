@@ -1,0 +1,97 @@
+name: Helm charts dependency version update bot
+
+on:
+  schedule:
+    - cron: '0 4 * * 1'
+ 
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Configurar ambiente
+        run: |
+          # Instale as ferramentas necessárias
+          curl -L https://github.com/mikefarah/yq/releases/download/v4.9.6/yq_linux_amd64 -o /usr/local/bin/yq
+          chmod +x /usr/local/bin/yq
+          # Instale o Helm (se necessário)
+          curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+
+  process-directory:
+    runs-on: ubuntu-latest
+ 
+    strategy:
+      matrix:
+        path: [charts/k8s-cfg-base, charts/ms-generic]                          # Passar os diretorios que vão ser verificado a versão das dependencias
+      
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Detail Process
+        run: | 
+          path=${{ matrix.path }}
+          echo -e "***** path execution $path ***** 
+          "
+          pathFormatado="./${path}/"                                                  # Passando diretamente para o comando CAT ele some com as barras então foi criado essa variável antes
+          infoChartLock=$(cat "${pathFormatado}Chart.lock")                           # Leitura do arquivo .lock
+          infoChartYml=$(cat "${pathFormatado}Chart.yml")                             # Leitura do arquivo .yml
+
+          numberDependencies=$(cat ${pathFormatado}Chart.lock | yq e '.dependencies | length' -)                                      # Aqui temos o total de dependências do arquivo 
+          numberDependencies=$((numberDependencies - 1))                                                                              # Aqui temos o -1 por que o 0 e o primeiro objeto assim tendo um a mais no final
+          
+          while [ $numberDependencies -ge 0 ]                                                                                         # Vamos passar por cada objeto do arquivo .lock que e um yml 
+          do
+            dependencyInfo=$(echo "$infoChartLock" | yq e ".dependencies[$numberDependencies]" -)                                     # Informações que tem no .lock sobre a dependência
+            UrlRepositoryDependency=$(echo "$dependencyInfo" | yq e '.repository' -)                                                  # URL do repositorio
+            dependencyName=$(echo "$dependencyInfo" | yq e '.name' -)                                                                 # Nome da dependência
+            currentVersion=$(echo "$dependencyInfo" | yq e '.version' -)                                                              # Versão atual da dependência
+            AddRepositoryDependency=$(helm repo add $dependencyName $UrlRepositoryDependency)                                         # Adicionando o repositorio 
+            versionMoreRecent=$(helm search repo $dependencyName/$dependencyName -o json | yq e '.[0].version' -)                     # Versão mais recente no repositorio da dependência
+            currentVersion_upgrade=$(echo "$infoChartYml" |yq e ".dependencies[] | select(.name == \"$dependencyName\") | .version" -)
+            projeto=$(echo "$infoChartYml" | yq e ".name" -)
+            echo "Dependency : $dependencyName"
+
+            counter=0
+            regex="[^0-9.]"
+            if [[ $currentVersion_upgrade =~ $regex ]]; then                                                                          # Essa etapa compara as versões genericas do yml com a mais recente
+            index=$(expr index "$currentVersion_upgrade" "${BASH_REMATCH}")
+            counter=$((index - 1))
+            else
+            counter=${#currentVersion_upgrade}
+            fi
+        
+            baseVersionYml=$(echo $currentVersion_upgrade | cut -c 1-$counter)
+            baseVersionLock=$(echo $versionMoreRecent | cut -c 1-$counter)
+
+            echo "$baseVersionYml"
+
+            if [[ "$baseVersionYml" == "$baseVersionLock" ]]; then                                                                   # Aqui finaliza essa etapa e verifica se e um Bump ou Upgrade
+              type="Upgrade"
+            else
+              type="Bump"
+            fi
+
+            if [ "$currentVersion" != "$versionMoreRecent" ]; then                                                                   # Verificação se a teve a atualização ou não na versão detalhada e após isso verifica se existe a issue e se não existir ela e criada 
+              if ! resultado=$(curl -s -X GET -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues?labels=$projeto,$dependencyName,$versionMoreRecent&per_page=100" | jq -e '.[] | select(.state == "open")'); then
+                response=$(curl -s -X POST \
+                  -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+                  -d "{\"title\":\"$type - $projeto - $dependencyName | $currentVersion --> $versionMoreRecent\", \"body\":\"Created from helm-charts dependency update check script\", \"labels\": [\"BOT\",  \"$projeto\", \"$dependencyName\", \"$versionMoreRecent\"]}" \
+                  "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues")
+                  echo -e "Issues created for dependency : $dependencyName | Version : $versionMoreRecent
+                  "
+
+              else
+                echo -e "There is already issues for dependency : $dependencyName | Version : $versionMoreRecent
+                "
+              fi
+            else
+              echo -e "This dependency is in the latest version : $dependencyName | Version : $versionMoreRecent
+              "
+            fi
+            
+            numberDependencies=$((numberDependencies - 1))
+          done
