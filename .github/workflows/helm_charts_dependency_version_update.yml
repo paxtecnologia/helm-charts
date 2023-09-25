@@ -38,7 +38,7 @@ jobs:
           "
           pathFormatado="./${path}/"                                                  # Passando diretamente para o comando CAT ele some com as barras então foi criado essa variável antes
           infoChartLock=$(cat "${pathFormatado}Chart.lock")                           # Leitura do arquivo .lock
-          infoChartYml=$(cat "${pathFormatado}Chart.yml")                             # Leitura do arquivo .yml
+          infoChartYml=$(cat "${pathFormatado}Chart.yaml")                             # Leitura do arquivo .yml
 
           numberDependencies=$(cat ${pathFormatado}Chart.lock | yq e '.dependencies | length' -)                                      # Aqui temos o total de dependências do arquivo 
           numberDependencies=$((numberDependencies - 1))                                                                              # Aqui temos o -1 por que o 0 e o primeiro objeto assim tendo um a mais no final
