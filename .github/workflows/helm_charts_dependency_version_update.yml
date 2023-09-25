@@ -3,7 +3,7 @@ name: Helm charts dependency version update bot
 on:
   schedule:
     - cron: '0 4 * * 1'
- 
+  workflow_dispatch:
 jobs:
   setup:
     runs-on: ubuntu-latest
@@ -38,7 +38,7 @@ jobs:
           "
           pathFormatado="./${path}/"                                                  # Passando diretamente para o comando CAT ele some com as barras então foi criado essa variável antes
           infoChartLock=$(cat "${pathFormatado}Chart.lock")                           # Leitura do arquivo .lock
-          infoChartYml=$(cat "${pathFormatado}Chart.yaml")                             # Leitura do arquivo .yml
+          infoChartYml=$(cat "${pathFormatado}Chart.yaml")                             # Leitura do arquivo .yaml
 
           numberDependencies=$(cat ${pathFormatado}Chart.lock | yq e '.dependencies | length' -)                                      # Aqui temos o total de dependências do arquivo 
           numberDependencies=$((numberDependencies - 1))                                                                              # Aqui temos o -1 por que o 0 e o primeiro objeto assim tendo um a mais no final
