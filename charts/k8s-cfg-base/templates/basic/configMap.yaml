@@ -1,9 +1,11 @@
-{{- $config := .Values.secret.basic }}
+{{- if .Values.configMap }}
+{{- $config := .Values.configMap.basic }}
 {{- range $i, $e := $config }}
-{{- range $namespace := $e.namespaces }}
+{{- range $j, $namespace := $e.namespaces }}
+{{- if $e.data }}
 ---
 apiVersion: v1
-kind: Secret
+kind: ConfigMap
 metadata:
   name: {{ $e.name }}
   namespace: {{ $namespace }}
@@ -13,12 +15,10 @@ metadata:
     chart/version: "{{ .Chart.Version }}"
     release/name: "{{ .Release.Name }}"
     release/revision: "{{ .Release.Revision }}"
-{{- with $e.data }}
-type: Opaque
 data:
-  {{- range $key, $value := $e.data }}
-  {{ $key }}: {{ $value | b64enc }}
-  {{- end }}
-{{- end }} 
+  {{- toYaml $e.data | nindent 2 }}
+{{- end }}
+{{- end }}
+{{- end }}
 {{- end }}
 {{- end }}

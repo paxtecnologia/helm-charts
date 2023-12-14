@@ -1,11 +1,12 @@
 {{- $config := .Values.pvcs }}
 {{- range $i, $e := $config }}
+{{- range $j, $namespace := $e.namespaces }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: {{ $e.name }}
-  namespace: {{ $e.namespace }}
+  namespace: {{ $namespace }}
   labels:
     configMap/name: {{ $e.name }}
     chart/name: "{{ .Chart.Name }}"
@@ -20,9 +21,14 @@ spec:
     {{ if ((($e.resources).requests).storage) }}
       storage: {{ $e.resources.requests.storage }}
     {{ else }}
-      storage: "50Gi"
+      storage: "8Gi"
     {{ end }}
-      
+  {{ if ($e.storageClassName) }}
   storageClassName: {{ $e.storageClassName }}
+  {{ end }}
+  {{ if ($e.volumeName) }}
+  volumeName: {{ $e.volumeName }}
+  {{ end }}
   volumeMode: {{ default "Filesystem" $e.volumeMode }} 
+{{- end}}
 {{- end}}

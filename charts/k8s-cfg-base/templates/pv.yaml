@@ -1,0 +1,16 @@
+{{- $config := .Values.pvs }}
+{{- range $i, $e := $config }}
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ $e.name }}
+spec:
+  capacity:
+    storage: {{ default "8Gi" $e.storage }}
+  {{ toYaml $e.spec | nindent 2 }}
+  accessModes:
+    - {{ default "ReadWriteMany" $e.accessModes }} 
+  persistentVolumeReclaimPolicy: {{ default "Retain" $e.persistentVolumeReclaimPolicy }}
+  volumeMode: {{ default "Filesystem" $e.volumeMode }}
+{{- end}}

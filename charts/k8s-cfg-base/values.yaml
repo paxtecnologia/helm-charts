@@ -1,10 +1,13 @@
 secret:
-  basic: []
+  basic:
+    opaque: []
 #    - name: NOME_DA_SECRET
 #      namespaces:  # LISTA_DAS_NAMESPACES
 #        - NOME_DA_NAMESPACE
 #      data:
 #        KEY: VALUE
+  dockerconfigjson: []
+
 
 configMap:
   basic: []
