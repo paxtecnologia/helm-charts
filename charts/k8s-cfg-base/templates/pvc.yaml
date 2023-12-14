@@ -9,8 +9,6 @@ metadata:
   namespace: {{ $namespace }}
   labels:
     configMap/name: {{ $e.name }}
-    chart/name: "{{ .Chart.Name }}"
-    chart/version: "{{ .Chart.Version }}"
     release/name: "{{ .Release.Name }}"
     release/revision: "{{ .Release.Revision }}"
 spec:

@@ -26,3 +26,6 @@ pvcs: []
 #        storage: 50Gi
 #    storageClassName: NOME_DO_STORAGECLASS
 #    volumeMode: Filesystem|Block
+
+opentelemetry:
+  instrumentation: {}
