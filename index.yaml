@@ -3,6 +3,22 @@ entries:
   k8s-cfg-base:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2023-12-14T13:36:30.400844982Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    description: A Helm chart for Kubernetes
+    digest: 3cc60d843ee28a052f0048ecdc89946bd13c1f22a8cf156240e77a22c9da5567
+    name: k8s-cfg-base
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/k8s-cfg-base-0.2.0/k8s-cfg-base-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2023-12-06T13:23:25.647685619Z"
     dependencies:
     - name: common
@@ -146,6 +162,22 @@ entries:
     - https://github.com/paxtecnologia/helm-charts/releases/download/k8s-cfg-base-0.1.0/k8s-cfg-base-0.1.0.tgz
     version: 0.1.0
   ms-generic:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2023-12-14T13:36:30.629985925Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    description: A Helm chart for Kubernetes
+    digest: ab6de6925c5e6439465bc762b422f05c8e054332024877ad18903744dff21ec6
+    name: ms-generic
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/ms-generic-0.4.0/ms-generic-0.4.0.tgz
+    version: 0.4.0
   - apiVersion: v2
     appVersion: 1.16.0
     created: "2023-09-25T18:20:40.67413606Z"
@@ -1016,4 +1048,4 @@ entries:
     urls:
     - https://github.com/paxtecnologia/helm-charts/releases/download/ms-nginx-0.1.1/ms-nginx-0.1.1.tgz
     version: 0.1.1
-generated: "2023-12-06T13:23:25.647827223Z"
+generated: "2023-12-14T13:36:30.630374419Z"
