@@ -11,8 +11,8 @@ metadata:
   namespace: {{ $namespace }}
   labels:
     configMap/name: {{ $e.name }}
-    release/name: "{{ .Release.Name }}"
-    release/revision: "{{ .Release.Revision }}"
+    release/name: "{{ $.Release.Name }}"
+    release/revision: "{{ $.Release.Revision }}"
 data:
   {{- toYaml $e.data | nindent 2 }}
 {{- end }}

@@ -15,10 +15,10 @@ If release name contains chart name it will be used as a full name.
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
 {{- $name := default .Chart.Name .Values.nameOverride }}
-{{- if contains $name .Release.Name }}
-{{- .Release.Name | trunc 63 | trimSuffix "-" }}
+{{- if contains $name $.Release.Name }}
+{{- $.Release.Name | trunc 63 | trimSuffix "-" }}
 {{- else }}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
+{{- printf "%s-%s" $.Release.Name $name | trunc 63 | trimSuffix "-" }}
 {{- end }}
 {{- end }}
 {{- end }}
@@ -39,7 +39,7 @@ helm.sh/chart: {{ include "k8s-cfg-base.chart" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
+app.kubernetes.io/managed-by: {{ $.Release.Service }}
 {{- end }}
 
 {{/*
@@ -47,7 +47,7 @@ Selector labels
 */}}
 {{- define "k8s-cfg-base.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "k8s-cfg-base.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/instance: {{ $.Release.Name }}
 {{- end }}
 
 {{/*
