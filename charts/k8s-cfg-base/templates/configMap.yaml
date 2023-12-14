@@ -7,6 +7,12 @@ kind: ConfigMap
 metadata:
   name: {{ $e.name }}
   namespace: {{ $namespace }}
+  labels:
+    configMap/name: {{ $e.name }}
+    chart/name: "{{ .Chart.Name }}"
+    chart/version: "{{ .Chart.Version }}"
+    release/name: "{{ .Release.Name }}"
+    release/revision: "{{ .Release.Revision }}"
 {{- with $e.data }}
 data:
   {{- toYaml . | nindent 2 }}
