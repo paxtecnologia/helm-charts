@@ -17,7 +17,7 @@ spec:
   sampler:
     type: parentbased_traceidratio
     # argument: "0.25"
-    argument: {{ $config.traceidratio }}
+    argument: "{{ $config.traceidratio }}"
   python:
     env:
       # Required if endpoint is set to 4317.
