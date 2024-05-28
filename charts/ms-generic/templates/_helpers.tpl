@@ -43,6 +43,15 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{/*
+AppVersion
+*/}}
+{{- define "ms-generic.AppVersion" -}}
+{{- if .Values.app.version -}}
+app.kubernetes.io/version: {{ .Values.app.version | quote }}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Selector labels
 */}}
 {{- define "ms-generic.selectorLabels" -}}
