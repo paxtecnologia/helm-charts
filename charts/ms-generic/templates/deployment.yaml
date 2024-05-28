@@ -27,6 +27,7 @@ spec:
       labels: {{- include "common.labels.standard" . | nindent 8 }}
         {{- include "ms-generic.labels.AppVersion" $ | nindent 8 }}
         {{- include "ms-generic.labels.kiali" $ | nindent 8 }}
+        {{- include "ms-generic.labels.opentelemetry" $ | nindent 8 }}
         {{- if .Values.podLabels }}
         {{- include "common.tplvalues.render" (dict "value" .Values.podLabels "context" $) | nindent 8 }}
         {{- end }}
@@ -62,6 +63,10 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.labels['app.kubernetes.io/name']
+            - name: OTEL_SERVICE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['app.opentelemetry.io/service-name']
           {{- if .Values.env.enabled }}
             {{- toYaml .Values.env.data | nindent 12 }}
           {{- end }}

@@ -49,6 +49,13 @@ version: {{ .Values.app.version | quote }}
 {{- end -}}
 {{- end -}}
 
+{{/*
+labels opentelemetry
+*/}}
+{{- define "ms-generic.labels.opentelemetry" -}}
+app.opentelemetry.io/service-name: {{ include "common.names.fullname" . }}.{{ .Release.Namespace }}
+{{- end -}}
+
 
 {{/*
 Selector labels
