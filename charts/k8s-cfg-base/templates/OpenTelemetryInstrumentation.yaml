@@ -9,9 +9,6 @@ metadata:
 spec:
   exporter:
     endpoint: http://{{ $config.defaultEndpoint }}:4317
-  resources:
-    labels:
-      k8s.namespace.name: ${POD_NAMESPACE}
   propagators:
     - tracecontext
     - baggage
