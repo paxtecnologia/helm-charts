@@ -31,25 +31,24 @@ Create chart name and version as used by the chart label.
 {{- end }}
 
 {{/*
-Common labels
+labels AppVersion
 */}}
-{{- define "ms-generic.labels" -}}
-helm.sh/chart: {{ include "ms-generic.chart" . }}
-{{ include "ms-generic.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end }}
-
-{{/*
-AppVersion
-*/}}
-{{- define "ms-generic.AppVersion" -}}
+{{- define "ms-generic.labels.AppVersion" -}}
 {{- if .Values.app.version -}}
 app.kubernetes.io/version: {{ .Values.app.version | quote }}
 {{- end -}}
 {{- end -}}
+
+{{/*
+labels kiali
+*/}}
+{{- define "ms-generic.labels.kiali" -}}
+app: {{ include "common.names.name" . }}
+{{- if .Values.app.version }}
+version: {{ .Values.app.version | quote }} 
+{{- end -}}
+{{- end -}}
+
 
 {{/*
 Selector labels

@@ -16,8 +16,9 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: {{ $fullName }}
-  labels:
-    {{- include "ms-generic.labels" . | nindent 4 }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+  {{- include "ms-generic.labels.AppVersion" $ | nindent 4 }}
+  {{- include "ms-generic.labels.kiali" $ | nindent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}

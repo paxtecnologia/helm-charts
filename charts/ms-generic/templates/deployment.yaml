@@ -4,10 +4,11 @@ metadata:
   name: {{ template "common.names.fullname" $ }}
   namespace: {{ template "common.names.namespace" $ }}
   labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    {{- include "ms-generic.labels.AppVersion" $ | nindent 4 }}
+    {{- include "ms-generic.labels.kiali" $ | nindent 4 }}
     {{- if .Values.commonLabels }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
-    {{- include "ms-generic.AppVersion" $ | nindent 4 }}
   {{- if .Values.commonAnnotations }}
   annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
   {{- end }}
@@ -24,10 +25,11 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels: {{- include "common.labels.standard" . | nindent 8 }}
+        {{- include "ms-generic.labels.AppVersion" $ | nindent 8 }}
+        {{- include "ms-generic.labels.kiali" $ | nindent 8 }}
         {{- if .Values.podLabels }}
         {{- include "common.tplvalues.render" (dict "value" .Values.podLabels "context" $) | nindent 8 }}
         {{- end }}
-        {{- include "ms-generic.AppVersion" $ | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
