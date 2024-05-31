@@ -26,13 +26,35 @@ spec:
       template:
         spec:
           containers:
-            {{- range .Values.jobTemplate.containers }}
-            - name: {{ required "Container name was not defined" .name }}
-              image: {{ required "Container image was not defined" .image }}
-              args: {{ required "Container args was not defined" .args | toJson }}
-              imagePullPolicy: {{ required "Container imagePullPolicy was not defined" .imagePullPolicy }}
-              {{- if .env }}
-              env: {{ toYaml . | nindent 15 }}
+            - name: {{ template "common.names.fullname" $ }}
+              securityContext:
+                {{- toYaml .Values.securityContext | nindent 16 }}
+              image: "{{ .Values.image.repository }}/{{ .Values.image.name }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+              imagePullPolicy: {{ .Values.image.pullPolicy }}
+              env:
+                - name: MY_JOB_IP
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: status.jobIP
+                - name: MY_JOB_NAME
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.name
+                - name: MY_NAMESPACE_NAME
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.namespace
+                - name: MY_DEPLOYMENT_NAME
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.labels['app.kubernetes.io/name']
+                - name: OTEL_SERVICE_NAME
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.labels['app.opentelemetry.io/service-name']
+              {{- if .Values.env }}
+                {{- toYaml .Values.env | nindent 16 }}
               {{- end }}
-            {{- end }}
+              {{- if .Values.containersSecondary }} {{ .Values.containersSecondary | toString | nindent 12 }}
+              {{- end }}
           restartPolicy: OnFailure
