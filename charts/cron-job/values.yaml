@@ -1,0 +1,28 @@
+name: "example-cron-job"
+schedule: "*/5 * * * *"
+# successfulJobsHistoryLimit: 3
+# failedJobsHistoryLimit: 2
+# ttlSecondsAfterFinished: 100
+# concurrencyPolicy: "Replace" # Allow: Permite varias execução, Replace: Se um novo cronjob for iniciado o antigo e substituido, Forbid: So e possivel um novo cronjob após o termino do anterior 
+# suspend: false
+labels:
+  AppVersion: 0.19.0
+serviceAccount:
+  create: true
+  # annotations: {}
+  # name: ""
+app:
+  version: 0.0
+jobTemplate:
+  # backoffLimit: 6
+  # parallelism: 1
+  # completions: 1
+  # activeDeadlineSeconds: 100
+  containers:
+    - name: "example-container"
+      image: "busybox"
+      args: ["echo", "Hello World"]
+      imagePullPolicy: Always
+      # env:                      # Tudo que estiver dentro do env e jogando para o template
+      #   - exemplo: test
+      #     label: testando        

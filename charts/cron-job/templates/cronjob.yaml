@@ -1,0 +1,38 @@
+apiVersion: batch/v1
+kind: cronJob
+metadata:
+  name: {{ template "common.names.fullname" $ }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  schedule: "{{ required "Scheduler not defined" .Values.schedule }}"
+  {{- if .Values.ttlSecondsAfterFinished }}
+  ttlSecondsAfterFinished: {{ .Values.ttlSecondsAfterFinished }}
+  {{- end }}
+  {{- if .Values.successfulJobsHistoryLimit }}
+  successfulJobsHistoryLimit: {{ .Values.successfulJobsHistoryLimit }}
+  {{- end }}
+  {{- if .Values.failedJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ .Values.failedJobsHistoryLimit }}
+  {{- end }}
+  concurrencyPolicy: {{ .Values.concurrencyPolicy | default "Replace" }}
+  suspend: {{ .Values.suspend | default false }}
+  serviceAccountName: {{ include "serviceAccountName" . }}
+  jobTemplate:
+    spec:
+      backoffLimit: {{ .Values.jobTemplate.backoffLimit | default 6 }}
+      parallelism: {{ .Values.jobTemplate.parallelism | default 1 }}
+      completions: {{ .Values.jobTemplate.completions | default 1}}
+      activeDeadlineSeconds: {{ .Values.jobTemplate.activeDeadlineSeconds | default 100 }}
+      template:
+        spec:
+          containers:
+            {{- range .Values.jobTemplate.containers }}
+            - name: {{ required "Container name was not defined" .name }}
+              image: {{ required "Container image was not defined" .image }}
+              args: {{ required "Container args was not defined" .args | toJson }}
+              imagePullPolicy: {{ required "Container imagePullPolicy was not defined" .imagePullPolicy }}
+              {{- if .env }}
+              env: {{ toYaml . | nindent 15 }}
+              {{- end }}
+            {{- end }}
+          restartPolicy: OnFailure
