@@ -43,3 +43,18 @@ containersSecondary: |
     image: "busybox"
     args: ["echo", "Hello World"]
     imagePullPolicy: Always
+
+secret:
+  enable: false
+
+configMap:
+  enable: false
+
+secretProviderClass:
+  enable: false
+
+envFrom:
+  existingConfigMaps:
+    enable: false
+  existingSecrets:
+    enable: false
