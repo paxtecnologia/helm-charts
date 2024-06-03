@@ -4,6 +4,7 @@
         "dockerfile": "Dockerfile",
         "context": ".."
     },
+	"remoteUser": "dev-user",
     // https://tutopal.com/solved-fatal-detected-dubious-ownership-in-repository/
 	"postStartCommand": "git config --global --add safe.directory /workspaces/*",
 	"customizations": {
