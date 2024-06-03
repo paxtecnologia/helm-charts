@@ -32,6 +32,12 @@ env:
 
 securityContext: {}
 
+spec:
+  ttlSecondsAfterFinishedDisabled: false
+  ttlSecondsAfterFinished: 180
+  failedJobsHistoryLimit: 5
+  successfulJobsHistoryLimit: 5
+  
 jobTemplate:
   # backoffLimit: 7
 #   parallelism: 1

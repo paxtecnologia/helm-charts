@@ -5,14 +5,14 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   schedule: "{{ required "Scheduler not defined" .Values.schedule }}"
-  {{- if .Values.ttlSecondsAfterFinished }}
-  ttlSecondsAfterFinished: {{ .Values.ttlSecondsAfterFinished }}
+  {{- if not .Values.spec.ttlSecondsAfterFinishedDisabled }}
+  ttlSecondsAfterFinished: {{ .Values.spec.ttlSecondsAfterFinished }}
   {{- end }}
-  {{- if .Values.successfulJobsHistoryLimit }}
-  successfulJobsHistoryLimit: {{ .Values.successfulJobsHistoryLimit }}
+  {{- if .Values.spec.ttlSecondsAfterFinishedDisabled }}
+  successfulJobsHistoryLimit: {{ .Values.spec.successfulJobsHistoryLimit }}
   {{- end }}
-  {{- if .Values.failedJobsHistoryLimit }}
-  failedJobsHistoryLimit: {{ .Values.failedJobsHistoryLimit }}
+  {{- if .Values.spec.ttlSecondsAfterFinishedDisabled }}
+  failedJobsHistoryLimit: {{ .Values.spec.failedJobsHistoryLimit }}
   {{- end }}
   concurrencyPolicy: {{ .Values.concurrencyPolicy | default "Replace" }}
   suspend: {{ .Values.suspend | default false }}
