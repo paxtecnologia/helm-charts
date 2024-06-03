@@ -19,10 +19,12 @@ spec:
   serviceAccountName: {{ include "serviceAccountName" . }}
   jobTemplate:
     spec:
+      {{- if .Values.jobTemplate }}
       backoffLimit: {{ .Values.jobTemplate.backoffLimit | default 6 }}
       parallelism: {{ .Values.jobTemplate.parallelism | default 1 }}
       completions: {{ .Values.jobTemplate.completions | default 1}}
       activeDeadlineSeconds: {{ .Values.jobTemplate.activeDeadlineSeconds | default 100 }}
+      {{- end }}
       template:
         spec:
           containers:

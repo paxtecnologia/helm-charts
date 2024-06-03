@@ -7,7 +7,7 @@ schedule: "*/5 * * * *"
 # suspend: false
 
 labels:
-  AppVersion: 0.19.0
+  AppVersion: 0.1.0
 
 serviceAccount:
   create: true
@@ -32,11 +32,11 @@ env:
 
 securityContext: {}
 
-jobTemplate: {}
-  # backoffLimit: 6
-  # parallelism: 1
-  # completions: 1
-  # activeDeadlineSeconds: 100
+jobTemplate:
+  # backoffLimit: 7
+#   parallelism: 1
+#   completions: 1
+#   activeDeadlineSeconds: 100
 
 containersSecondary: |
   - name: "example-container"
