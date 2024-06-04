@@ -23,8 +23,8 @@ spec:
   {{- if .Values.spec.ttlSecondsAfterFinishedDisabled }}
   failedJobsHistoryLimit: {{ .Values.spec.failedJobsHistoryLimit }}
   {{- end }}
-  concurrencyPolicy: {{ .Values.concurrencyPolicy | default "Replace" }}
-  suspend: {{ .Values.suspend | default false }}
+  concurrencyPolicy: {{ .Values.concurrencyPolicy }}
+  suspend: {{ .Values.suspend }}
   serviceAccountName: {{ include "serviceAccountName" . }}
   jobTemplate:
     spec:

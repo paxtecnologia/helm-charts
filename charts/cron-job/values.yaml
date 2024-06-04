@@ -1,10 +1,7 @@
 name: "example-cron-job"
 schedule: "*/5 * * * *"
-# successfulJobsHistoryLimit: 3
-# failedJobsHistoryLimit: 2
-# ttlSecondsAfterFinished: 100
-# concurrencyPolicy: "Replace" # Allow: Permite varias execução, Replace: Se um novo cronjob for iniciado o antigo e substituido, Forbid: So e possivel um novo cronjob após o termino do anterior 
-# suspend: false
+concurrencyPolicy: "Replace" # Allow: Permite varias execução, Replace: Se um novo cronjob for iniciado o antigo e substituido, Forbid: So e possivel um novo cronjob após o termino do anterior 
+suspend: false
 
 labels:
   AppVersion: 0.1.0
