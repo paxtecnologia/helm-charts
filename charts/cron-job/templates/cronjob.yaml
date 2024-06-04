@@ -29,10 +29,10 @@ spec:
   jobTemplate:
     spec:
       {{- if .Values.jobTemplate }}
-      backoffLimit: {{ .Values.jobTemplate.backoffLimit | default 6 }}
-      parallelism: {{ .Values.jobTemplate.parallelism | default 1 }}
-      completions: {{ .Values.jobTemplate.completions | default 1}}
-      activeDeadlineSeconds: {{ .Values.jobTemplate.activeDeadlineSeconds | default 100 }}
+      backoffLimit: {{ .Values.jobTemplate.backoffLimit }}
+      parallelism: {{ .Values.jobTemplate.parallelism }}
+      completions: {{ .Values.jobTemplate.completions }}
+      activeDeadlineSeconds: {{ .Values.jobTemplate.activeDeadlineSeconds }}
       {{- end }}
       template:
         metadata:

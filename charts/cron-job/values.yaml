@@ -39,10 +39,10 @@ spec:
   successfulJobsHistoryLimit: 5
   
 jobTemplate:
-  # backoffLimit: 7
-#   parallelism: 1
-#   completions: 1
-#   activeDeadlineSeconds: 100
+  backoffLimit: 5
+  parallelism: 1
+  completions: 1
+  activeDeadlineSeconds: 100
 
 containersSecondary: |
   - name: "example-container"
