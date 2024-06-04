@@ -40,7 +40,7 @@ jobTemplate:
   parallelism: 1
   completions: 1
   activeDeadlineSeconds: 100
-
+  restartPolicy: OnFailure
 containersSecondary: |
   - name: "example-container"
     image: "busybox"
@@ -48,16 +48,22 @@ containersSecondary: |
     imagePullPolicy: Always
 
 secret:
-  enable: false
+  enabled: false  # Add dados
 
 configMap:
-  enable: false
+  enabled: false  # Add dados
+  injectFile:
+    enabled: false
 
 secretProviderClass:
-  enable: false
+  enabled: false
+
+volumes:
+  persistentVolumeClaim:
+    enabled: false
 
 envFrom:
   existingConfigMaps:
-    enable: false
+    enabled: false
   existingSecrets:
-    enable: false
+    enabled: false

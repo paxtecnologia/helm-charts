@@ -109,4 +109,46 @@ spec:
               {{- end }}
               {{- if .Values.containersSecondary }} {{ .Values.containersSecondary | toString | nindent 12 }}
               {{- end }}
-          restartPolicy: OnFailure
+              {{- if or .Values.secretProviderClass.enabled .Values.configMap.injectFile.enabled .Values.volumes.persistentVolumeClaim.enabled }}
+              volumeMounts:
+                {{- range .Values.volumes.persistentVolumeClaim.itens }}
+                - name: {{ .name }}
+                  mountPath: {{ .mountPath }}
+                {{- end }}
+                {{- range .Values.configMap.injectFile.itens }}
+                - name: {{ include "cronjob.names.injectFile.name" ( dict "name" .name "context" $)  }}
+                  mountPath: {{ .destPath }}
+                  readOnly: true
+                {{- end }}
+                {{- if .Values.secretProviderClass.enabled }}
+                {{- range .Values.secretProviderClass.itens }}
+                - name: secrets-store-inline-{{ .provider }}
+                  mountPath: /mnt/secrets-store
+                  readOnly: true
+                {{- end }}
+                {{- end }}
+              {{- end }}
+          {{- if or .Values.secretProviderClass.enabled .Values.configMap.injectFile.enabled .Values.volumes.persistentVolumeClaim.enabled }}
+          volumes:
+            {{- range .Values.volumes.persistentVolumeClaim.itens }}
+            - name: {{ .name }}
+              persistentVolumeClaim:
+                claimName: {{ .claimName }}
+            {{- end }}
+            {{- range .Values.configMap.injectFile.itens }}
+            - name: {{ include "cronjob.names.injectFile.name" ( dict "name" .name "context" $)  }}
+              configMap:
+                name: {{ include "cronjob.names.injectFile.name" ( dict "name" .name "context" $)  }}
+            {{- end }}
+            {{- if .Values.secretProviderClass.enabled }}
+            {{- range .Values.secretProviderClass.itens }}
+            - name: secrets-store-inline-{{ .provider }}
+              csi:
+                driver: secrets-store.csi.k8s.io
+                readOnly: true
+                volumeAttributes:
+                  secretProviderClass: {{ include "cronjob.names.secretProviderClass.name" ( dict "provider" .provider "context" $)  }} 
+            {{- end }}
+            {{- end }}
+          {{- end }}
+          restartPolicy: {{ .Values.jobTemplate.restartPolicy }}
