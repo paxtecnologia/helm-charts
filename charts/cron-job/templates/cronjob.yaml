@@ -3,6 +3,15 @@ kind: cronJob
 metadata:
   name: {{ template "common.names.fullname" $ }}
   namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    {{- include "labels.AppVersion" $ | nindent 4 }}
+    {{- include "labels.kiali" $ | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
 spec:
   schedule: "{{ required "Scheduler not defined" .Values.schedule }}"
   {{- if not .Values.spec.ttlSecondsAfterFinishedDisabled }}
@@ -26,6 +35,18 @@ spec:
       activeDeadlineSeconds: {{ .Values.jobTemplate.activeDeadlineSeconds | default 100 }}
       {{- end }}
       template:
+        metadata:
+          {{- with .Values.podAnnotations }}
+          annotations:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          labels: {{- include "common.labels.standard" . | nindent 12 }}
+            {{- include "labels.AppVersion" $ | nindent 12 }}
+            {{- include "labels.kiali" $ | nindent 12 }}
+            {{- include "labels.opentelemetry" $ | nindent 12 }}
+            {{- if .Values.podLabels }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.podLabels "context" $) | nindent 8 }}
+            {{- end }}
         spec:
           containers:
             - name: {{ template "common.names.fullname" $ }}
@@ -66,7 +87,7 @@ spec:
                 {{- if .Values.secretProviderClass.enabled }}
                 {{- range .Values.secretProviderClass.itens }}
                 - secretRef: 
-                    name: {{ include "ms-generic.names.secretProviderClass.secretName.name" ( dict "provider" .provider "context" $)  }}
+                    name: {{ include "cronjob.names.secretProviderClass.secretName.name" ( dict "provider" .provider "context" $)  }}
                 {{- end }}
                 {{- end }}
                 {{- if .Values.configMap.enabled }}

@@ -45,3 +45,11 @@ app: {{ include "common.names.name" . }}
 version: {{ .Values.app.version | quote }} 
 {{- end -}}
 {{- end -}}
+
+{{/*
+labels opentelemetry
+*/}}
+{{- define "labels.opentelemetry" -}}
+app.opentelemetry.io/service-name: {{ include "common.names.fullname" . }}.{{ .Release.Namespace }}
+{{- end -}}
+
