@@ -21,11 +21,11 @@ image:
   name: "testName"
   tag: "testTag"
 
-env: 
-  - name: TEST_ENV
-    valueFrom:
-      fieldRef:
-        fieldPath: test_env
+# env: 
+#   - name: TEST_ENV
+#     valueFrom:
+#       fieldRef:
+#         fieldPath: test_env
 
 securityContext: {}
 
@@ -36,7 +36,7 @@ spec:
   successfulJobsHistoryLimit: 5
   
 jobTemplate:
-  backoffLimit: 5
+  backoffLimit: 6
   parallelism: 1
   completions: 1
   activeDeadlineSeconds: 100
