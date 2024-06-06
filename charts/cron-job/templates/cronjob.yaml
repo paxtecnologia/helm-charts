@@ -1,0 +1,157 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ template "common.names.fullname" $ }}
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    {{- include "labels.AppVersion" $ | nindent 4 }}
+    {{- include "labels.kiali" $ | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  schedule: "{{ required "Scheduler not defined" .Values.schedule }}"
+  {{- if not .Values.spec.ttlSecondsAfterFinishedDisabled }}
+  ttlSecondsAfterFinished: {{ .Values.spec.ttlSecondsAfterFinished }}
+  {{- end }}
+  {{- if .Values.spec.ttlSecondsAfterFinishedDisabled }}
+  successfulJobsHistoryLimit: {{ .Values.spec.successfulJobsHistoryLimit }}
+  {{- end }}
+  {{- if .Values.spec.ttlSecondsAfterFinishedDisabled }}
+  failedJobsHistoryLimit: {{ .Values.spec.failedJobsHistoryLimit }}
+  {{- end }}
+  concurrencyPolicy: {{ .Values.concurrencyPolicy }}
+  suspend: {{ .Values.suspend }}
+  serviceAccountName: {{ include "serviceAccountName" . }}
+  jobTemplate:
+    spec:
+      {{- if .Values.jobTemplate }}
+      backoffLimit: {{ .Values.jobTemplate.backoffLimit }}
+      parallelism: {{ .Values.jobTemplate.parallelism }}
+      completions: {{ .Values.jobTemplate.completions }}
+      activeDeadlineSeconds: {{ .Values.jobTemplate.activeDeadlineSeconds }}
+      {{- end }}
+      template:
+        metadata:
+          {{- with .Values.podAnnotations }}
+          annotations:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          labels: {{- include "common.labels.standard" . | nindent 12 }}
+            {{- include "labels.AppVersion" $ | nindent 12 }}
+            {{- include "labels.kiali" $ | nindent 12 }}
+            {{- include "labels.opentelemetry" $ | nindent 12 }}
+            {{- if .Values.podLabels }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.podLabels "context" $) | nindent 8 }}
+            {{- end }}
+        spec:
+          containers:
+            - name: {{ template "common.names.fullname" $ }}
+              securityContext:
+                {{- toYaml .Values.securityContext | nindent 16 }}
+              image: "{{ .Values.image.repository }}/{{ .Values.image.name }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+              imagePullPolicy: {{ .Values.image.pullPolicy }}
+              {{- if .Values.image.args }}
+              args: {{ toJson .Values.image.args }}
+              {{- end }}
+              env:
+                - name: MY_POD_IP
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: status.podIP
+                - name: MY_JOB_NAME
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.name
+                - name: MY_NAMESPACE_NAME
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.namespace
+                - name: MY_DEPLOYMENT_NAME
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.labels['app.kubernetes.io/name']
+                - name: OTEL_SERVICE_NAME
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.labels['app.opentelemetry.io/service-name']
+              {{- if .Values.env }}
+                {{- toYaml .Values.env | nindent 16 }}
+              {{- end }}
+              {{- if or .Values.secret.enabled .Values.configMap.enabled .Values.envFrom.existingConfigMaps.enabled .Values.envFrom.existingSecrets.enabled  .Values.secretProviderClass.enabled  }}
+              envFrom:
+                {{- if .Values.secret.enabled }}
+                - secretRef: 
+                    name: {{ template "common.names.fullname" $ }}-helm
+                {{- end }}
+                {{- if .Values.secretProviderClass.enabled }}
+                {{- range .Values.secretProviderClass.itens }}
+                - secretRef: 
+                    name: {{ include "cronjob.names.secretProviderClass.secretName.name" ( dict "provider" .provider "context" $)  }}
+                {{- end }}
+                {{- end }}
+                {{- if .Values.configMap.enabled }}
+                - configMapRef:
+                    name: {{ template "common.names.fullname" $ }}-helm
+                {{- end }}
+                {{- if .Values.envFrom.existingSecrets.enabled }}
+                {{- range .Values.envFrom.existingSecrets.list }}
+                - secretRef:
+                    name:  {{ . }}
+                {{- end }}
+                {{- end }}
+                {{- if .Values.envFrom.existingConfigMaps.enabled }}
+                {{- range .Values.envFrom.existingConfigMaps.list }}
+                - configMapRef:
+                    name: {{ . }}
+                {{- end }}
+                {{- end }}
+              {{- end }}
+              {{- if .Values.containersSecondary }} {{ .Values.containersSecondary | toString | nindent 12 }}
+              {{- end }}
+              {{- if or .Values.secretProviderClass.enabled .Values.configMap.injectFile.enabled .Values.volumes.persistentVolumeClaim.enabled }}
+              volumeMounts:
+                {{- range .Values.volumes.persistentVolumeClaim.itens }}
+                - name: {{ .name }}
+                  mountPath: {{ .mountPath }}
+                {{- end }}
+                {{- range .Values.configMap.injectFile.itens }}
+                - name: {{ include "cronjob.names.injectFile.name" ( dict "name" .name "context" $)  }}
+                  mountPath: {{ .destPath }}
+                  readOnly: true
+                {{- end }}
+                {{- if .Values.secretProviderClass.enabled }}
+                {{- range .Values.secretProviderClass.itens }}
+                - name: secrets-store-inline-{{ .provider }}
+                  mountPath: /mnt/secrets-store
+                  readOnly: true
+                {{- end }}
+                {{- end }}
+              {{- end }}
+          {{- if or .Values.secretProviderClass.enabled .Values.configMap.injectFile.enabled .Values.volumes.persistentVolumeClaim.enabled }}
+          volumes:
+            {{- range .Values.volumes.persistentVolumeClaim.itens }}
+            - name: {{ .name }}
+              persistentVolumeClaim:
+                claimName: {{ .claimName }}
+            {{- end }}
+            {{- range .Values.configMap.injectFile.itens }}
+            - name: {{ include "cronjob.names.injectFile.name" ( dict "name" .name "context" $)  }}
+              configMap:
+                name: {{ include "cronjob.names.injectFile.name" ( dict "name" .name "context" $)  }}
+            {{- end }}
+            {{- if .Values.secretProviderClass.enabled }}
+            {{- range .Values.secretProviderClass.itens }}
+            - name: secrets-store-inline-{{ .provider }}
+              csi:
+                driver: secrets-store.csi.k8s.io
+                readOnly: true
+                volumeAttributes:
+                  secretProviderClass: {{ include "cronjob.names.secretProviderClass.name" ( dict "provider" .provider "context" $)  }} 
+            {{- end }}
+            {{- end }}
+          {{- end }}
+          restartPolicy: {{ .Values.jobTemplate.restartPolicy }}

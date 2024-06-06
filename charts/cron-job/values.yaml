@@ -1,0 +1,69 @@
+schedule: "*/5 * * * *"
+concurrencyPolicy: "Replace" # Allow: Permite varias execução, Replace: Se um novo cronjob for iniciado o antigo e substituido, Forbid: So e possivel um novo cronjob após o termino do anterior 
+suspend: false
+
+labels:
+  AppVersion: 0.1.0
+
+serviceAccount:
+  create: true
+  # annotations: {}
+  # name: ""
+
+app:
+  version: 0.0
+
+
+image:
+  pullPolicy: IfNotPresent
+  repository: ""
+  name: ""
+  tag: ""
+  # args: []
+
+# env: 
+#   - name: TEST_ENV
+#     valueFrom:
+#       fieldRef:
+#         fieldPath: test_env
+
+securityContext: {}
+
+spec:
+  ttlSecondsAfterFinishedDisabled: false
+  ttlSecondsAfterFinished: 180
+  failedJobsHistoryLimit: 2
+  successfulJobsHistoryLimit: 1
+  
+jobTemplate:
+  backoffLimit: 2
+  parallelism: 1
+  completions: 1
+  activeDeadlineSeconds: 100
+  restartPolicy: OnFailure
+# containersSecondary: |
+#   - name: ""
+#     image: ""
+#     args: []
+#     imagePullPolicy: 
+
+secret:
+  enabled: false  # Add dados
+
+configMap:
+  enabled: false  # Add dados
+  injectFile:
+    enabled: false
+
+secretProviderClass:
+  enabled: false
+
+volumes:
+  persistentVolumeClaim:
+    enabled: false
+
+envFrom:
+  existingConfigMaps:
+    enabled: false
+  existingSecrets:
+    enabled: false
