@@ -10,7 +10,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Configurar ambiente
         run: |
@@ -25,11 +25,11 @@ jobs:
  
     strategy:
       matrix:
-        path: [charts/k8s-cfg-base, charts/ms-generic]                          # Passar os diretorios que vão ser verificado a versão das dependencias
+        path: [charts/k8s-cfg-base, charts/ms-generic, charts/cron-job]                          # Passar os diretorios que vão ser verificado a versão das dependencias
       
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       
       - name: Detail Process
         run: | 
