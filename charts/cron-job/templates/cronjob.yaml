@@ -54,6 +54,9 @@ spec:
                 {{- toYaml .Values.securityContext | nindent 16 }}
               image: "{{ .Values.image.repository }}/{{ .Values.image.name }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
               imagePullPolicy: {{ .Values.image.pullPolicy }}
+              {{- if .Values.image.args }}
+              args: {{ toJson .Values.image.args }}
+              {{- end }}
               env:
                 - name: MY_POD_IP
                   valueFrom:

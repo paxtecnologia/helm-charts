@@ -1,4 +1,3 @@
-name: "example-cron-job"
 schedule: "*/5 * * * *"
 concurrencyPolicy: "Replace" # Allow: Permite varias execução, Replace: Se um novo cronjob for iniciado o antigo e substituido, Forbid: So e possivel um novo cronjob após o termino do anterior 
 suspend: false
@@ -17,9 +16,10 @@ app:
 
 image:
   pullPolicy: IfNotPresent
-  repository: "testRepo"
-  name: "testName"
-  tag: "testTag"
+  repository: ""
+  name: ""
+  tag: ""
+  # args: []
 
 # env: 
 #   - name: TEST_ENV
@@ -32,20 +32,20 @@ securityContext: {}
 spec:
   ttlSecondsAfterFinishedDisabled: false
   ttlSecondsAfterFinished: 180
-  failedJobsHistoryLimit: 5
-  successfulJobsHistoryLimit: 5
+  failedJobsHistoryLimit: 2
+  successfulJobsHistoryLimit: 1
   
 jobTemplate:
-  backoffLimit: 6
+  backoffLimit: 2
   parallelism: 1
   completions: 1
   activeDeadlineSeconds: 100
   restartPolicy: OnFailure
-containersSecondary: |
-  - name: "example-container"
-    image: "busybox"
-    args: ["echo", "Hello World"]
-    imagePullPolicy: Always
+# containersSecondary: |
+#   - name: ""
+#     image: ""
+#     args: []
+#     imagePullPolicy: 
 
 secret:
   enabled: false  # Add dados
