@@ -1,5 +1,22 @@
 apiVersion: v1
 entries:
+  cronjob-deploy:
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2024-06-06T18:49:35.278908883Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    description: A Helm chart for Kubernetes
+    digest: 00ef2afff8cd79fe5293d3d2a53fed6a8237bf9ebd5bd567126c436c0655dd36
+    name: cronjob-deploy
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/cronjob-deploy-0.1.0/cronjob-deploy-0.1.0.tgz
+    version: 0.1.0
   k8s-cfg-base:
   - apiVersion: v2
     appVersion: 1.16.0
@@ -1252,4 +1269,4 @@ entries:
     urls:
     - https://github.com/paxtecnologia/helm-charts/releases/download/ms-nginx-0.1.1/ms-nginx-0.1.1.tgz
     version: 0.1.1
-generated: "2024-05-28T20:02:57.401953334Z"
+generated: "2024-06-06T18:49:35.279021684Z"
