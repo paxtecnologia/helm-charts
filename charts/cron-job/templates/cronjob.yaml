@@ -14,14 +14,11 @@ metadata:
   {{- end }}
 spec:
   schedule: "{{ required "Scheduler not defined" .Values.schedule }}"
-  {{- if not .Values.spec.ttlSecondsAfterFinishedDisabled }}
-  ttlSecondsAfterFinished: {{ .Values.spec.ttlSecondsAfterFinished }}
+  {{- if .Values.clearJobHistory.ttlSecondsAfterFinishedDisabled }}
+  successfulJobsHistoryLimit: {{ .Values.clearJobHistory.successfulJobsHistoryLimit }}
   {{- end }}
-  {{- if .Values.spec.ttlSecondsAfterFinishedDisabled }}
-  successfulJobsHistoryLimit: {{ .Values.spec.successfulJobsHistoryLimit }}
-  {{- end }}
-  {{- if .Values.spec.ttlSecondsAfterFinishedDisabled }}
-  failedJobsHistoryLimit: {{ .Values.spec.failedJobsHistoryLimit }}
+  {{- if .Values.clearJobHistory.ttlSecondsAfterFinishedDisabled }}
+  failedJobsHistoryLimit: {{ .Values.clearJobHistory.failedJobsHistoryLimit }}
   {{- end }}
   concurrencyPolicy: {{ .Values.concurrencyPolicy }}
   suspend: {{ .Values.suspend }}
@@ -29,6 +26,9 @@ spec:
   jobTemplate:
     spec:
       {{- if .Values.jobTemplate }}
+      {{- if not .Values.clearJobHistory.ttlSecondsAfterFinishedDisabled }}
+      ttlSecondsAfterFinished: {{ .Values.clearJobHistory.ttlSecondsAfterFinished }}
+      {{- end }}
       backoffLimit: {{ .Values.jobTemplate.backoffLimit }}
       parallelism: {{ .Values.jobTemplate.parallelism }}
       completions: {{ .Values.jobTemplate.completions }}
@@ -56,6 +56,9 @@ spec:
               imagePullPolicy: {{ .Values.image.pullPolicy }}
               {{- if .Values.image.args }}
               args: {{ toJson .Values.image.args }}
+              {{- end }}
+              {{- if .Values.image.command }}
+              command: {{ toJson .Values.image.command }}
               {{- end }}
               env:
                 - name: MY_POD_IP
