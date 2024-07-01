@@ -1,5 +1,5 @@
 schedule: "*/5 * * * *"
-concurrencyPolicy: "Replace" # Allow: Permite varias execução, Replace: Se um novo cronjob for iniciado o antigo e substituido, Forbid: So e possivel um novo cronjob após o termino do anterior 
+concurrencyPolicy: "Replace" # Allow: Permite varias execução, Replace: Se um novo cronjob for iniciado o antigo e substituido, Forbid: So e possível um novo cronjob após o termino do anterior 
 suspend: false
 
 labels:
@@ -20,6 +20,7 @@ image:
   name: ""
   tag: ""
   # args: []
+  # command: []
 
 # env: 
 #   - name: TEST_ENV
@@ -29,7 +30,9 @@ image:
 
 securityContext: {}
 
-spec:
+clearJobHistory:
+# Se `ttlSecondsAfterFinishedDisabled` for False, a função irá limpar os jobs já executados a cada intervalo de tempo.
+# Se `ttlSecondsAfterFinishedDisabled` for True, a função irá manter um histórico do número de execuções bem-sucedidas e falhas.
   ttlSecondsAfterFinishedDisabled: false
   ttlSecondsAfterFinished: 180
   failedJobsHistoryLimit: 2
