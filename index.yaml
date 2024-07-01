@@ -20,6 +20,22 @@ entries:
   cronjob-generic:
   - apiVersion: v2
     appVersion: 0.1.0
+    created: "2024-07-01T13:39:49.710039361Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    description: A Helm chart for Kubernetes
+    digest: 28248ab681335beefb77d868551b24ec183510483cddf7d68bf2890b59d7feb4
+    name: cronjob-generic
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/cronjob-generic-0.1.1/cronjob-generic-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: 0.1.0
     created: "2024-07-01T13:38:55.411108852Z"
     dependencies:
     - name: common
@@ -1286,4 +1302,4 @@ entries:
     urls:
     - https://github.com/paxtecnologia/helm-charts/releases/download/ms-nginx-0.1.1/ms-nginx-0.1.1.tgz
     version: 0.1.1
-generated: "2024-07-01T13:38:55.41124091Z"
+generated: "2024-07-01T13:39:49.710239063Z"
