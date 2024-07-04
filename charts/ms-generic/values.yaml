@@ -36,7 +36,10 @@ fullnameOverride: ""
 
 env:
   enabled: false
-  data: {}
+  data: []
+  # data:
+  #   - name: NAME
+  #     value: VALUE
 
 secret:
   enabled: false
