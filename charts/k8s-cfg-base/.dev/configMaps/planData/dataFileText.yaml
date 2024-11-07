@@ -1,0 +1,8 @@
+configMaps:
+  planData:
+    dataFile:
+      namespaces:
+        - namespaces1
+      data:
+        fileName: |
+          fileValeuText

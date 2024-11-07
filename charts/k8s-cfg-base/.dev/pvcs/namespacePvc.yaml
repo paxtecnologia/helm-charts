@@ -1,0 +1,11 @@
+pvcs:
+  pvcSingleNamespace:
+    namespace: singleNamespace
+    storageClassName: nfs-shd
+    accessModes: ReadWriteMany
+    resources:
+      requests:
+        storage: 10G
+  pvcSingleNamespacePvName:
+    namespace: singleNamespace
+    volumeName: "pvName"

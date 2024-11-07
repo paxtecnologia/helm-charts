@@ -1,0 +1,33 @@
+{{- $pvs := .Values.pvs }}
+{{- $config := dict }}
+
+{{- range $pvName, $conf := $pvs }}
+  {{- if $conf.namespaces }}
+    {{- range $index, $namespace := $conf.namespaces }}
+      {{- $mergedName := printf "%s.%s" $pvName $namespace }}
+      {{- $_ := set $conf "name" $mergedName }}
+      {{- $_ := set $config $mergedName $namespace }}
+      {{- $_ := set $config $mergedName $conf }}
+    {{- end }}
+  {{- else }}
+    {{- $_ := set $conf "name" $pvName }}
+    {{- $_ := set $config $pvName $conf }}
+  {{- end }}
+{{- end }}
+{{- range $pvKey, $conf := $config }}
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ $conf.name }}
+spec:
+  capacity:
+    storage: {{ default "8Gi" $conf.storage }}
+  volumeMode: {{ default "Filesystem" $conf.volumeMode }}
+  accessModes:
+    - {{ default "ReadWriteMany" $conf.accessModes }} 
+  persistentVolumeReclaimPolicy: {{ default "Retain" $conf.persistentVolumeReclaimPolicy }}
+  {{- with $conf.spec }}
+  {{- tpl (toYaml .) $ | nindent 2 }}
+  {{- end }}  
+{{- end}}

@@ -1,0 +1,57 @@
+{{- $pvcs := .Values.pvcs }}
+{{- $config := dict }}
+
+{{- range $pvc, $conf := $pvcs }}
+  {{- if $conf.namespace }}
+    {{- $_ := set $conf "name" $pvc }}
+    {{- $_ := set $conf "namespace" $conf.namespace }}
+    {{- $mergedName := printf "%s.%s" $pvc $conf.namespace }}
+    {{- $_ := set $config $mergedName $conf }}
+  {{- end }}
+  {{- range $index, $namespace := $conf.namespaces }}
+    {{- $_ := set $conf "name" $pvc }}
+    {{- $_ := set $conf "namespace" $namespace }}
+    {{- if $conf.volumeName }}
+      {{- $mergedVolumeName := printf "%s.%s" $conf.volumeName $namespace }}
+      {{- $_ := set $conf "volumeName" $mergedVolumeName }}
+    {{- end }}
+    {{- $mergedName := printf "%s.%s" $pvc $namespace }}
+    {{- $_ := set $config $mergedName $conf }}
+  {{- end }}
+{{- end }}
+
+
+{{- range $pvcNameKey, $conf := $config }}
+{{- if not $conf.resources }}
+  {{- $_ := set $conf "resources" dict }}
+{{- end }}
+
+{{- if not $conf.resources.requests }}
+  {{- $_ := set $conf.resources "requests" dict }}
+{{- end }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ $conf.name }}
+  namespace: {{ $conf.namespace }}
+  labels:
+    release/name: "{{ $.Release.Name }}"
+    release/revision: "{{ $.Release.Revision }}"
+spec:
+  accessModes:
+    - {{ default "ReadWriteMany" $conf.accessModes }} 
+  resources:
+    requests:
+      storage: {{ default "8Gi" $conf.resources.requests.storage }}
+  {{- with $conf.storageClassName }}
+  storageClassName: {{ . }}
+  {{ end }}
+  {{- with $conf.volumeName }}
+  volumeName: {{ . }}
+  {{ end }}
+  volumeMode: {{ default "Filesystem" $conf.volumeMode }} 
+  {{- with $conf.spec }}
+  {{- tpl (toYaml .) $ | nindent 2 }}
+  {{- end }} 
+{{- end}}

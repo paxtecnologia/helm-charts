@@ -1,0 +1,9 @@
+pvs:
+  pv-efs-1:
+    namespaces:
+      - namespace1
+      - namespace2
+    spec:
+      nfs:
+        server: 10.10.10.10
+        path: /data/efs/1

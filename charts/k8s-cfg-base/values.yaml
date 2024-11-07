@@ -1,31 +1,60 @@
-secret:
-  basic:
-    opaque: []
-#    - name: NOME_DA_SECRET
-#      namespaces:  # LISTA_DAS_NAMESPACES
-#        - NOME_DA_NAMESPACE
-#      data:
-#        KEY: VALUE
-  dockerconfigjson: []
+secrets:
+  opaque: {}
+    # NOME_DA_SECRET:
+    #   namespaces:  # LISTA_DAS_NAMESPACES
+    #     - NOME_DA_NAMESPACE
+    #   data:
+    #     KEY: VALUE
+  dockerconfigjson: {}
+    # NOME_DA_SECRET:
+    #   namespaces:  # LISTA_DAS_NAMESPACES
+    #     - NOME_DA_NAMESPACE
+    #   data:
+    #     KEY: VALUE
 
 
-configMap:
-  basic: []
-#    - name: NOME_DO_CONFIGMAP
-#      namespaces:  # LISTA_DAS_NAMESPACES
-#        - NOME_DA_NAMESPACE
-#      data:
-#        KEY: VALUE
+configMaps:
+  planData: {}
+    # NOME_DO_CONFIGMAP: 
+    #   namespaces:  # LISTA_DAS_NAMESPACES
+    #     - NOME_DA_NAMESPACE
+    #   data:
+    #     KEY: VALUE
 
-pvcs: []
-#  - name: NOME_DO_PVC
-#    namespace: NOME_DA_NAMESPACE
-#    accessModes: ReadWriteOnce|ReadOnlyMany|ReadWriteMany|ReadWriteOncePod
-#    resources:
-#      requests:
-#        storage: 50Gi
-#    storageClassName: NOME_DO_STORAGECLASS
-#    volumeMode: Filesystem|Block
+pvs: {}
+  # NOME_DO_PV # PV puro
+  #   spec: # DEFINICAO DA SPEC
+  #     nfs:
+  #       server: <IP>
+  #       path: <PATH>
+  # NOME_DO_PV # Concatena a namespace ao nome do PV
+  #   namespaces: # LISTA_DAS_NAMESPACES
+  #     - NOME_DA_NAMESPACE
+  #   spec: # DEFINICAO DA SPEC
+  #     nfs:
+  #       server: <IP>
+  #       path: <PATH>
+  #  
+
+pvcs: {}
+  # NOME_DO_PVC: # PVC Puro
+  #   namespace: NOME_DA_NAMESPACE
+  #   accessModes: ReadWriteOnce|ReadOnlyMany|ReadWriteMany|ReadWriteOncePod
+  #   resources:
+  #     requests:
+  #       storage: 50Gi
+  #   storageClassName: NOME_DO_STORAGECLASS
+  #   volumeMode: Filesystem|Block
+  # NOME_DO_PVC: # PVC Puro
+  #   namespace: NOME_DA_NAMESPACE
+  #   volumeName: NOME_DO_VOLUME
+  # NOME_DO_PVC: # Concatena a namespace ao nome do PVC
+  #   namespaces:  # LISTA_DAS_NAMESPACES
+  #     - NOME_DA_NAMESPACE
 
 opentelemetry:
   instrumentation: {}
+   # namespaces: # LISTA_DAS_NAMESPACES
+   #  - NOME_DA_NAMESPACE
+   # defaultEndpoint: otel-collector.l4-mntg-opentelemetry.svc.cluster.local
+   # traceidratio: 1

@@ -1,0 +1,12 @@
+pvs:
+  pv-efs-1:
+    spec:
+      nfs:
+        server: 10.10.10.10
+        path: /data/efs/1
+  pv-efs-2:
+    spec:
+      nfs:
+        server: 20.20.20.20
+        path: /data/efs/2
+  pv-efs-3: {}

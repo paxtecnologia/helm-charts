@@ -1,0 +1,20 @@
+{{- if .Values.configMaps }}
+{{- $config := .Values.configMaps.planData }}
+{{- range $confKey, $confValue := $config }}
+{{- range $j, $namespace := $confValue.namespaces }}
+{{- if $confValue.data }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $confKey }}
+  namespace: {{ $namespace }}
+  labels:
+    release/name: "{{ $.Release.Name }}"
+    release/revision: "{{ $.Release.Revision }}"
+data:
+  {{- toYaml $confValue.data | nindent 2 }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
