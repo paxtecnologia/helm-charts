@@ -3,4 +3,4 @@ opentelemetry:
     namespaces: # LISTA_DAS_NAMESPACES
       - NOME_DA_NAMESPACE
     defaultEndpoint: otel-collector.l4-mntg-opentelemetry.svc.cluster.local
-    traceidratio: 1
+    traceidratio: "1"

@@ -16,7 +16,7 @@ spec:
     - jaeger
   sampler:
     type: parentbased_traceidratio
-    argument: {{ default "8Gi" $config.traceidratio }}
+    argument: "{{ default 0.25 $config.traceidratio }}"
   python:
     env:
       # Required if endpoint is set to 4317.
