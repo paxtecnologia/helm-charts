@@ -10,10 +10,10 @@ spec:
   exporter:
     endpoint: http://{{ $config.defaultEndpoint }}:4317
     retrySettings:
-      maxAttempts: {{ .Values.opentelemetry.instrumentation.retry.maxAttempts }}
-      initialInterval: {{ .Values.opentelemetry.instrumentation.retry.initialInterval }}
-      maxInterval: {{ .Values.opentelemetry.instrumentation.retry.maxInterval }}
-      timeout: {{ .Values.opentelemetry.instrumentation.retry.timeout }}
+      maxAttempts: {{ $config.retry.maxAttempts }}
+      initialInterval: {{ $config.retry.initialInterval }}
+      maxInterval: {{ $config.retry.maxInterval }}
+      timeout: {{ $config.retry.timeout }}
   propagators:
     - tracecontext
     - baggage
