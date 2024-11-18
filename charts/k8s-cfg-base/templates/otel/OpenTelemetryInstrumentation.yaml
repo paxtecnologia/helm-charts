@@ -9,6 +9,11 @@ metadata:
 spec:
   exporter:
     endpoint: http://{{ $config.defaultEndpoint }}:4317
+    retrySettings:
+      maxAttempts: {{ .Values.opentelemetry.instrumentation.retry.maxAttempts }}
+      initialInterval: {{ .Values.opentelemetry.instrumentation.retry.initialInterval }}
+      maxInterval: {{ .Values.opentelemetry.instrumentation.retry.maxInterval }}
+      timeout: {{ .Values.opentelemetry.instrumentation.retry.timeout }}
   propagators:
     - tracecontext
     - baggage

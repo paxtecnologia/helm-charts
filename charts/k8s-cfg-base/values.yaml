@@ -53,8 +53,12 @@ pvcs: {}
   #     - NOME_DA_NAMESPACE
 
 opentelemetry:
-  instrumentation: {}
-   # namespaces: # LISTA_DAS_NAMESPACES
-   #  - NOME_DA_NAMESPACE
-   # defaultEndpoint: otel-collector.l4-mntg-opentelemetry.svc.cluster.local
-   # traceidratio: 1
+  instrumentation:
+    namespaces: []
+    defaultEndpoint: otel-collector.l4-mntg-opentelemetry.svc.cluster.local
+    traceidratio: 1
+    retry:
+      maxAttempts: 9999  # Tentativas ilimitadas (valor muito alto)
+      initialInterval: 10s
+      maxInterval: 10s 
+      timeout: 10s
