@@ -29,6 +29,9 @@ serviceMonitor:
   enabled: true
   interval: 1m
   url: "/"
+  port: http-app
+  scheme: http
+  scrapeTimeout: 30s
 
 imagePullSecrets: []
 nameOverride: ""

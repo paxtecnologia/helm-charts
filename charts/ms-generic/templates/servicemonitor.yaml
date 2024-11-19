@@ -15,9 +15,9 @@ spec:
     - honorLabels: true
       interval: {{ .Values.serviceMonitor.interval }}
       path: {{ .Values.serviceMonitor.url }}
-      port: app
-      scheme: http
-      scrapeTimeout: 30s
+      port: {{ .Values.serviceMonitor.port }}
+      scheme: {{ .Values.serviceMonitor.scheme }}
+      scrapeTimeout: {{ .Values.serviceMonitor.scrapeTimeout }}
   namespaceSelector:
     matchNames:
       - {{ template "common.names.namespace" $ }}
