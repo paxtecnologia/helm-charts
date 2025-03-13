@@ -171,6 +171,9 @@ spec:
         - name: {{ $key }} 
           configMap:
             name: {{ include "ms-generic.names.injectFile.name" ( dict "name" $key "context" $)  }}
+          {{- if $value.mode }}
+          defaultMode: {{ $value.mode}}  
+          {{- end }}  
         {{- end }}
         {{- if .Values.secretProviderClass.enabled }}
         {{- range .Values.secretProviderClass.itens }}
