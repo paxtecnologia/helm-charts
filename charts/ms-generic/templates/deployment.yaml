@@ -135,7 +135,7 @@ spec:
               mountPath: {{ .mountPath }}
             {{- end }}
             {{- range $key, $value := .Values.configMap.injectFile.itens }}
-            - name: {{ include "ms-generic.names.injectFile.name" ( dict "name" $key "context" $)  }}
+            - name: {{ $key }} 
               mountPath: {{ $value.destPath }}
               subPath: {{ $value.name }}
               readOnly: true
@@ -168,7 +168,7 @@ spec:
             claimName: {{ .claimName }}
         {{- end }}
         {{- range $key, $value := .Values.configMap.injectFile.itens }}
-        - name: {{ include "ms-generic.names.injectFile.name" ( dict "name" $key "context" $)  }}
+        - name: {{ $key }} 
           configMap:
             name: {{ include "ms-generic.names.injectFile.name" ( dict "name" $key "context" $)  }}
         {{- end }}
