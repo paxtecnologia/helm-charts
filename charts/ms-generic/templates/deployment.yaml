@@ -134,9 +134,10 @@ spec:
             - name: {{ .name }}
               mountPath: {{ .mountPath }}
             {{- end }}
-            {{- range .Values.configMap.injectFile.itens }}
-            - name: {{ include "ms-generic.names.injectFile.name" ( dict "name" .name "context" $)  }}
-              mountPath: {{ .destPath }}
+            {{- range $key, $value := .Values.configMap.injectFile.itens }}
+            - name: {{ include "ms-generic.names.injectFile.name" ( dict "name" $key "context" $)  }}
+              mountPath: {{ $value.destPath }}
+              subPath: {{ $value.name }}
               readOnly: true
             {{- end }}
             {{- if .Values.secretProviderClass.enabled }}
@@ -166,10 +167,10 @@ spec:
            persistentVolumeClaim:
             claimName: {{ .claimName }}
         {{- end }}
-        {{- range .Values.configMap.injectFile.itens }}
-        - name: {{ include "ms-generic.names.injectFile.name" ( dict "name" .name "context" $)  }}
+        {{- range $key, $value := .Values.configMap.injectFile.itens }}
+        - name: {{ include "ms-generic.names.injectFile.name" ( dict "name" $key "context" $)  }}
           configMap:
-            name: {{ include "ms-generic.names.injectFile.name" ( dict "name" .name "context" $)  }}
+            name: {{ include "ms-generic.names.injectFile.name" ( dict "name" $key "context" $)  }}
         {{- end }}
         {{- if .Values.secretProviderClass.enabled }}
         {{- range .Values.secretProviderClass.itens }}

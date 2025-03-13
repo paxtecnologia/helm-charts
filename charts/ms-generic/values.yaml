@@ -16,7 +16,7 @@ image:
 
 container:
   port: 80
-  extra: 
+  extra:
     ports: []
 
 probe:
@@ -35,9 +35,10 @@ serviceMonitor:
   scheme: http
   scrapeTimeout: 30s
 
-imagePullSecrets: 
-  - name: regcred
-  
+## não pode ter um default
+imagePullSecrets:
+  []
+  # - name: regcred
 nameOverride: ""
 fullnameOverride: ""
 
@@ -61,15 +62,18 @@ configMap:
     # key: value
   injectFile:
     enabled: false
-    itens: []
-    # - name: application.yaml
-    #   content: |-
-    #     abc: xyz
-    #   destPath: /app
-    # - name: application2.yaml
-    #   content: |-
-    #     abc: xyz
-    #   destPath: /app
+    itens:
+      {}
+      # application:
+      #   name: application.yaml
+      #   content: |-
+      #      abc: xyz
+      #   destPath: /app/application.yaml
+      # application2:
+      #   name: application2.yaml
+      #   content: |-
+      #     abc: xyz
+      #   destPath: /app/application2.yaml
 
 volumes:
   persistentVolumeClaim:
@@ -131,7 +135,8 @@ service:
   port: 80
   #nodePort: 30000
   # Permite o inject direto de configurações nas portas dos service
-  extra: {}
+  extra:
+    {}
     # ports:
 
 ingress:

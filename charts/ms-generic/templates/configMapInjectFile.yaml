@@ -1,10 +1,10 @@
 {{- if .Values.configMap.injectFile.enabled }}
-{{- range .Values.configMap.injectFile.itens }}
+{{- range $key, $value := .Values.configMap.injectFile.itens }}
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "ms-generic.names.injectFile.name" ( dict "name" .name "context" $)  }}
+  name: {{ include "ms-generic.names.injectFile.name" ( dict "name" $key "context" $)  }}
   namespace: {{ template "common.names.namespace" $ }}
   labels: {{- include "common.labels.standard" $ | nindent 4 }}
     {{- if $.Values.commonLabels }}
@@ -16,7 +16,7 @@ metadata:
   annotations: {{- include "common.tplvalues.render" ( dict "value" $.Values.commonAnnotations "context" $ ) | nindent 4 }}
   {{- end }}
 data:
-  {{ .name }}: |-
-{{ (printf "%s" .content) | indent 4 }}
+  {{ $value.name }}: |-
+{{ (printf "%s" $value.content) | indent 4 }}
 {{- end }}
 {{- end }}
