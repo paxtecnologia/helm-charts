@@ -21,10 +21,10 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http-app
+    - name: http-app
+      port: {{ .Values.service.port }}
       protocol: TCP
-      name: http-app
+      targetPort: http-app
       {{- if .Values.service.nodePort }}
       nodePort: {{ .Values.service.nodePort }}
       {{- end }}

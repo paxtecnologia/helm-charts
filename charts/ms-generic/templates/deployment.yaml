@@ -103,6 +103,11 @@ spec:
             - name: http-app
               containerPort: {{ .Values.container.port }}
               protocol: TCP
+            {{- range .Values.container.extra.ports }}
+            - name: {{ .name }}
+              containerPort: {{ .port }}
+              protocol: {{ default "TCP" .protocol }}
+            {{- end }}
           livenessProbe:
             httpGet:
               path: {{ or .Values.probe.liveness .Values.probe.path }}

@@ -1,0 +1,8 @@
+service:
+  extra:
+    ports:
+      - port: 443
+        targetPort: https-app
+        protocol: TCP
+        name: https-app
+      
