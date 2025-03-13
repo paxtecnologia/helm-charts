@@ -61,20 +61,19 @@ configMap:
     {}
     # key: value
   injectFile:
-    enabled: true
+    enabled: false
     itens:
-      # {}
-      application:
-        name: application.yaml
-        mode: 555
-        content: |-
-           abc: xyz
-        destPath: /app/application.yaml
-      application2:
-        name: application2.yaml
-        content: |-
-          abc: xyz
-        destPath: /app/application2.yaml
+      {}
+      # application:
+      #   name: application.yaml
+      #   content: |-
+      #      abc: xyz
+      #   destPath: /app/application.yaml
+      # application2:
+      #   name: application2.yaml
+      #   content: |-
+      #     abc: xyz
+      #   destPath: /app/application2.yaml
 
 volumes:
   persistentVolumeClaim:
