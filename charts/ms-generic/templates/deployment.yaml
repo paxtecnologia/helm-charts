@@ -142,7 +142,7 @@ spec:
             {{- if .Values.secretProviderClass.enabled }}
             {{- range .Values.secretProviderClass.itens }}
             - name: secrets-store-inline-{{ .provider }}
-              mountPath: /mnt/secrets-store
+              mountPath: {{ default "/mnt/secrets-store" .mountPath }}
               readOnly: true
             {{- end }}
             {{- end }}

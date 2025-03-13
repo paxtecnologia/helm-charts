@@ -35,7 +35,9 @@ serviceMonitor:
   scheme: http
   scrapeTimeout: 30s
 
-imagePullSecrets: []
+imagePullSecrets: 
+  - name: regcred
+  
 nameOverride: ""
 fullnameOverride: ""
 
@@ -131,10 +133,6 @@ service:
   # Permite o inject direto de configurações nas portas dos service
   extra: {}
     # ports:
-
-
-
-
 
 ingress:
   enabled: false
