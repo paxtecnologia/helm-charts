@@ -1,0 +1,7 @@
+service:
+  extra: 
+    service:
+      name: bananinha
+      type: ClusterIP
+      port: 80
+      nodePort: 30000

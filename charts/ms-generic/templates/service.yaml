@@ -31,4 +31,46 @@ spec:
     {{- if .Values.service.extra.ports }}
     {{- toYaml .Values.service.extra.ports | nindent 4 }}
     {{- end }}
-  selector: {{- include "common.labels.matchLabels" $ | nindent 6 }}    
+  selector: {{- include "common.labels.matchLabels" $ | nindent 6 }}
+
+---
+{{- if .Values.service.extra }}
+{{- if .Values.service.extra.service }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.service.extra.service.name }}
+  namespace: {{ template "common.names.namespace" $ }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    {{- include "ms-generic.labels.AppVersion" $ | nindent 4 }}
+    {{- include "ms-generic.labels.kiali" $ | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.commonAnnotations }}
+  annotations:
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" (dict "value" .Values.commonAnnotations "context" $) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.service.annotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.service.annotations "context" $) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  type: {{ .Values.service.extra.service.type }}
+  ports:
+    - name: http-app
+      port: {{ .Values.service.extra.service.port }}
+      protocol: TCP
+      targetPort: http-app
+      {{- if .Values.service.extra.service.nodePort }}
+      nodePort: {{ .Values.service.extra.service.nodePort }}
+      {{- end }}
+    {{- if .Values.service.extra.service.extra }}
+    {{- if .Values.service.extra.service.extra.ports }}
+    {{- toYaml .Values.service.extra.service.extra.ports | nindent 4 }}
+    {{- end }}
+    {{- end }}
+  selector: {{- include "common.labels.matchLabels" $ | nindent 6 }}
+{{- end }}
+{{- end }}
