@@ -36,9 +36,9 @@ spec:
         {{- end }}
       secretName: {{ .secretName }}
     {{- end }}
-  {{- end }}
   {{- if .Values.ingress.tls.extra }}
     {{- toYaml .Values.ingress.tls.extra | nindent 4 }}
+  {{- end }}
   {{- end }}
   rules:
     {{- range .Values.ingress.hosts }}
