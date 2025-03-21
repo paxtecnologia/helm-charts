@@ -1,4 +1,4 @@
 initContainers:
   enabled: true
   waitForCmd:
-    command: ['sh', '-c', 'while true; do STATUS=""; nc -z redis 6379 || STATUS="$STATUS Redis"; if [ -z "$STATUS" ]; then echo "Todos os serviços estão disponíveis!"; break; fi; echo "Aguardando os seguintes serviços:$STATUS..."; sleep 10; done']
+    command: ['sh', '-c', 'while true; do STATUS=""; nc -z redis 6379 || STATUS="$STATUS Redis"; nc -z mysql 1433 || STATUS="$STATUS MySQL"; nc -z uol.com.br 80 || STATUS="$STATUS UOL"; if [ -z "$STATUS" ]; then echo "Todos os serviços estão disponíveis!"; break; fi; echo "Aguardando os seguintes serviços:$STATUS..."; sleep 10; done']
