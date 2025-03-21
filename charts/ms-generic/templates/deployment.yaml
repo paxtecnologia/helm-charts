@@ -153,7 +153,8 @@ spec:
         {{- if .Values.initContainers.waitForCmd }}
         - name: wait-for-cmd
           image: busybox
-          command: {{ .Values.initContainers.waitForCmd.command }}
+          command:
+            {{- toYaml .Values.initContainers.waitForCmd.command | nindent 12 }}
         {{- end }}
         {{- with .Values.initContainers.extras }} 
           {{- toYaml . | nindent 8 }}
