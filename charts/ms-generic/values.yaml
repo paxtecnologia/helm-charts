@@ -100,7 +100,9 @@ envFrom:
     list:
       []
       # - secretsName
-
+initContainers:
+  enabled: false
+  
 secretProviderClass:
   enabled: false
   list:

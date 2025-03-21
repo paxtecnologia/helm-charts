@@ -1,0 +1,4 @@
+initContainers:
+  enabled: true
+  waitForCmd:
+    command: ['sh', '-c', 'until nc -z db-service 5432; do echo waiting for db; sleep 2; done']

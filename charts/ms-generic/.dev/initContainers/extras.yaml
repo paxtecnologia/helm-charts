@@ -1,0 +1,11 @@
+initContainers:
+  enabled: true
+  extras:
+      - name: wait-for-db
+        image: busybox
+        command: ['sh', '-c', 'until nc -z db-service 5432; do echo waiting for db; sleep 2; done']
+      - name: wait-for-redis
+        image: busybox
+        command: ['sh', '-c', 'until nc -z db-redis 6379; do echo waiting for db; sleep 2; done']
+
+    
