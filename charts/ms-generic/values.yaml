@@ -87,9 +87,15 @@ volumes:
   persistentVolumeClaim:
     enabled: false
     itens: []
-    # - name: nfsData
-    #   mountPath: /data
-    #   claimName: nfs-data-clain
+    #  - name: nfsData
+    #    mountPath: /data
+    #    claimName: nfs-data-clain
+    #    existingClaim: false
+    #    accessModes: ReadWriteOnce
+    #    size: 5Gi
+    #    storageClassName: ebs-gp3
+    #    persistentVolumeReclaimPolicy: Retain
+
 envFrom:
   existingConfigMaps:
     enabled: false
@@ -209,3 +215,5 @@ tolerations: []
 affinity: {}
 # Força a troca do nome do service
 # serviceFullnameOverride: nomeDoService
+
+commonLabels: {}

@@ -1,0 +1,28 @@
+{{- if .Values.volumes.persistentVolumeClaim.enabled }}
+{{- range $item := .Values.volumes.persistentVolumeClaim.itens }}
+  {{- if not $item.existingClaim }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ $item.claimName }}
+  {{- $claimLabels := include "common.tplvalues.merge" ( dict "values" ( list $item.labels $.Values.commonLabels ) "context" . ) }}
+  labels: {{- include "common.labels.matchLabels" ( dict "customLabels" $claimLabels "context" $ ) | nindent 10 }}
+  {{- if .annotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" $item.annotations "context" $) | nindent 10 }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ $item.accessModes }}
+  resources:
+    requests:
+      storage: {{ $item.size }}
+  {{- if $item.storageClassName }}
+  storageClassName: {{ $item.storageClassName }}
+  {{- end }}
+  {{- if $item.persistentVolumeReclaimPolicy }}
+  persistentVolumeReclaimPolicy: {{ $item.persistentVolumeReclaimPolicy }}
+  {{- end }}
+  {{- end }}
+{{- end }}
+{{- end }}

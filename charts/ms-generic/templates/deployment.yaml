@@ -180,8 +180,8 @@ spec:
       {{- if or .Values.secretProviderClass.enabled .Values.configMap.injectFile.enabled .Values.volumes.persistentVolumeClaim.enabled }}
       volumes:
         {{- range .Values.volumes.persistentVolumeClaim.itens }}
-         - name: {{ .name }}
-           persistentVolumeClaim:
+        - name: {{ .name }}
+          persistentVolumeClaim:
             claimName: {{ .claimName }}
         {{- end }}
         {{- range $key, $value := .Values.configMap.injectFile.itens }}

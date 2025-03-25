@@ -1,0 +1,13 @@
+volumes:
+  persistentVolumeClaim:
+    enabled: true
+    itens:
+     - name: nfsData
+       mountPath: /data
+       claimName: nfs-data-clain
+       existingClaim: false
+       accessModes: ReadWriteOnce
+       size: 5Gi
+       storageClassName: ebs-gp3
+       persistentVolumeReclaimPolicy: Retain
+       labels: {}
