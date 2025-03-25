@@ -7,9 +7,9 @@ kind: PersistentVolumeClaim
 metadata:
   name: {{ $item.claimName }}
   {{- $claimLabels := include "common.tplvalues.merge" ( dict "values" ( list $item.labels $.Values.commonLabels ) "context" . ) }}
-  labels: {{- include "common.labels.matchLabels" ( dict "customLabels" $claimLabels "context" $ ) | nindent 10 }}
+  labels: {{- include "common.labels.matchLabels" ( dict "customLabels" $claimLabels "context" $ ) | nindent 4 }}
   {{- if .annotations }}
-  annotations: {{- include "common.tplvalues.render" ( dict "value" $item.annotations "context" $) | nindent 10 }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" $item.annotations "context" $) | nindent 4 }}
   {{- end }}
 spec:
   accessModes:
