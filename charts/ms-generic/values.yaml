@@ -20,6 +20,7 @@ container:
     ports: []
 
 deployment:
+  revisionHistoryLimit: 5
   strategy:
     type: RollingUpdate  # Define a estratégia de atualização (RollingUpdate ou Recreate)
     rollingUpdate:

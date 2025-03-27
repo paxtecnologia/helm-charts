@@ -15,6 +15,7 @@ metadata:
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
+  revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
   {{- end }}
   strategy:
     type: {{ .Values.deployment.strategy.type }}
