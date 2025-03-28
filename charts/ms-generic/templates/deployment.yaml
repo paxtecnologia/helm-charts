@@ -156,6 +156,9 @@ spec:
             {{- end }}
             {{- end }}
           {{- end }}
+        {{- range .Values.containers.planList }}
+        - {{- toYaml . | nindent 10 }}
+        {{- end }}
       {{- if .Values.initContainers.enabled }}
       initContainers:
         {{- if .Values.initContainers.waitForCmd }}
