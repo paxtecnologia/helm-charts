@@ -29,7 +29,7 @@ deployment:
     type: RollingUpdate  # Define a estratégia de atualização (RollingUpdate ou Recreate)
     rollingUpdate:
       maxSurge: 1         # Número máximo de pods adicionais durante a atualização (se a estratégia for RollingUpdate)
-      maxUnavailable: 1   # Número máximo de pods indisponíveis durante a atualização (se a estratégia for RollingUpdate) 
+      maxUnavailable: 0   # Número máximo de pods indisponíveis durante a atualização (se a estratégia for RollingUpdate) 
 
 #resources:
 #  limits:
