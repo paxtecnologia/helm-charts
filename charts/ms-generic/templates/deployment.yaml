@@ -21,8 +21,8 @@ spec:
     type: {{ .Values.deployment.strategy.type }}
     {{- if eq .Values.deployment.strategy.type "RollingUpdate" }}
     rollingUpdate:
-      maxSurge: {{ .Values.deployment.strategy.rollingUpdate.maxSurge | default 1 }}
-      maxUnavailable: {{ .Values.deployment.strategy.rollingUpdate.maxUnavailable | default 1 }}
+      maxSurge: {{ .Values.deployment.strategy.rollingUpdate.maxSurge }}
+      maxUnavailable: {{ .Values.deployment.strategy.rollingUpdate.maxUnavailable }}
     {{- end }}
   selector:
     matchLabels: {{- include "common.labels.matchLabels" $ | nindent 6 }}

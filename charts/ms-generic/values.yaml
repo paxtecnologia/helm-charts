@@ -21,7 +21,6 @@ container:
 
 containers:
   planList: []
-       
 
 deployment:
   revisionHistoryLimit: 5
