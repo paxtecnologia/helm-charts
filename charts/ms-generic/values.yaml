@@ -168,6 +168,7 @@ service:
 
 ingress:
   enabled: false
+  appendNamespace: false
   className: ""
   annotations:
     {}

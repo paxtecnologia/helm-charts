@@ -15,7 +15,11 @@ apiVersion: extensions/v1beta1
 {{- end }}
 kind: Ingress
 metadata:
-  name: {{ $fullName }}
+  {{- if .Values.ingress.appendNamespace }}
+  name: {{ template "common.names.fullname" $ }}-{{ template "common.names.namespace" $ }}
+  {{- else }}
+  name: {{ template "common.names.fullname" $ }}
+  {{- end }}
   labels: {{- include "common.labels.standard" $ | nindent 4 }}
   {{- include "ms-generic.labels.AppVersion" $ | nindent 4 }}
   {{- include "ms-generic.labels.kiali" $ | nindent 4 }}
@@ -53,11 +57,11 @@ spec:
             backend:
               {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
               service:
-                name: {{ $fullName }}
+                name: {{ template "ms-generic.names.service.name" $ }}
                 port:
                   number: {{ $svcPort }}
               {{- else }}
-              serviceName: {{ $fullName }}
+              serviceName: {{ template "ms-generic.names.service.name" $ }}
               servicePort: {{ $svcPort }}
               {{- end }}
           {{- end }}
