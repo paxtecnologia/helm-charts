@@ -1,0 +1,3 @@
+# serviceAccount:
+#   extras:
+#     automountServiceAccountToken: true
