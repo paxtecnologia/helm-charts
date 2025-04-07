@@ -116,6 +116,17 @@ spec:
               containerPort: {{ .port }}
               protocol: {{ default "TCP" .protocol }}
             {{- end }}
+          {{- if .Values.probe.startupProbe.enabled }}
+          startupProbe:
+            httpGet:
+              path: {{ .Values.probe.startupProbe.path }}
+              port: {{ default .Values.probe.startupProbe.port }}
+            timeoutSeconds: {{ .Values.probe.startupProbe.timeoutSeconds }}
+            periodSeconds: {{ .Values.probe.startupProbe.periodSeconds }}
+            successThreshold: {{ .Values.probe.startupProbe.successThreshold }}
+            failureThreshold: {{ .Values.probe.startupProbe.failureThreshold }}
+            initialDelaySeconds: {{ .Values.probe.startupProbe.initialDelaySeconds }}
+          {{- end }}
           livenessProbe:
             httpGet:
               path: {{ or .Values.probe.liveness .Values.probe.path }}

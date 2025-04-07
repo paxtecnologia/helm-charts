@@ -45,6 +45,15 @@ probe:
   successThreshold: 1
   failureThreshold: 3
   initialDelaySeconds: 180
+  startupProbe:
+    enabled: false
+    path: "/"
+    port: http-app
+    timeoutSeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    failureThreshold: 3
+    initialDelaySeconds: 180
 
 serviceMonitor:
   enabled: true
