@@ -23,4 +23,9 @@ spec:
       - {{ template "common.names.namespace" $ }}
   selector:
     matchLabels: {{- include "common.labels.matchLabels" $ | nindent 6 }}
+    matchExpressions:
+      - key: prometheus.io/scrape
+        operator: NotIn
+        values:
+          - "false"
 {{- end }}
