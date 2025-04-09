@@ -548,6 +548,19 @@ entries:
     version: 0.1.0
   ms-generic:
   - apiVersion: v2
+    created: "2025-04-09T23:47:56.351512269Z"
+    dependencies:
+    - name: common
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 2.*
+    description: A Helm chart for Kubernetes
+    digest: 81e77f5c438519d6054ebb9b82dfc9a5058846c3e35d2eb8b9d442d7abeb4c33
+    name: ms-generic
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/ms-generic-1.1.20/ms-generic-1.1.20.tgz
+    version: 1.1.20
+  - apiVersion: v2
     created: "2025-04-08T19:10:03.250155607Z"
     dependencies:
     - name: common
@@ -1854,4 +1867,4 @@ entries:
     urls:
     - https://github.com/paxtecnologia/helm-charts/releases/download/ms-nginx-0.1.1/ms-nginx-0.1.1.tgz
     version: 0.1.1
-generated: "2025-04-08T19:10:03.25045631Z"
+generated: "2025-04-09T23:47:56.351805288Z"
