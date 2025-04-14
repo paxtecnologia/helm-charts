@@ -64,7 +64,7 @@ Create the name of the service account to use
 {{/*
 Allow the release namespace to be overridden for multi-namespace deployments in combined charts
 */}}
-{{- define "kube-prometheus-stack.namespace" -}}
+{{- define "pax-prometheus.namespace" -}}
   {{- if .Values.namespaceOverride -}}
     {{- .Values.namespaceOverride -}}
   {{- else -}}
