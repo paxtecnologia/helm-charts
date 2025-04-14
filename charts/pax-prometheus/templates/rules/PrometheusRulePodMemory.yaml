@@ -23,13 +23,9 @@ spec:
       for: 1m
       labels:
         severity: critical
-        workload_type: "{{ $labels.owner_kind | lower }}"
-        namespace: "{{ $labels.namespace }}"
-        pod: "{{ $labels.pod }}"
-        container: "{{ $labels.container }}"
       annotations:
         summary: "Pod finalizado por OOM (Out of Memory)"
-        description: "O container {{ $labels.container }} no pod {{ $labels.pod }} (namespace: {{ $labels.namespace }}) foi finalizado por OOMKilled. Workload: {{ $labels.owner_kind }}/{{ $labels.owner_name }}"
+        description: "O container {{`{{`}} $labels.container {{`}}`}} no pod {{`{{`}} $labels.pod {{`}}`}} (namespace: {{`{{`}} $labels.namespace {{`}}`}}) foi finalizado por OOMKilled. Workload: {{`{{`}} $labels.owner_kind {{`}}`}}/{{`{{`}} $labels.owner_name {{`}}`}}"
     
     # 2. Alerta para Subutilização de Memória (vs Request)
     - alert: PodMemoryRequestUnderutilized
@@ -40,17 +36,13 @@ spec:
         < 0.80
       for: 1h
       labels:
-        severity: info
-        workload_type: "{{ $labels.owner_kind | lower }}"
-        namespace: "{{ $labels.namespace }}"
-        pod: "{{ $labels.pod }}"
-        container: "{{ $labels.container }}"
+        severity: warning
       annotations:
         summary: "Subutilização de memória (request muito alto)"
         description: |-
-          Container {{ $labels.container }} (pod: {{ $labels.pod }}, ns: {{ $labels.namespace }}) 
-          está usando apenas {{ printf "%.1f" (value * 100) }}% do memory request.
-          Workload: {{ $labels.owner_kind }}/{{ $labels.owner_name }}
+          Container {{`{{`}} $labels.container {{`}}`}} (pod: {{`{{`}} $labels.pod {{`}}`}}, ns: {{`{{`}} $labels.namespace {{`}}`}}) 
+          está usando apenas {{`{{`}} printf "%.1f" (value * 100) {{`}}`}}% do memory request.
+          Workload: {{`{{`}} $labels.owner_kind {{`}}`}}/{{`{{`}} $labels.owner_name {{`}}`}}
           Considere reduzir os requests e limits para otimizar recursos.
 
     # 3. Alerta para Uso Alto de Memória (vs Limit) - NOVO
@@ -63,14 +55,10 @@ spec:
       for: 5m
       labels:
         severity: warning
-        workload_type: "{{ $labels.owner_kind | lower }}"
-        namespace: "{{ $labels.namespace }}"
-        pod: "{{ $labels.pod }}"
-        container: "{{ $labels.container }}"
       annotations:
         summary: "Uso de memória próximo ao limite (96%)"
         description: |-
-          Container {{ $labels.container }} (pod: {{ $labels.pod }}, ns: {{ $labels.namespace }})
-          está usando {{ printf "%.1f" (value * 100) }}% do memory limit.
-          Workload: {{ $labels.owner_kind }}/{{ $labels.owner_name }}
+          Container {{`{{`}} $labels.container {{`}}`}} (pod: {{`{{`}} $labels.pod {{`}}`}}, ns: {{`{{`}} $labels.namespace {{`}}`}})
+          está usando {{`{{`}} printf "%.1f" (value * 100) {{`}}`}}% do memory limit.
+          Workload: {{`{{`}} $labels.owner_kind {{`}}`}}/{{`{{`}} $labels.owner_name {{`}}`}}
           Risco de OOMKilled. Considere aumentar o limit ou otimizar a aplicação.
