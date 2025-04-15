@@ -1,21 +1,25 @@
 {{- /* Criação do contexto unificado */ -}}
-{{- $context := mergeOverwrite (deepCopy .) (dict "Values" (default dict .Values.kubePrometheusStack)) -}}
+{{- $prometheusContext := dict 
+  "Chart" (dict "Name" "kube-prometheus-stack")
+  "Release" .Release
+  "Values" (.Values.kubePrometheusStack | default dict)
+-}}
 
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
-  name: {{ printf "%s-%s" (include "kube-prometheus-stack.fullname" $context) "pax-pod-memory.rules" | trunc 63 | trimSuffix "-" }}
-  namespace: {{ template "kube-prometheus-stack.namespace" $context }}
+  name: {{ printf "%s-%s" (include "kube-prometheus-stack.fullname" $prometheusContext) "pax-pod-memory.rules" | trunc 63 | trimSuffix "-" }}
+  namespace: {{ template "kube-prometheus-stack.namespace" $prometheusContext }}
   labels:
-    app: {{ template "kube-prometheus-stack.name" $context }}
-{{ include "kube-prometheus-stack.labels" $context | indent 4 }}
-{{- if $context.Values.defaultRules }}
-  {{- if $context.Values.defaultRules.labels }}
-{{ toYaml $context.Values.defaultRules.labels | indent 4 }}
+    app: {{ template "kube-prometheus-stack.name" $prometheusContext }}
+{{ include "kube-prometheus-stack.labels" $prometheusContext | indent 4 }}
+{{- if $prometheusContext.Values.defaultRules }}
+  {{- if $prometheusContext.Values.defaultRules.labels }}
+{{ toYaml $prometheusContext.Values.defaultRules.labels | indent 4 }}
   {{- end }}
-  {{- if $context.Values.defaultRules.annotations }}
+  {{- if $prometheusContext.Values.defaultRules.annotations }}
   annotations:
-{{ toYaml $context.Values.defaultRules.annotations | indent 4 }}
+{{ toYaml $prometheusContext.Values.defaultRules.annotations | indent 4 }}
   {{- end }}
 {{- end }}
 spec:
