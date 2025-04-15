@@ -6,12 +6,18 @@ metadata:
   labels:
     app: {{ template "kube-prometheus-stack.name" . }}
 {{ include "kube-prometheus-stack.labels" . | indent 4 }}
-{{- if .Values.kubePrometheusStack.defaultRules.labels }}
-{{ toYaml .Values.kubePrometheusStack.defaultRules.labels | indent 4 }}
-{{- end }}
-{{- if .Values.kubePrometheusStack.defaultRules.annotations }}
+{{- /* Acesso aos valores do kube-prometheus-stack via escopo pai */ -}}
+{{- $parent := .Values | deepCopy -}}
+{{- if $parent.kubePrometheusStack }}
+  {{- if $parent.kubePrometheusStack.defaultRules }}
+    {{- if $parent.kubePrometheusStack.defaultRules.labels }}
+{{ toYaml $parent.kubePrometheusStack.defaultRules.labels | indent 4 }}
+    {{- end }}
+    {{- if $parent.kubePrometheusStack.defaultRules.annotations }}
   annotations:
-{{ toYaml .Values.kubePrometheusStack.defaultRules.annotations | indent 4 }}
+{{ toYaml $parent.kubePrometheusStack.defaultRules.annotations | indent 4 }}
+    {{- end }}
+  {{- end }}
 {{- end }}
 spec:
   groups:
