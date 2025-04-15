@@ -1,15 +1,23 @@
 
 {{- /* Cria contexto completo para o Prometheus Stack */ -}}
-{{- $prometheusValues := $.Values.kubePrometheusStack | default dict -}}
+{{- $prometheusValues := .Values.kubePrometheusStack | default dict -}}
 {{- $prometheusContext := dict 
   "Chart" .Chart
   "Release" .Release
   "Values" $prometheusValues
 -}}
+
+# In any template file (e.g., templates/debug.yaml)
+{{- /* Debug print all values */ -}}
+{{- printf "Values: %v" .Values | println }}
+
+{{- /* Debug print specific value */ -}}
+{{- printf "prometheusContext: %v" $prometheusContext | println }}
+
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
-  name: {{ printf "%s-%s" (include "kube-prometheus-stack.fullname" $prometheusContext) "pax-pod-memory.rules" | trunc 63 | trimSuffix "-" }}
+  name: {{ printf "%s-%s" (include "kube-prometheus-stack.fullname" $prometheusContext) "pax-pod-memory" | trunc 63 | trimSuffix "-" }}
   namespace: {{ template "kube-prometheus-stack.namespace" $prometheusContext }}
   labels:
     app: {{ template "kube-prometheus-stack.name" $prometheusContext }}
