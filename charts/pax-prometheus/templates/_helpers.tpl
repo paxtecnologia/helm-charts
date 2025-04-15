@@ -2,8 +2,7 @@
 Expand the name of the chart.
 */}}
 {{- define "pax-prometheus.name" -}}
-{{- $parent := .Values | deepCopy -}}
-{{- default .Chart.Name $parent.kubePrometheusStack.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
@@ -12,11 +11,10 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 If release name contains chart name it will be used as a full name.
 */}}
 {{- define "pax-prometheus.fullname" -}}
-{{- $parent := .Values | deepCopy -}}
-{{- if $parent.kubePrometheusStack.fullnameOverride }}
-{{- $parent.kubePrometheusStack.fullnameOverride | trunc 63 | trimSuffix "-" }}
+{{- if .Values.fullnameOverride }}
+{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
-{{- $name := default .Chart.Name $parent.kubePrometheusStack.nameOverride }}
+{{- $name := default .Chart.Name .Values.nameOverride }}
 {{- if contains $name .Release.Name }}
 {{- .Release.Name | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -57,21 +55,8 @@ Create the name of the service account to use
 */}}
 {{- define "pax-prometheus.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- $parent := .Values | deepCopy -}}
-{{- default (include "pax-prometheus.fullname" .) $parent.kubePrometheusStack.serviceAccount.name }}
+{{- default (include "pax-prometheus.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
-
-{{/*
-Allow the release namespace to be overridden for multi-namespace deployments in combined charts
-*/}}
-{{- define "pax-prometheus.namespace" -}}
-{{- $parent := .Values | deepCopy -}}
-  {{- if $parent.kubePrometheusStack.namespaceOverride -}}
-    {{- $parent.kubePrometheusStack.namespaceOverride -}}
-  {{- else -}}
-    {{- .Release.Namespace -}}
-  {{- end -}}
-{{- end -}}

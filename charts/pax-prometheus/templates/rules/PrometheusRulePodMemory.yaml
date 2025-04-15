@@ -1,13 +1,13 @@
+{{- /* Acesso aos valores do kube-prometheus-stack via escopo pai */ -}}
+{{- $parent := .Values | deepCopy -}}
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
-  name: {{ printf "%s-%s" (include "pax-prometheus.fullname" . ) "pax-pod-memory.rules" | trunc 63 | trimSuffix "-" }}
-  namespace: {{ template "pax-prometheus.namespace" . }}
+  name: {{ printf "%s-%s" (include "kube-prometheus-stack.fullname" $parent.kubePrometheusStack ) "pax-pod-memory.rules" | trunc 63 | trimSuffix "-" }}
+  namespace: {{ template "kube-prometheus-stack.namespace" $parent.kubePrometheusStack }}
   labels:
-    app: {{ template "pax-prometheus.name" . }}
-{{ include "kube-prometheus-stack.labels" $ | indent 4 }}
-{{- /* Acesso aos valores do kube-prometheus-stack via escopo pai */ -}}
-{{- $parent := .Values | deepCopy -}}
+    app: {{ template "kube-prometheus-stack.name" $parent.kubePrometheusStack }}
+{{ include "kube-prometheus-stack.labels" $parent.kubePrometheusStack | indent 4 }}
 {{- if $parent.kubePrometheusStack }}
   {{- if $parent.kubePrometheusStack.defaultRules }}
     {{- if $parent.kubePrometheusStack.defaultRules.labels }}
