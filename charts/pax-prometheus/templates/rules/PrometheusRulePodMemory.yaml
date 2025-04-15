@@ -35,7 +35,7 @@ spec:
     
     # 2. Alerta para Subutilização de Memória (vs Request)
     - alert: PodMemoryRequestUnderutilized
-      expr: |-
+      expr: >-
         sum(container_memory_working_set_bytes{job="kubelet", metrics_path="/metrics/cadvisor", container!="", image!=""}) by (namespace, pod, container)
         /
         sum(kube_pod_container_resource_requests{job="kube-state-metrics", resource="memory", unit="byte"} > 0) by (namespace, pod, container)
@@ -45,15 +45,10 @@ spec:
         severity: warning
       annotations:
         summary: "Subutilização de memória (request muito alto)"
-        description: |-
-          Container {{`{{`}} $labels.container {{`}}`}} (pod: {{`{{`}} $labels.pod {{`}}`}}, ns: {{`{{`}} $labels.namespace {{`}}`}}) 
-          está usando apenas {{`{{`}} printf "%.1f" (value * 100) {{`}}`}}% do memory request.
-          Workload: {{`{{`}} $labels.owner_kind {{`}}`}}/{{`{{`}} $labels.owner_name {{`}}`}}
-          Considere reduzir os requests e limits para otimizar recursos.
 
     # 3. Alerta para Uso Alto de Memória (vs Limit) - NOVO
     - alert: PodMemoryUsageNearLimit
-      expr: |-
+      expr: >-
         sum(container_memory_working_set_bytes{job="kubelet", metrics_path="/metrics/cadvisor", container!="", image!=""}) by (namespace, pod, container)
         /
         sum(kube_pod_container_resource_limits{job="kube-state-metrics", resource="memory", unit="byte"} > 0) by (namespace, pod, container)
@@ -63,8 +58,3 @@ spec:
         severity: warning
       annotations:
         summary: "Uso de memória próximo ao limite (96%)"
-        description: |-
-          Container {{`{{`}} $labels.container {{`}}`}} (pod: {{`{{`}} $labels.pod {{`}}`}}, ns: {{`{{`}} $labels.namespace {{`}}`}})
-          está usando {{`{{`}} printf "%.1f" (value * 100) {{`}}`}}% do memory limit.
-          Workload: {{`{{`}} $labels.owner_kind {{`}}`}}/{{`{{`}} $labels.owner_name {{`}}`}}
-          Risco de OOMKilled. Considere aumentar o limit ou otimizar a aplicação.
