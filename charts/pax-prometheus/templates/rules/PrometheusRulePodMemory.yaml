@@ -1,9 +1,14 @@
-{{- /* Criação do contexto unificado */ -}}
+
+{{- /* Cria contexto completo para o Prometheus Stack */ -}}
+{{- $prometheusValues := .Values.kubePrometheusStack | default dict -}}
 {{- $prometheusContext := dict 
   "Chart" .Chart
   "Release" .Release
-  "Values" (.Values.kubePrometheusStack | default dict)
+  "Values" $prometheusValues
 -}}
+
+{{- /* Debug: Verifique os valores disponíveis */ -}}
+{{- /* {{ $prometheusContext | toYaml | nindent 0 }} */ -}}
 
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
