@@ -1,13 +1,13 @@
 
 {{- /* Cria contexto completo para o Prometheus Stack */ -}}
-{{- $prometheusValues := .Values.kubePrometheusStack | default dict -}}
+{{- $prometheusValues := $.Values.kubePrometheusStack | default dict -}}
 {{- $prometheusContext := dict 
   "Chart" .Chart
   "Release" .Release
   "Values" $prometheusValues
 -}}
 
-{{- printf "Valores globais:\n%s" (toYaml .Values) | nindent 0 -}}
+{{- printf "Valores globais:\n%s" (toYaml $.Values) | nindent 0 -}}
 {{- printf "\nContexto do Prometheus:\n%s" (toYaml $prometheusContext) | nindent 0 -}}
 
 apiVersion: monitoring.coreos.com/v1
