@@ -23,7 +23,7 @@ spec:
     - alert: PodOOMKilled
       expr: |-
         kube_pod_container_status_last_terminated_reason{job="kube-state-metrics", reason="OOMKilled"} == 1
-      for: 1m
+      for: {{ .Values.prometheusRulePodMemory.podOOMKilled.for }}
       labels:
         severity: critical
       annotations:
@@ -32,25 +32,25 @@ spec:
     
     # 2. Alerta para Subutilização de Memória (vs Request)
     - alert: PodMemoryRequestUnderutilized
-      expr: >-
-        sum(container_memory_working_set_bytes{job="kubelet", metrics_path="/metrics/cadvisor", container!="", image!=""}) by (namespace, pod, container)
+      expr: |-
+        sum(container_memory_working_set_bytes{job="kubelet", metrics_path="/metrics/cadvisor", container!="", image!="", namespace!~"{{ .Values.prometheusRulePodMemory.podMemoryRequestUnderutilized.exclude.namespace }}", pod!~"{{ .Values.prometheusRulePodMemory.podMemoryRequestUnderutilized.exclude.pod }}"}) by (namespace, pod, container)
         /
-        sum(kube_pod_container_resource_requests{job="kube-state-metrics", resource="memory", unit="byte"} > 0) by (namespace, pod, container)
-        < 0.80
-      for: 1h
+        sum(kube_pod_container_resource_requests{job="kube-state-metrics", resource="memory", unit="byte", namespace!~"{{ .Values.prometheusRulePodMemory.podMemoryRequestUnderutilized.exclude.namespace }}", pod!~"{{ .Values.prometheusRulePodMemory.podMemoryRequestUnderutilized.exclude.pod }}"}} > 0) by (namespace, pod, container)
+        < {{ .Values.prometheusRulePodMemory.podMemoryRequestUnderutilized.threshold }}
+      for: {{ .Values.prometheusRulePodMemory.podMemoryRequestUnderutilized.for }}
       labels:
         severity: warning
       annotations:
-        summary: "Subutilização de memória (request muito alto)"
+        summary: "resource.request.memory maior que o consumo real"
 
     # 3. Alerta para Uso Alto de Memória (vs Limit) - NOVO
     - alert: PodMemoryUsageNearLimit
       expr: >-
-        sum(container_memory_working_set_bytes{job="kubelet", metrics_path="/metrics/cadvisor", container!="", image!=""}) by (namespace, pod, container)
+        sum(container_memory_working_set_bytes{job="kubelet", metrics_path="/metrics/cadvisor", container!="", image!="", namespace!~"{{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.exclude.namespace }}", pod!~"{{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.exclude.pod }}"}) by (namespace, pod, container)
         /
-        sum(kube_pod_container_resource_limits{job="kube-state-metrics", resource="memory", unit="byte"} > 0) by (namespace, pod, container)
-        > 0.96
-      for: 5m
+        sum(kube_pod_container_resource_limits{job="kube-state-metrics", resource="memory", unit="byte", namespace!~"{{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.exclude.namespace }}", pod!~"{{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.exclude.pod }}"} > 0) by (namespace, pod, container)
+        > {{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.threshold }}
+      for: {{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.for }}
       labels:
         severity: warning
       annotations:

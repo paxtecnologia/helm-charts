@@ -1,1 +1,16 @@
 defaultRules: {}
+prometheusRulePodMemory:
+  podOOMKilled:
+    for: 1m
+  podMemoryRequestUnderutilized:
+    threshold: 0.80
+    for: 30m
+    exclude:
+      namespace: "kube-system"
+      pod: ""
+  podMemoryUsageNearLimit:
+    threshold: 0.96
+    for: 10m
+    exclude:
+      namespace: ""
+      pod: ""
