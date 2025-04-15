@@ -43,14 +43,14 @@ spec:
       labels:
         severity: warning
       annotations:
-        summary: "resource.request.memory maior que o consumo real"
+        summary: 'resource.request.memory maior que o consumo real ({{`{{`}} printf "%.1f" $value {{`}}`}}%)'
         description: |-
           Container {{`{{`}} $labels.container {{`}}`}} (pod: {{`{{`}} $labels.pod {{`}}`}}, ns: {{`{{`}} $labels.namespace {{`}}`}}) 
           está usando apenas {{`{{`}} printf "%.1f" $value {{`}}`}}% do memory request.
           Workload: {{`{{`}} $labels.owner_kind {{`}}`}}/{{`{{`}} $labels.owner_name {{`}}`}}
           Considere reduzir os requests e limits para otimizar recursos.
 
-    # 3. Alerta para Uso Alto de Memória (vs Limit) - NOVO
+    # 3. Alerta para Uso Alto de Memória (vs Limit)
     - alert: PodMemoryUsageNearLimit
       expr: >-
         ((       
@@ -63,7 +63,7 @@ spec:
       labels:
         severity: warning
       annotations:
-        summary: "Uso de memória próximo ao limite (96%)"
+        summary: "Uso de memória próximo ao limite ({{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.for }}%)"
         description: |-
           Container {{`{{`}} $labels.container {{`}}`}} (pod: {{`{{`}} $labels.pod {{`}}`}}, ns: {{`{{`}} $labels.namespace {{`}}`}})
           está usando {{`{{`}} printf "%.1f" $value {{`}}`}}% do memory limit.
