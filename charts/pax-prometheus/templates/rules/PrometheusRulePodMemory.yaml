@@ -1,40 +1,19 @@
 
-{{- /* Cria contexto completo para o Prometheus Stack */ -}}
-{{- $prometheusValues := .kubePrometheusStack | default dict -}}
-{{- $prometheusContext := dict 
-  "Chart" .Chart
-  "Release" .Release
-  "Values" $prometheusValues
--}}
-
-{{- /* Debug completo do contexto (.) */ -}}
-{{- printf "\n=== CONTEXT (.) ===\n%s" (toYaml .) | println }}
-
-{{- /* Debug do contexto raiz ($) */ -}}
-{{- printf "\n=== ROOT CONTEXT ($) ===\n%s" (toYaml $) | println }}
-
-{{- /* Debug dos valores (.Values) */ -}}
-{{- printf "\n=== VALUES (.Values) ===\n%s" (toYaml .Values) | println }}
-
-{{- /* Debug dos valores via raiz ($.Values) */ -}}
-{{- printf "\n=== VALUES ($.Values) ===\n%s" (toYaml $.Values) | println }}
-
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
-  name: {{ printf "%s-%s" (include "kube-prometheus-stack.fullname" $prometheusContext) "pax-pod-memory" | trunc 63 | trimSuffix "-" }}
-  namespace: {{ template "kube-prometheus-stack.namespace" $prometheusContext }}
+  name: {{ printf "%s-%s" (include "pax-prometheus.fullname" .) "pax-pod-memory" | trunc 63 | trimSuffix "-" }}
+  namespace: {{ template "pax-prometheus.namespace" . }}
   labels:
-    app: {{ template "kube-prometheus-stack.name" $prometheusContext }}
-{{ include "kube-prometheus-stack.labels" $prometheusContext | indent 4 }}
-{{- if $prometheusContext.Values.defaultRules }}
-  {{- if $prometheusContext.Values.defaultRules.labels }}
-{{ toYaml $prometheusContext.Values.defaultRules.labels | indent 4 }}
-  {{- end }}
-  {{- if $prometheusContext.Values.defaultRules.annotations }}
+    app: {{ template "pax-prometheus.name" . }}
+{{- if .Values.defaultRules }}
+{{- if .Values.defaultRules.labels }}
+{{ toYaml .Values.defaultRules.labels | indent 4 }}
+{{- end }}
+{{- if .Values.defaultRules.annotations }}
   annotations:
-{{ toYaml $prometheusContext.Values.defaultRules.annotations | indent 4 }}
-  {{- end }}
+{{ toYaml .Values.defaultRules.annotations | indent 4 }}
+{{- end }}
 {{- end }}
 spec:
   groups:
