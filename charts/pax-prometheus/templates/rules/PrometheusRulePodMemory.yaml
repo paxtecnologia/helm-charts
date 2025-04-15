@@ -63,7 +63,7 @@ spec:
       labels:
         severity: warning
       annotations:
-        summary: "Uso de memória próximo ao limite ({{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.for }}%)"
+        summary: "Uso de memória próximo ao limite ({{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.threshold }}%)"
         description: |-
           Container {{`{{`}} $labels.container {{`}}`}} (pod: {{`{{`}} $labels.pod {{`}}`}}, ns: {{`{{`}} $labels.namespace {{`}}`}})
           está usando {{`{{`}} printf "%.1f" $value {{`}}`}}% do memory limit.
