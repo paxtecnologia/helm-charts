@@ -19,13 +19,13 @@ metadata:
   {{- end }}
 {{- end }}
 spec:
-spec:
   groups:
-  - name: k8s.rules.pod_memory
+  - name: pax.k8s.rules.pod_memory
     rules:
     # 1. Alerta para Pods Finalizados por OOM
     - alert: PodOOMKilled
-      expr: kube_pod_container_status_last_terminated_reason{job="kube-state-metrics", reason="OOMKilled"} == 1
+      expr: |-
+        kube_pod_container_status_last_terminated_reason{job="kube-state-metrics", reason="OOMKilled"} == 1
       for: 1m
       labels:
         severity: critical
@@ -35,7 +35,7 @@ spec:
     
     # 2. Alerta para Subutilização de Memória (vs Request)
     - alert: PodMemoryRequestUnderutilized
-      expr: |
+      expr: |-
         sum(container_memory_working_set_bytes{job="kubelet", metrics_path="/metrics/cadvisor", container!="", image!=""}) by (namespace, pod, container)
         /
         sum(kube_pod_container_resource_requests{job="kube-state-metrics", resource="memory", unit="byte"} > 0) by (namespace, pod, container)
@@ -53,7 +53,7 @@ spec:
 
     # 3. Alerta para Uso Alto de Memória (vs Limit) - NOVO
     - alert: PodMemoryUsageNearLimit
-      expr: |
+      expr: |-
         sum(container_memory_working_set_bytes{job="kubelet", metrics_path="/metrics/cadvisor", container!="", image!=""}) by (namespace, pod, container)
         /
         sum(kube_pod_container_resource_limits{job="kube-state-metrics", resource="memory", unit="byte"} > 0) by (namespace, pod, container)
