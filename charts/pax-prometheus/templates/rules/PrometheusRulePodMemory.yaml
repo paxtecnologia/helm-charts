@@ -33,25 +33,39 @@ spec:
     # 2. Alerta para Subutilização de Memória (vs Request)
     - alert: PodMemoryRequestUnderutilized
       expr: >-
+        ((
         sum(container_memory_working_set_bytes{job="kubelet", metrics_path="/metrics/cadvisor", container!="", image!="", namespace!~"{{ .Values.prometheusRulePodMemory.podMemoryRequestUnderutilized.exclude.namespace }}", pod!~"{{ .Values.prometheusRulePodMemory.podMemoryRequestUnderutilized.exclude.pod }}"}) by (namespace, pod, container)
         /
         sum(kube_pod_container_resource_requests{job="kube-state-metrics", resource="memory", unit="byte", namespace!~"{{ .Values.prometheusRulePodMemory.podMemoryRequestUnderutilized.exclude.namespace }}", pod!~"{{ .Values.prometheusRulePodMemory.podMemoryRequestUnderutilized.exclude.pod }}"} > 0) by (namespace, pod, container)
+        ) * 100)
         < {{ .Values.prometheusRulePodMemory.podMemoryRequestUnderutilized.threshold }}
       for: {{ .Values.prometheusRulePodMemory.podMemoryRequestUnderutilized.for }}
       labels:
         severity: warning
       annotations:
         summary: "resource.request.memory maior que o consumo real"
+        description: |-
+          Container {{`{{`}} $labels.container {{`}}`}} (pod: {{`{{`}} $labels.pod {{`}}`}}, ns: {{`{{`}} $labels.namespace {{`}}`}}) 
+          está usando apenas {{`{{`}} printf "%.1f" $value {{`}}`}}% do memory request.
+          Workload: {{`{{`}} $labels.owner_kind {{`}}`}}/{{`{{`}} $labels.owner_name {{`}}`}}
+          Considere reduzir os requests e limits para otimizar recursos.
 
     # 3. Alerta para Uso Alto de Memória (vs Limit) - NOVO
     - alert: PodMemoryUsageNearLimit
       expr: >-
+        ((       
         sum(container_memory_working_set_bytes{job="kubelet", metrics_path="/metrics/cadvisor", container!="", image!="", namespace!~"{{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.exclude.namespace }}", pod!~"{{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.exclude.pod }}"}) by (namespace, pod, container)
         /
         sum(kube_pod_container_resource_limits{job="kube-state-metrics", resource="memory", unit="byte", namespace!~"{{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.exclude.namespace }}", pod!~"{{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.exclude.pod }}"} > 0) by (namespace, pod, container)
+        ) * 100)
         > {{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.threshold }}
       for: {{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.for }}
       labels:
         severity: warning
       annotations:
         summary: "Uso de memória próximo ao limite (96%)"
+        description: |-
+          Container {{`{{`}} $labels.container {{`}}`}} (pod: {{`{{`}} $labels.pod {{`}}`}}, ns: {{`{{`}} $labels.namespace {{`}}`}})
+          está usando {{`{{`}} printf "%.1f" $value {{`}}`}}% do memory limit.
+          Workload: {{`{{`}} $labels.owner_kind {{`}}`}}/{{`{{`}} $labels.owner_name {{`}}`}}
+          Risco de OOMKilled. Considere aumentar o limit ou otimizar a aplicação.
