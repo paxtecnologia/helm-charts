@@ -1,6 +1,6 @@
 
 {{- /* Cria contexto completo para o Prometheus Stack */ -}}
-{{- $prometheusValues := $.Values.kubePrometheusStack | default dict -}}
+{{- $prometheusValues := .kubePrometheusStack | default dict -}}
 {{- $prometheusContext := dict 
   "Chart" .Chart
   "Release" .Release
