@@ -6,9 +6,6 @@
   "Release" .Release
   "Values" $prometheusValues
 -}}
-
-{{- printf "Contexto do Prometheus: %s" (toYaml $prometheusContext) | nindent 0 -}}
-
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
