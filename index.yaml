@@ -1870,6 +1870,16 @@ entries:
   pax-prometheus:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2025-04-15T05:32:21.69771705Z"
+    description: A Helm chart for Kubernetes
+    digest: b1cb29384e0450c3b5ff534ec99d2a2b0ed56e54d1b7a9a5b826ff0f1225f978
+    name: pax-prometheus
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/pax-prometheus-0.1.20/pax-prometheus-0.1.20.tgz
+    version: 0.1.20
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2025-04-15T04:01:30.083004326Z"
     description: A Helm chart for Kubernetes
     digest: e9f5c0d0caed8acf66a91148e379f963ad0855e6621f275aa9500b13d99ce8d1
@@ -2068,4 +2078,4 @@ entries:
     urls:
     - https://github.com/paxtecnologia/helm-charts/releases/download/pax-prometheus-0.1.0/pax-prometheus-0.1.0.tgz
     version: 0.1.0
-generated: "2025-04-15T04:01:30.083628042Z"
+generated: "2025-04-15T05:32:21.698325562Z"
