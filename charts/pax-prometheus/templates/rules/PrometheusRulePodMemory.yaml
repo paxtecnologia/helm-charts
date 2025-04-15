@@ -1,6 +1,6 @@
 {{- /* Criação do contexto unificado */ -}}
 {{- $prometheusContext := dict 
-  "Chart" (dict "Name" "kube-prometheus-stack")
+  "Chart" .Chart
   "Release" .Release
   "Values" (.Values.kubePrometheusStack | default dict)
 -}}
