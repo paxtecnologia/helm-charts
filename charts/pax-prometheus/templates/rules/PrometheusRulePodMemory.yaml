@@ -4,11 +4,11 @@
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
-  name: {{ printf "%s-%s" (include "pax-prometheus.fullname" $context) "pax-pod-memory.rules" | trunc 63 | trimSuffix "-" }}
-  namespace: {{ template "pax-prometheus.namespace" $context }}
+  name: {{ printf "%s-%s" (include "kube-prometheus-stack.fullname" $context) "pax-pod-memory.rules" | trunc 63 | trimSuffix "-" }}
+  namespace: {{ template "kube-prometheus-stack.namespace" $context }}
   labels:
-    app: {{ template "pax-prometheus.name" $context }}
-{{ include "pax-prometheus.labels" $context | indent 4 }}
+    app: {{ template "kube-prometheus-stack.name" $context }}
+{{ include "kube-prometheus-stack.labels" $context | indent 4 }}
 {{- if $context.Values.defaultRules }}
   {{- if $context.Values.defaultRules.labels }}
 {{ toYaml $context.Values.defaultRules.labels | indent 4 }}
