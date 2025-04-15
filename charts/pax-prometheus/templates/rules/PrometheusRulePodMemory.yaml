@@ -1,18 +1,23 @@
 
 {{- /* Cria contexto completo para o Prometheus Stack */ -}}
-{{- $prometheusValues := .Values.kubePrometheusStack | default dict -}}
+{{- $prometheusValues := .kubePrometheusStack | default dict -}}
 {{- $prometheusContext := dict 
   "Chart" .Chart
   "Release" .Release
   "Values" $prometheusValues
 -}}
 
-# In any template file (e.g., templates/debug.yaml)
-{{- /* Debug print all values */ -}}
-{{- printf "Values: %v" .Values | println }}
+{{- /* Debug completo do contexto (.) */ -}}
+{{- printf "\n=== CONTEXT (.) ===\n%s" (toYaml .) | println }}
 
-{{- /* Debug print specific value */ -}}
-{{- printf "prometheusContext: %v" $prometheusContext | println }}
+{{- /* Debug do contexto raiz ($) */ -}}
+{{- printf "\n=== ROOT CONTEXT ($) ===\n%s" (toYaml $) | println }}
+
+{{- /* Debug dos valores (.Values) */ -}}
+{{- printf "\n=== VALUES (.Values) ===\n%s" (toYaml .Values) | println }}
+
+{{- /* Debug dos valores via raiz ($.Values) */ -}}
+{{- printf "\n=== VALUES ($.Values) ===\n%s" (toYaml $.Values) | println }}
 
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
