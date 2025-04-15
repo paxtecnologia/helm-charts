@@ -7,8 +7,7 @@
   "Values" $prometheusValues
 -}}
 
-{{- printf "Valores globais:\n%s" (toYaml $.Values) | nindent 0 -}}
-{{- printf "\nContexto do Prometheus:\n%s" (toYaml $prometheusContext) | nindent 0 -}}
+{{- printf "Contexto do Prometheus: %s" (toYaml $prometheusContext) | nindent 0 -}}
 
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
