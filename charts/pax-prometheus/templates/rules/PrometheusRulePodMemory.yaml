@@ -1,11 +1,11 @@
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
-  name: {{ printf "%s-%s" (include "pax-prometheus.fullname" .) "pax-pod-memory.rules" | trunc 63 | trimSuffix "-" }}
+  name: {{ printf "%s-%s" (include "pax-prometheus.fullname" . ) "pax-pod-memory.rules" | trunc 63 | trimSuffix "-" }}
   namespace: {{ template "pax-prometheus.namespace" . }}
   labels:
-    app: {{ template "kube-prometheus-stack.name" . }}
-{{ include "kube-prometheus-stack.labels" . | indent 4 }}
+    app: {{ template "pax-prometheus.name" . }}
+{{ include "kube-prometheus-stack.labels" $ | indent 4 }}
 {{- /* Acesso aos valores do kube-prometheus-stack via escopo pai */ -}}
 {{- $parent := .Values | deepCopy -}}
 {{- if $parent.kubePrometheusStack }}
