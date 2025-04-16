@@ -46,9 +46,7 @@ spec:
         summary: 'resource.request.memory maior que o consumo real ({{`{{`}} printf "%.1f" $value {{`}}`}}%)'
         description: |-
           Container {{`{{`}} $labels.container {{`}}`}} (pod: {{`{{`}} $labels.pod {{`}}`}}, ns: {{`{{`}} $labels.namespace {{`}}`}}) 
-          está usando apenas {{`{{`}} printf "%.1f" $value {{`}}`}}% do memory request.
-          Workload: {{`{{`}} $labels.owner_kind {{`}}`}}/{{`{{`}} $labels.owner_name {{`}}`}}
-          Considere reduzir os requests e limits para otimizar recursos.
+          está usando apenas {{`{{`}} printf "%.1f" $value {{`}}`}}% do memory request. Considere reduzir os requests e limits para otimizar recursos.
 
     # 3. Alerta para Uso Alto de Memória (vs Limit)
     - alert: PodMemoryUsageNearLimit
@@ -66,6 +64,4 @@ spec:
         summary: "Uso de memória próximo ao limite ({{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.threshold }}%)"
         description: |-
           Container {{`{{`}} $labels.container {{`}}`}} (pod: {{`{{`}} $labels.pod {{`}}`}}, ns: {{`{{`}} $labels.namespace {{`}}`}})
-          está usando {{`{{`}} printf "%.1f" $value {{`}}`}}% do memory limit.
-          Workload: {{`{{`}} $labels.owner_kind {{`}}`}}/{{`{{`}} $labels.owner_name {{`}}`}}
-          Risco de OOMKilled. Considere aumentar o limit ou otimizar a aplicação.
+          está usando {{`{{`}} printf "%.1f" $value {{`}}`}}% do memory limit. Risco de OOMKilled. Considere aumentar o limit ou otimizar a aplicação.
