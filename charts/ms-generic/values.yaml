@@ -44,7 +44,7 @@ probe:
   periodSeconds: 10
   successThreshold: 1
   failureThreshold: 3
-  initialDelaySeconds: 180
+  initialDelaySeconds: 120
   startupProbe:
     enabled: false
     path: "/"
@@ -53,7 +53,7 @@ probe:
     periodSeconds: 10
     successThreshold: 1
     failureThreshold: 30
-    initialDelaySeconds: 180
+    initialDelaySeconds: 120
 
 serviceMonitor:
   enabled: true
