@@ -1,4 +1,4 @@
-name: Delete Draft Releases Manually
+name: Delete Draft Releases - Debug Mode
 on:
   workflow_dispatch:
 
@@ -6,77 +6,110 @@ jobs:
   delete-drafts:
     runs-on: ubuntu-latest
     steps:
-      - name: Delete draft releases
+      - name: Debug draft releases deletion
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO_OWNER: ${{ github.repository_owner }}
           REPO_NAME: ${{ github.event.repository.name }}
         run: |
-          # Configuração inicial tolerante a falhas
+          # Configuração inicial com debug
+          echo "::group::System Setup"
           sudo apt-get update -y
-          sudo apt-get install -y jq curl || echo "Dependências instaladas com warning"
+          sudo apt-get install -y jq curl
+          echo "jq version: $(jq --version)"
+          echo "curl version: $(curl --version | head -n 1)"
+          echo "::endgroup::"
 
-          DELETED_COUNT=0
+          # Variáveis de controle
           PAGE=1
           PER_PAGE=100
           MAX_PAGES=10
+          DELETED_COUNT=0
           API_URL="https://api.github.com/repos/$REPO_OWNER/$REPO_NAME/releases"
 
-          echo "=== INICIANDO LIMPEZA DE DRAFTS ==="
+          echo "::group::Initial Parameters"
+          echo "Repo: $REPO_OWNER/$REPO_NAME"
+          echo "Max pages: $MAX_PAGES"
+          echo "Per page: $PER_PAGE"
+          echo "::endgroup::"
 
+          # Loop principal com debug detalhado
           while [[ $PAGE -le $MAX_PAGES ]]; do
-            echo "🔍 Buscando página $PAGE..."
+            echo "::group::Processing Page $PAGE"
             
-            # Requisição com timeout e tratamento robusto
-            RELEASES_JSON=$(curl -sf \
+            # 1. Fetch API response with full debug
+            echo "[DEBUG] Fetching page $PAGE from API..."
+            RELEASES_RESPONSE=$(curl -v -s \
               -H "Authorization: token $GITHUB_TOKEN" \
               -H "Accept: application/vnd.github.v3+json" \
-              --connect-timeout 10 \
-              "$API_URL?page=$PAGE&per_page=$PER_PAGE") || {
-                echo "⚠️ Falha na API ao buscar página $PAGE"
-                break
-              }
-
-            # Verificação EXTREMAMENTE robusta do JSON
-            if ! jq -e 'if type=="array" then true else false end' <<< "${RELEASES_JSON:-[]}" >/dev/null; then
-              echo "ℹ️ Nenhuma release encontrada (página $PAGE)"
+              "$API_URL?page=$PAGE&per_page=$PER_PAGE" 2>&1)
+            
+            # Log complete response for inspection
+            echo "[DEBUG] Full API response:"
+            echo "$RELEASES_RESPONSE"
+            
+            # Extract just the JSON body
+            RELEASES_JSON=$(echo "$RELEASES_RESPONSE" | grep -E '^{.*}$')
+            
+            # 2. Validate JSON structure
+            echo "[DEBUG] Validating JSON..."
+            if ! jq -e '.' <<< "$RELEASES_JSON" >/dev/null 2>&1; then
+              echo "::error::Invalid JSON response from API"
+              echo "[DEBUG] JSON validation failed. Content:"
+              echo "$RELEASES_JSON"
               break
             fi
-
-            # Processamento seguro de drafts
-            DRAFT_IDS=$(echo "${RELEASES_JSON:-[]}" | jq -r '.[] | select(.draft==true) | .id' 2>/dev/null || true)
-
+            
+            # 3. Process drafts
+            echo "[DEBUG] Extracting draft releases..."
+            DRAFT_IDS=$(echo "$RELEASES_JSON" | jq -r '.[] | select(.draft==true) | .id' 2>&1)
+            JQ_EXIT_CODE=$?
+            
+            echo "[DEBUG] jq exit code: $JQ_EXIT_CODE"
+            echo "[DEBUG] Found draft IDs: $DRAFT_IDS"
+            
+            if [[ $JQ_EXIT_CODE -ne 0 ]]; then
+              echo "::warning::Error processing JSON with jq"
+              echo "[DEBUG] jq error output:"
+              echo "$DRAFT_IDS"
+            fi
+            
             if [[ -z "$DRAFT_IDS" ]]; then
-              echo "➡️ Nenhum draft na página $PAGE"
+              echo "No drafts found on page $PAGE"
               ((PAGE++))
+              echo "::endgroup::"
               continue
             fi
-
-            # Deleção com verificação explícita
+            
+            # 4. Delete drafts
             for release_id in $DRAFT_IDS; do
-              echo "🗑️ Processando draft ID $release_id..."
+              echo "[DEBUG] Deleting release $release_id..."
               
-              RESPONSE=$(curl -sf -X DELETE \
+              DELETE_RESPONSE=$(curl -v -s -X DELETE \
                 -H "Authorization: token $GITHUB_TOKEN" \
                 -H "Accept: application/vnd.github.v3+json" \
-                -w "%{http_code}" \
-                -o /dev/null \
-                --connect-timeout 10 \
-                "$API_URL/$release_id")
-
-              if [[ "${RESPONSE:-}" == "204" ]]; then
-                echo "✅ Sucesso ao deletar $release_id"
+                -w "\nHTTP_STATUS:%{http_code}" \
+                "$API_URL/$release_id" 2>&1)
+              
+              HTTP_STATUS=$(echo "$DELETE_RESPONSE" | grep 'HTTP_STATUS:' | cut -d':' -f2)
+              echo "[DEBUG] Delete response status: $HTTP_STATUS"
+              echo "[DEBUG] Full delete response:"
+              echo "$DELETE_RESPONSE"
+              
+              if [[ "$HTTP_STATUS" == "204" ]]; then
+                echo "✅ Successfully deleted draft $release_id"
                 ((DELETED_COUNT++))
               else
-                echo "❌ Falha ao deletar $release_id (status: ${RESPONSE:-unknown})"
+                echo "::error::Failed to delete draft $release_id (status: $HTTP_STATUS)"
               fi
             done
-
+            
             ((PAGE++))
+            echo "::endgroup::"
           done
 
-          echo "=================================="
-          echo "🚀 RESUMO FINAL"
-          echo "📌 Páginas processadas: $((PAGE-1))"
-          echo "🗑️ Drafts deletados: $DELETED_COUNT"
-          echo "=================================="
+          # Resultado final
+          echo "::group::Final Results"
+          echo "Total pages processed: $((PAGE-1))"
+          echo "Total drafts deleted: $DELETED_COUNT"
+          echo "::endgroup::"
