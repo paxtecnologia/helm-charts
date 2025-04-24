@@ -33,12 +33,31 @@ spec:
     # 2. Alerta para Subutilização de Memória (vs Request)
     - alert: PodMemoryRequestUnderutilized
       expr: >-
-        ((
-        sum(container_memory_working_set_bytes{job="kubelet", metrics_path="/metrics/cadvisor", container!="", image!="", namespace!~"{{ .Values.prometheusRulePodMemory.podMemoryRequestUnderutilized.exclude.namespace }}", pod!~"{{ .Values.prometheusRulePodMemory.podMemoryRequestUnderutilized.exclude.pod }}"}) by (namespace, pod, container)
-        /
-        sum(kube_pod_container_resource_requests{job="kube-state-metrics", resource="memory", unit="byte", namespace!~"{{ .Values.prometheusRulePodMemory.podMemoryRequestUnderutilized.exclude.namespace }}", pod!~"{{ .Values.prometheusRulePodMemory.podMemoryRequestUnderutilized.exclude.pod }}"} > 0) by (namespace, pod, container)
-        ) * 100)
-        < {{ .Values.prometheusRulePodMemory.podMemoryRequestUnderutilized.threshold }}
+        (
+          (sum by(namespace, pod, container) (
+            avg_over_time(
+              container_memory_working_set_bytes{
+                job="kubelet",
+                metrics_path="/metrics/cadvisor",
+                container!="",
+                image!="",
+                namespace!~"{{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.exclude.namespace }}",
+                pod!~"{{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.exclude.pod }}"
+              }[1h]
+            )
+          )
+          /
+          sum by(namespace, pod, container) (
+            kube_pod_container_resource_limits{
+              job="kube-state-metrics",
+              resource="memory",
+              unit="byte",
+              namespace!~"{{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.exclude.namespace }}",
+              pod!~"{{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.exclude.pod }}"
+            }
+          )) * 100
+        )
+        > {{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.threshold }}
       for: {{ .Values.prometheusRulePodMemory.podMemoryRequestUnderutilized.for }}
       labels:
         severity: warning
