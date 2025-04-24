@@ -119,5 +119,5 @@ spec:
         description: |-
           Container {{`{{`}} $labels.container {{`}}`}} (pod: {{`{{`}} $labels.pod {{`}}`}}, ns: {{`{{`}} $labels.namespace {{`}}`}}) 
           está consistentemente consumindo mais memória que o request definido.
-          Média de consumo na última hora: {{`{{`}} printf "%.1f" $value {{`}}`}} bytes
+          Média de consumo na última hora: {{`{{`}} printf "%.1f" $value {{`}}`}} bytes.
           Considere aumentar o memory request para evitar problemas de performance.
