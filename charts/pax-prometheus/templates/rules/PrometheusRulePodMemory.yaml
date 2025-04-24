@@ -86,38 +86,38 @@ spec:
           está usando {{`{{`}} printf "%.1f" $value {{`}}`}}% do memory limit. Risco de OOMKilled. Considere aumentar o limit ou otimizar a aplicação.
     # 4- Alerta para Consistente Excesso de Consumo de Memória sobre Request
     - alert: PodMemoryRequestLow
-  expr: >-
-    (
-      sum by(namespace, pod, container) (
-        avg_over_time(
-          container_memory_working_set_bytes{
-            job="kubelet",
-            metrics_path="/metrics/cadvisor",
-            container!="",
-            image!="",
-            namespace!~"{{ .Values.prometheusRulePodMemory.podMemoryRequestLow.exclude.namespace }}",
-            pod!~"{{ .Values.prometheusRulePodMemory.podMemoryRequestLow.exclude.pod }}"
-          }[1h]
+      expr: >-
+        (
+          sum by(namespace, pod, container) (
+            avg_over_time(
+              container_memory_working_set_bytes{
+                job="kubelet",
+                metrics_path="/metrics/cadvisor",
+                container!="",
+                image!="",
+                namespace!~"{{ .Values.prometheusRulePodMemory.podMemoryRequestLow.exclude.namespace }}",
+                pod!~"{{ .Values.prometheusRulePodMemory.podMemoryRequestLow.exclude.pod }}"
+              }[1h]
+            )
+          )
+          >
+          sum by(namespace, pod, container) (
+            kube_pod_container_resource_requests{
+              job="kube-state-metrics",
+              resource="memory",
+              unit="byte",
+              namespace!~"{{ .Values.prometheusRulePodMemory.podMemoryRequestLow.exclude.namespace }}",
+              pod!~"{{ .Values.prometheusRulePodMemory.podMemoryRequestLow.exclude.pod }}"
+            }
+          )
         )
-      )
-      >
-      sum by(namespace, pod, container) (
-        kube_pod_container_resource_requests{
-          job="kube-state-metrics",
-          resource="memory",
-          unit="byte",
-          namespace!~"{{ .Values.prometheusRulePodMemory.podMemoryRequestLow.exclude.namespace }}",
-          pod!~"{{ .Values.prometheusRulePodMemory.podMemoryRequestLow.exclude.pod }}"
-        }
-      )
-    )
-  for: {{ .Values.prometheusRulePodMemory.podMemoryRequestLow.for }}
-  labels:
-    severity: warning
-  annotations:
-    summary: 'Consumo de memória maior que o request, valor atual: ({{`{{`}} printf "%.1f" $value {{`}}`}} bytes)'
-    description: |-
-      Container {{`{{`}} $labels.container {{`}}`}} (pod: {{`{{`}} $labels.pod {{`}}`}}, ns: {{`{{`}} $labels.namespace {{`}}`}}) 
-      está consistentemente consumindo mais memória que o request definido.
-      Média de consumo na última hora: {{`{{`}} printf "%.1f" $value {{`}}`}} bytes
-      Considere aumentar o memory request para evitar problemas de performance.
+      for: {{ .Values.prometheusRulePodMemory.podMemoryRequestLow.for }}
+      labels:
+        severity: warning
+      annotations:
+        summary: 'Consumo de memória maior que o request, valor atual: ({{`{{`}} printf "%.1f" $value {{`}}`}} bytes)'
+        description: |-
+          Container {{`{{`}} $labels.container {{`}}`}} (pod: {{`{{`}} $labels.pod {{`}}`}}, ns: {{`{{`}} $labels.namespace {{`}}`}}) 
+          está consistentemente consumindo mais memória que o request definido.
+          Média de consumo na última hora: {{`{{`}} printf "%.1f" $value {{`}}`}} bytes
+          Considere aumentar o memory request para evitar problemas de performance.
