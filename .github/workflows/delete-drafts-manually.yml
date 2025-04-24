@@ -1,4 +1,4 @@
-name: Delete Draft Releases - Debug Mode
+name: Delete Draft Releases - Robust Version
 on:
   workflow_dispatch:
 
@@ -6,101 +6,80 @@ jobs:
   delete-drafts:
     runs-on: ubuntu-latest
     steps:
-      - name: Debug draft releases deletion
+      - name: Delete draft releases
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO_OWNER: ${{ github.repository_owner }}
           REPO_NAME: ${{ github.event.repository.name }}
         run: |
-          # Configuração inicial com debug
-          echo "::group::System Setup"
+          # Install dependencies
           sudo apt-get update -y
           sudo apt-get install -y jq curl
-          echo "jq version: $(jq --version)"
-          echo "curl version: $(curl --version | head -n 1)"
-          echo "::endgroup::"
 
-          # Variáveis de controle
+          # Configuration
           PAGE=1
           PER_PAGE=100
           MAX_PAGES=10
           DELETED_COUNT=0
           API_URL="https://api.github.com/repos/$REPO_OWNER/$REPO_NAME/releases"
+          TEMP_FILE=$(mktemp)
 
           echo "::group::Initial Parameters"
-          echo "Repo: $REPO_OWNER/$REPO_NAME"
-          echo "Max pages: $MAX_PAGES"
-          echo "Per page: $PER_PAGE"
+          echo "Repository: $REPO_OWNER/$REPO_NAME"
+          echo "Max pages to check: $MAX_PAGES"
+          echo "Releases per page: $PER_PAGE"
           echo "::endgroup::"
 
-          # Loop principal com debug detalhado
           while [[ $PAGE -le $MAX_PAGES ]]; do
             echo "::group::Processing Page $PAGE"
             
-            # 1. Fetch API response with full debug
-            echo "[DEBUG] Fetching page $PAGE from API..."
-            RELEASES_RESPONSE=$(curl -v -s \
+            # Fetch releases with proper error handling
+            echo "Fetching releases (page $PAGE)..."
+            HTTP_STATUS=$(curl -s -o "$TEMP_FILE" -w "%{http_code}" \
               -H "Authorization: token $GITHUB_TOKEN" \
               -H "Accept: application/vnd.github.v3+json" \
-              "$API_URL?page=$PAGE&per_page=$PER_PAGE" 2>&1)
+              "$API_URL?page=$PAGE&per_page=$PER_PAGE")
             
-            # Log complete response for inspection
-            echo "[DEBUG] Full API response:"
-            echo "$RELEASES_RESPONSE"
-            
-            # Extract just the JSON body
-            RELEASES_JSON=$(echo "$RELEASES_RESPONSE" | grep -E '^{.*}$')
-            
-            # 2. Validate JSON structure
-            echo "[DEBUG] Validating JSON..."
-            if ! jq -e '.' <<< "$RELEASES_JSON" >/dev/null 2>&1; then
-              echo "::error::Invalid JSON response from API"
-              echo "[DEBUG] JSON validation failed. Content:"
-              echo "$RELEASES_JSON"
+            if [[ "$HTTP_STATUS" != "200" ]]; then
+              echo "::error::Failed to fetch releases (HTTP $HTTP_STATUS)"
+              echo "Response content:"
+              cat "$TEMP_FILE"
               break
             fi
-            
-            # 3. Process drafts
-            echo "[DEBUG] Extracting draft releases..."
-            DRAFT_IDS=$(echo "$RELEASES_JSON" | jq -r '.[] | select(.draft==true) | .id' 2>&1)
-            JQ_EXIT_CODE=$?
-            
-            echo "[DEBUG] jq exit code: $JQ_EXIT_CODE"
-            echo "[DEBUG] Found draft IDs: $DRAFT_IDS"
-            
-            if [[ $JQ_EXIT_CODE -ne 0 ]]; then
-              echo "::warning::Error processing JSON with jq"
-              echo "[DEBUG] jq error output:"
-              echo "$DRAFT_IDS"
+
+            # Validate JSON
+            if ! jq -e '.' "$TEMP_FILE" >/dev/null; then
+              echo "::error::Invalid JSON response"
+              echo "Response content:"
+              cat "$TEMP_FILE"
+              break
             fi
+
+            # Extract draft release IDs
+            DRAFT_IDS=$(jq -r '.[] | select(.draft==true) | .id' "$TEMP_FILE")
             
             if [[ -z "$DRAFT_IDS" ]]; then
-              echo "No drafts found on page $PAGE"
+              echo "No draft releases found on page $PAGE"
               ((PAGE++))
               echo "::endgroup::"
               continue
             fi
+
+            echo "Found draft releases: $DRAFT_IDS"
             
-            # 4. Delete drafts
+            # Delete each draft
             for release_id in $DRAFT_IDS; do
-              echo "[DEBUG] Deleting release $release_id..."
-              
-              DELETE_RESPONSE=$(curl -v -s -X DELETE \
+              echo "Deleting draft release $release_id..."
+              DELETE_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X DELETE \
                 -H "Authorization: token $GITHUB_TOKEN" \
                 -H "Accept: application/vnd.github.v3+json" \
-                -w "\nHTTP_STATUS:%{http_code}" \
-                "$API_URL/$release_id" 2>&1)
+                "$API_URL/$release_id")
               
-              HTTP_STATUS=$(echo "$DELETE_RESPONSE" | grep 'HTTP_STATUS:' | cut -d':' -f2)
-              echo "[DEBUG] Delete response status: $HTTP_STATUS"
-              echo "[DEBUG] Full delete response:"
-              echo "$DELETE_RESPONSE"
-              
-              if [[ "$HTTP_STATUS" == "204" ]]; then
+              if [[ "$DELETE_STATUS" == "204" ]]; then
                 echo "✅ Successfully deleted draft $release_id"
                 ((DELETED_COUNT++))
               else
-                echo "::error::Failed to delete draft $release_id (status: $HTTP_STATUS)"
+                echo "::error::Failed to delete draft $release_id (HTTP $DELETE_STATUS)"
               fi
             done
             
@@ -108,8 +87,13 @@ jobs:
             echo "::endgroup::"
           done
 
-          # Resultado final
+          # Cleanup and report
+          rm -f "$TEMP_FILE"
           echo "::group::Final Results"
           echo "Total pages processed: $((PAGE-1))"
           echo "Total drafts deleted: $DELETED_COUNT"
           echo "::endgroup::"
+
+          if [[ $DELETED_COUNT -eq 0 ]]; then
+            echo "::warning::No draft releases were deleted"
+          fi
