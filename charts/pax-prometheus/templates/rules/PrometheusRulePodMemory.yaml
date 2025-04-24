@@ -66,14 +66,14 @@ spec:
           Container {{`{{`}} $labels.container {{`}}`}} (pod: {{`{{`}} $labels.pod {{`}}`}}, ns: {{`{{`}} $labels.namespace {{`}}`}})
           está usando {{`{{`}} printf "%.1f" $value {{`}}`}}% do memory limit. Risco de OOMKilled. Considere aumentar o limit ou otimizar a aplicação.
     # 4- Alerta para Consistente Excesso de Consumo de Memória sobre Request
-    - alert: PodMemoryRequestOverutilized
+    - alert: PodMemoryRequestLow
       expr: >-
         (
-        sum(container_memory_working_set_bytes{job="kubelet", metrics_path="/metrics/cadvisor", container!="", image!="", namespace!~"{{ .Values.prometheusRulePodMemory.podMemoryRequestOverutilized.exclude.namespace }}", pod!~"{{ .Values.prometheusRulePodMemory.podMemoryRequestOverutilized.exclude.pod }}"}) by (namespace, pod, container)
+        sum(container_memory_working_set_bytes{job="kubelet", metrics_path="/metrics/cadvisor", container!="", image!="", namespace!~"{{ .Values.prometheusRulePodMemory.podMemoryRequestLow.exclude.namespace }}", pod!~"{{ .Values.prometheusRulePodMemory.podMemoryRequestLow.exclude.pod }}"}) by (namespace, pod, container)
         >
-        sum(kube_pod_container_resource_requests{job="kube-state-metrics", resource="memory", unit="byte", namespace!~"{{ .Values.prometheusRulePodMemory.podMemoryRequestOverutilized.exclude.namespace }}", pod!~"{{ .Values.prometheusRulePodMemory.podMemoryRequestOverutilized.exclude.pod }}"} > 0) by (namespace, pod, container)
+        sum(kube_pod_container_resource_requests{job="kube-state-metrics", resource="memory", unit="byte", namespace!~"{{ .Values.prometheusRulePodMemory.podMemoryRequestLow.exclude.namespace }}", pod!~"{{ .Values.prometheusRulePodMemory.podMemoryRequestLow.exclude.pod }}"} > 0) by (namespace, pod, container)
         )
-      for: {{ .Values.prometheusRulePodMemory.podMemoryRequestOverutilized.for }}
+      for: {{ .Values.prometheusRulePodMemory.podMemoryRequestLow.for }}
       labels:
         severity: warning
       annotations:

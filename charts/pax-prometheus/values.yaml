@@ -14,7 +14,7 @@ prometheusRulePodMemory:
     exclude:
       namespace: ""
       pod: ""
-  podMemoryRequestOverutilized:
+  podMemoryRequestLow:
     threshold: 96
     for: 10m
     exclude:
