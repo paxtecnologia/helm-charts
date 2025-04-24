@@ -77,8 +77,8 @@ spec:
       labels:
         severity: warning
       annotations:
-        summary: 'Consumo de memória consistentemente maior que o request ({{`{{`}} printf "%.1f" $value {{`}}`}}%)'
+        summary: 'Consumo de memória maior que o request, valor atual: ({{`{{`}} printf "%.1f" $value {{`}}`}} bytes)'
         description: |-
           Container {{`{{`}} $labels.container {{`}}`}} (pod: {{`{{`}} $labels.pod {{`}}`}}, ns: {{`{{`}} $labels.namespace {{`}}`}}) 
-          está consistentemente consumindo mais memória que o request por mais de 1 hora.
+          está consumindo mais memória que o request por mais de 1 hora.
           Considere aumentar o memory request para evitar problemas de performance ou OOM kills.
