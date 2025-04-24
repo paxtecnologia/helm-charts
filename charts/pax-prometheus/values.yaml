@@ -15,8 +15,7 @@ prometheusRulePodMemory:
       namespace: ""
       pod: ""
   podMemoryRequestLow:
-    threshold: 96
-    for: 10m
+    for: 1h
     exclude:
-      namespace: ""
+      namespace: "kube-system"
       pod: ""
