@@ -65,3 +65,20 @@ spec:
         description: |-
           Container {{`{{`}} $labels.container {{`}}`}} (pod: {{`{{`}} $labels.pod {{`}}`}}, ns: {{`{{`}} $labels.namespace {{`}}`}})
           está usando {{`{{`}} printf "%.1f" $value {{`}}`}}% do memory limit. Risco de OOMKilled. Considere aumentar o limit ou otimizar a aplicação.
+    # 4- Alerta para Consistente Excesso de Consumo de Memória sobre Request
+    - alert: PodMemoryRequestOverutilized
+      expr: >-
+        (
+        sum(container_memory_working_set_bytes{job="kubelet", metrics_path="/metrics/cadvisor", container!="", image!="", namespace!~"{{ .Values.prometheusRulePodMemory.podMemoryRequestOverutilized.exclude.namespace }}", pod!~"{{ .Values.prometheusRulePodMemory.podMemoryRequestOverutilized.exclude.pod }}"}) by (namespace, pod, container)
+        >
+        sum(kube_pod_container_resource_requests{job="kube-state-metrics", resource="memory", unit="byte", namespace!~"{{ .Values.prometheusRulePodMemory.podMemoryRequestOverutilized.exclude.namespace }}", pod!~"{{ .Values.prometheusRulePodMemory.podMemoryRequestOverutilized.exclude.pod }}"} > 0) by (namespace, pod, container)
+        )
+      for: {{ .Values.prometheusRulePodMemory.podMemoryRequestOverutilized.for }}
+      labels:
+        severity: warning
+      annotations:
+        summary: 'Consumo de memória consistentemente maior que o request ({{`{{`}} printf "%.1f" $value {{`}}`}}%)'
+        description: |-
+          Container {{`{{`}} $labels.container {{`}}`}} (pod: {{`{{`}} $labels.pod {{`}}`}}, ns: {{`{{`}} $labels.namespace {{`}}`}}) 
+          está consistentemente consumindo mais memória que o request por mais de 1 hora.
+          Considere aumentar o memory request para evitar problemas de performance ou OOM kills.
