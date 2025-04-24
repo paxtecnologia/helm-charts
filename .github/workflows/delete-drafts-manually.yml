@@ -12,16 +12,59 @@ jobs:
           REPO_OWNER: ${{ github.repository_owner }}
           REPO_NAME: ${{ github.event.repository.name }}
         run: |
-          # (O mesmo script da Opção 1)
-          sudo apt-get install -y jq
-          DRAFT_RELEASES=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
-            -H "Accept: application/vnd.github.v3+json" \
-            "https://api.github.com/repos/$REPO_OWNER/$REPO_NAME/releases" \
-            | jq '.[] | select(.draft == true) | .id')
+          # Instala jq para processamento de JSON
+          sudo apt-get update -y && sudo apt-get install -y jq
           
-          for release_id in $DRAFT_RELEASES; do
-            echo "Deleting draft release ID $release_id"
-            curl -X DELETE -H "Authorization: token $GITHUB_TOKEN" \
+          # Inicializa contador
+          DELETED_COUNT=0
+          PAGE=1
+          PER_PAGE=100  # Máximo permitido pela API
+          
+          echo "Starting draft releases cleanup..."
+          
+          while :; do
+            # Obtém releases paginadas
+            echo "Fetching page $PAGE..."
+            RELEASES_JSON=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
               -H "Accept: application/vnd.github.v3+json" \
-              "https://api.github.com/repos/$REPO_OWNER/$REPO_NAME/releases/$release_id"
+              "https://api.github.com/repos/$REPO_OWNER/$REPO_NAME/releases?page=$PAGE&per_page=$PER_PAGE")
+            
+            # Verifica se terminou a paginação
+            if [[ "$RELEASES_JSON" == "[]" ]]; then
+              echo "No more releases found. Ending process."
+              break
+            fi
+            
+            # Filtra drafts e processa
+            DRAFT_IDS=$(echo "$RELEASES_JSON" | jq -r '.[] | select(.draft == true) | .id')
+            
+            if [[ -z "$DRAFT_IDS" ]]; then
+              echo "No drafts found on page $PAGE."
+              ((PAGE++))
+              continue
+            fi
+            
+            # Deleta cada draft
+            for release_id in $DRAFT_IDS; do
+              echo "Deleting draft release ID $release_id"
+              RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" -X DELETE \
+                -H "Authorization: token $GITHUB_TOKEN" \
+                -H "Accept: application/vnd.github.v3+json" \
+                "https://api.github.com/repos/$REPO_OWNER/$REPO_NAME/releases/$release_id")
+              
+              if [[ "$RESPONSE_CODE" == "204" ]]; then
+                echo "✅ Successfully deleted draft release ID $release_id"
+                ((DELETED_COUNT++))
+              else
+                echo "❌ Failed to delete draft release ID $release_id (HTTP $RESPONSE_CODE)"
+              fi
+            done
+            
+            ((PAGE++))
           done
+          
+          # Resumo final
+          echo "--------------------------------------------------"
+          echo "🚀 Cleanup completed!"
+          echo "📊 Total draft releases deleted: $DELETED_COUNT"
+          echo "--------------------------------------------------"
