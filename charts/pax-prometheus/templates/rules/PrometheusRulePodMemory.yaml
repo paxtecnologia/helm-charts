@@ -23,7 +23,7 @@ spec:
     # 1 - Alerta para Pods Finalizados por OOM
     - alert: PodOOMKilled
       expr: |-
-        kube_pod_container_status_last_terminated_reason{job="kube-state-metrics", reason="OOMKilled"} == 1
+        kube_pod_container_status_last_terminated_reason{reason="OOMKilled"} == 1
       for: {{ .Values.prometheusRulePodMemory.podOOMKilled.for }}
       labels:
         severity: critical
@@ -39,8 +39,6 @@ spec:
           (sum by(namespace, pod, container) (
             avg_over_time(
               container_memory_working_set_bytes{
-                job="kubelet",
-                metrics_path="/metrics/cadvisor",
                 container!="",
                 image!="",
                 namespace!~"{{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.exclude.namespace }}",
@@ -51,7 +49,6 @@ spec:
           /
           sum by(namespace, pod, container) (
             kube_pod_container_resource_requests{
-              job="kube-state-metrics",
               resource="memory",
               unit="byte",
               namespace!~"{{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.exclude.namespace }}",
@@ -74,9 +71,9 @@ spec:
     - alert: PodMemoryUsageNearLimit
       expr: >-
         ((       
-        sum(container_memory_working_set_bytes{job="kubelet", metrics_path="/metrics/cadvisor", container!="", image!="", namespace!~"{{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.exclude.namespace }}", pod!~"{{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.exclude.pod }}"}) by (namespace, pod, container)
+        sum(container_memory_working_set_bytes{container!="", image!="", namespace!~"{{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.exclude.namespace }}", pod!~"{{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.exclude.pod }}"}) by (namespace, pod, container)
         /
-        sum(kube_pod_container_resource_limits{job="kube-state-metrics", resource="memory", unit="byte", namespace!~"{{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.exclude.namespace }}", pod!~"{{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.exclude.pod }}"} > 0) by (namespace, pod, container)
+        sum(kube_pod_container_resource_limits{resource="memory", unit="byte", namespace!~"{{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.exclude.namespace }}", pod!~"{{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.exclude.pod }}"} > 0) by (namespace, pod, container)
         ) * 100)
         > {{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.threshold }}
       for: {{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.for }}
@@ -96,8 +93,6 @@ spec:
           sum by(namespace, pod, container) (
             avg_over_time(
               container_memory_working_set_bytes{
-                job="kubelet",
-                metrics_path="/metrics/cadvisor",
                 container!="",
                 image!="",
                 namespace!~"{{ .Values.prometheusRulePodMemory.podMemoryRequestLow.exclude.namespace }}",
@@ -108,7 +103,6 @@ spec:
           >
           sum by(namespace, pod, container) (
             kube_pod_container_resource_requests{
-              job="kube-state-metrics",
               resource="memory",
               unit="byte",
               namespace!~"{{ .Values.prometheusRulePodMemory.podMemoryRequestLow.exclude.namespace }}",
@@ -133,9 +127,9 @@ spec:
       expr: >-
         (
           (
-            kube_pod_container_resource_limits{job="kube-state-metrics", resource="memory", unit="byte", namespace!~"{{ .Values.prometheusRulePodMemory.memoryBetweenRequestLimitGreaterThanPercent.exclude.namespace }}", pod!~"{{ .Values.prometheusRulePodMemory.memoryBetweenRequestLimitGreaterThanPercent.exclude.pod }}"}
+            kube_pod_container_resource_limits{resource="memory", unit="byte", namespace!~"{{ .Values.prometheusRulePodMemory.memoryBetweenRequestLimitGreaterThanPercent.exclude.namespace }}", pod!~"{{ .Values.prometheusRulePodMemory.memoryBetweenRequestLimitGreaterThanPercent.exclude.pod }}"}
             /
-            kube_pod_container_resource_requests{job="kube-state-metrics", resource="memory", unit="byte", namespace!~"{{ .Values.prometheusRulePodMemory.memoryBetweenRequestLimitGreaterThanPercent.exclude.namespace }}", pod!~"{{ .Values.prometheusRulePodMemory.memoryBetweenRequestLimitGreaterThanPercent.exclude.pod }}"}
+            kube_pod_container_resource_requests{resource="memory", unit="byte", namespace!~"{{ .Values.prometheusRulePodMemory.memoryBetweenRequestLimitGreaterThanPercent.exclude.namespace }}", pod!~"{{ .Values.prometheusRulePodMemory.memoryBetweenRequestLimitGreaterThanPercent.exclude.pod }}"}
             - 1
           ) * 100
         ) > {{ .Values.prometheusRulePodMemory.memoryBetweenRequestLimitGreaterThanPercent.threshold }}
