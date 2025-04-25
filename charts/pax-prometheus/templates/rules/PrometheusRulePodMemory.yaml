@@ -19,7 +19,6 @@ spec:
   groups:
   - name: pax.k8s.rules.pod_memory
     rules:
-    # 1 - Alerta para Pods Finalizados por OOM
     {{- if .Values.prometheusRulePodMemory.podOOMKilled.enabled }}
     # 1 - Alerta para Pods Finalizados por OOM
     - alert: PodOOMKilled
@@ -69,7 +68,6 @@ spec:
         description: |-
           Container {{`{{`}} $labels.container {{`}}`}} (pod: {{`{{`}} $labels.pod {{`}}`}}, ns: {{`{{`}} $labels.namespace {{`}}`}}) 
           está usando apenas {{`{{`}} printf "%.1f" $value {{`}}`}}% do memory request. Considere reduzir os requests e limits para otimizar recursos.
-
     {{- end }}
     {{- if .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.enabled }}
     # 3 - Alerta para Uso Alto de Memória (vs Limit)
@@ -89,7 +87,6 @@ spec:
         description: |-
           Container {{`{{`}} $labels.container {{`}}`}} (pod: {{`{{`}} $labels.pod {{`}}`}}, ns: {{`{{`}} $labels.namespace {{`}}`}})
           está usando {{`{{`}} printf "%.1f" $value {{`}}`}}% do memory limit. Risco de OOMKilled. Considere aumentar o limit ou otimizar a aplicação.
-    
     {{- end }}
     {{- if .Values.prometheusRulePodMemory.podMemoryRequestLow.enabled }}
     # 4 - Alerta para Consistente Excesso de Consumo de Memória sobre Request
@@ -129,10 +126,9 @@ spec:
           está consistentemente consumindo mais memória que o request definido.
           Média de consumo na última hora: {{`{{`}} printf "%.1f" $value {{`}}`}} bytes.
           Considere aumentar o memory request para evitar problemas de performance.
-    
     {{- end }}
     {{- if .Values.prometheusRulePodMemory.memoryBetweenRequestLimitGreaterThanPercent.enabled }}
-    # 5 - Alerts when Memory Limit exceeds Request by more than configured percentage
+    # 5 - Alerta quando o Limite de Memória excede o Request pelo percentual configurado
     - alert: MemoryBetweenRequestLimitGreaterThanPercent
       expr: >-
         (
@@ -147,13 +143,14 @@ spec:
       labels:
         severity: warning
       annotations:
-        summary: 'Memory limit exceeds request by {{`{{`}} printf "%.0f" $value {{`}}`}}% (threshold: {{ .Values.prometheusRulePodMemory.memoryBetweenRequestLimitGreaterThanPercent.threshold }}%)'
+        summary: 'Limite de memória excede o request em {{`{{`}} printf "%.0f" $value {{`}}`}}% (threshold: {{ .Values.prometheusRulePodMemory.memoryBetweenRequestLimitGreaterThanPercent.threshold }}%)'
         description: |-
           Container {{`{{`}} $labels.container {{`}}`}} (Pod: {{`{{`}} $labels.pod {{`}}`}}, Namespace: {{`{{`}} $labels.namespace {{`}}`}})
-          - Memory Request: {{`{{`}} printf "%.1f" (div (kube_pod_container_resource_requests{job="kube-state-metrics", resource="memory", unit="byte", namespace=$labels.namespace, pod=$labels.pod, container=$labels.container}) 1000000) {{`}}`}} MB
-          - Memory Limit: {{`{{`}} printf "%.1f" (div (kube_pod_container_resource_limits{job="kube-state-metrics", resource="memory", unit="byte", namespace=$labels.namespace, pod=$labels.pod, container=$labels.container}) 1000000) {{`}}`}} MB
-          - Percentage above request: {{`{{`}} printf "%.0f" $value {{`}}`}}%
-          - Configured threshold: {{ .Values.prometheusRulePodMemory.memoryBetweenRequestLimitGreaterThanPercent.threshold }}%
-          Consider adjusting memory requests/limits for better resource allocation.
-     {{- end }}
-    
+          - Request atual de memória: {{`{{`}} printf "%.1f" (kube_pod_container_resource_requests{job="kube-state-metrics", resource="memory", unit="byte", namespace=$labels.namespace, pod=$labels.pod, container=$labels.container} / 1000000) {{`}}`}} MB
+          - Limite atual de memória: {{`{{`}} printf "%.1f" (kube_pod_container_resource_limits{job="kube-state-metrics", resource="memory", unit="byte", namespace=$labels.namespace, pod=$labels.pod, container=$labels.container} / 1000000) {{`}}`}} MB
+          - Excesso atual: {{`{{`}} printf "%.0f" $value {{`}}`}}%
+          Correção:
+          - Ajustar Limit para: {{`{{`}} printf "%.1f" ((kube_pod_container_resource_requests{job="kube-state-metrics", resource="memory", unit="byte", namespace=$labels.namespace, pod=$labels.pod, container=$labels.container} * (1 + ({{ .Values.prometheusRulePodMemory.memoryBetweenRequestLimitGreaterThanPercent.threshold }} / 100))) / 1000000) {{`}}`}} MB
+          ({{ .Values.prometheusRulePodMemory.memoryBetweenRequestLimitGreaterThanPercent.threshold }}% acima do Request)
+    {{- end }}
+  
