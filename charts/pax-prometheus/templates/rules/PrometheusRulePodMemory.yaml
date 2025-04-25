@@ -155,4 +155,5 @@ spec:
           - Percentage above request: {{`{{`}} printf "%.0f" $value {{`}}`}}%
           - Configured threshold: {{ .Values.prometheusRulePodMemory.memoryBetweenRequestLimitGreaterThanPercent.threshold }}%
           Consider adjusting memory requests/limits for better resource allocation.
+     {{- end }}
     
