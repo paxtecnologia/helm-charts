@@ -145,12 +145,12 @@ spec:
       annotations:
         summary: 'Limite de memória excede o request em {{`{{`}} printf "%.0f" $value {{`}}`}}% (threshold: {{ .Values.prometheusRulePodMemory.memoryBetweenRequestLimitGreaterThanPercent.threshold }}%)'
         description: |-
-          Container {{`{{`}} $labels.container {{`}}`}} (Pod: {{`{{`}} $labels.pod {{`}}`}}, Namespace: {{`{{`}} $labels.namespace {{`}}`}})
-          - Request atual de memória: {{`{{`}} printf "%.1f" (kube_pod_container_resource_requests{job="kube-state-metrics", resource="memory", unit="byte", namespace=$labels.namespace, pod=$labels.pod, container=$labels.container} / 1000000) {{`}}`}} MB
-          - Limite atual de memória: {{`{{`}} printf "%.1f" (kube_pod_container_resource_limits{job="kube-state-metrics", resource="memory", unit="byte", namespace=$labels.namespace, pod=$labels.pod, container=$labels.container} / 1000000) {{`}}`}} MB
+          Container {{`{{`}}$labels.container{{`}}`}} (Pod: {{`{{`}}$labels.pod{{`}}`}}, Namespace: {{`{{`}}$labels.namespace{{`}}`}})
+          - Request atual de memória: {{`{{`}} printf "%.1f" (kube_pod_container_resource_requests{job="kube-state-metrics", resource="memory", unit="byte", namespace=~"{{`{{`}}$labels.namespace{{`}}`}}", pod=~"{{`{{`}}$labels.pod{{`}}`}}", container=~"{{`{{`}}$labels.container{{`}}`}}"} / 1000000) {{`}}`}} MB
+          - Limite atual de memória: {{`{{`}} printf "%.1f" (kube_pod_container_resource_limits{job="kube-state-metrics", resource="memory", unit="byte", namespace=~"{{`{{`}}$labels.namespace{{`}}`}}", pod=~"{{`{{`}}$labels.pod{{`}}`}}", container=~"{{`{{`}}$labels.container{{`}}`}}"} / 1000000) {{`}}`}} MB
           - Excesso atual: {{`{{`}} printf "%.0f" $value {{`}}`}}%
           Correção:
-          - Ajustar Limit para: {{`{{`}} printf "%.1f" ((kube_pod_container_resource_requests{job="kube-state-metrics", resource="memory", unit="byte", namespace=$labels.namespace, pod=$labels.pod, container=$labels.container} * (1 + ({{ .Values.prometheusRulePodMemory.memoryBetweenRequestLimitGreaterThanPercent.threshold }} / 100))) / 1000000) {{`}}`}} MB
+          - Ajustar Limit para: {{`{{`}} printf "%.1f" ((kube_pod_container_resource_requests{job="kube-state-metrics", resource="memory", unit="byte", namespace=~"{{`{{`}}$labels.namespace{{`}}`}}", pod=~"{{`{{`}}$labels.pod{{`}}`}}", container=~"{{`{{`}}$labels.container{{`}}`}}"} * (1 + ({{ .Values.prometheusRulePodMemory.memoryBetweenRequestLimitGreaterThanPercent.threshold }} / 100))) / 1000000) {{`}}`}} MB
           ({{ .Values.prometheusRulePodMemory.memoryBetweenRequestLimitGreaterThanPercent.threshold }}% acima do Request)
     {{- end }}
   
