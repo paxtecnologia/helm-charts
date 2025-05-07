@@ -1,7 +1,9 @@
-.remover
+# Created by https://www.toptal.com/developers/gitignore/api/linux,windows,macos,helm
+# Edit at https://www.toptal.com/developers/gitignore?templates=linux,windows,macos,helm
 
-# Created by https://www.toptal.com/developers/gitignore/api/linux,windows,macos
-# Edit at https://www.toptal.com/developers/gitignore?templates=linux,windows,macos
+### Helm ###
+# Chart dependencies
+**/charts/*.tgz
 
 ### Linux ###
 *~
@@ -78,4 +80,3 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/linux,windows,macos,helm
-
