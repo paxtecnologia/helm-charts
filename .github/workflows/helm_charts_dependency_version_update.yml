@@ -25,7 +25,7 @@ jobs:
  
     strategy:
       matrix:
-        path: [charts/k8s-cfg-base, charts/ms-generic, charts/cron-job]                          # Passar os diretorios que vão ser verificado a versão das dependencias
+        path: [charts/k8s-cfg-base, charts/ms-generic, charts/cron-job, charts/pax-prometheus, charts/stk-fluent-bit-loki-s3]                          # Passar os diretorios que vão ser verificado a versão das dependencias
       
     steps:
       - name: Checkout code
