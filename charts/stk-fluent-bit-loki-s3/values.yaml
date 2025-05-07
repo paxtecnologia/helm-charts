@@ -11,8 +11,8 @@ fluent-bit:
           Retry_Limit False
       [OUTPUT]
           Name loki
-          Match infra-loki-distributor
-          Host loki-master
+          Match host.*
+          Host infra-loki-distributor
           labels agent=fluent-bit
           Logstash_Format On
           Logstash_Prefix node
