@@ -2428,4 +2428,19 @@ entries:
     urls:
     - https://github.com/paxtecnologia/helm-charts/releases/download/pax-prometheus-0.1.0/pax-prometheus-0.1.0.tgz
     version: 0.1.0
-generated: "2025-05-07T13:27:52.403056262Z"
+  stk-fluent-bit-loki-s3:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2025-05-07T13:33:10.656240074Z"
+    dependencies:
+    - name: fluent-bit
+      repository: https://fluent.github.io/helm-charts/
+      version: '*'
+    description: A Helm chart for Kubernetes
+    digest: d49f40c3e1def639e5b3bccbed3c448f8746c7bfd55ac80fab153b08ded51691
+    name: stk-fluent-bit-loki-s3
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/stk-fluent-bit-loki-s3-0.1.1/stk-fluent-bit-loki-s3-0.1.1.tgz
+    version: 0.1.1
+generated: "2025-05-07T13:33:10.656566814Z"
