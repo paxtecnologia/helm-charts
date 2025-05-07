@@ -1,11 +1,7 @@
 .remover
 
-# Created by https://www.toptal.com/developers/gitignore/api/linux,windows,macos,helm
-# Edit at https://www.toptal.com/developers/gitignore?templates=linux,windows,macos,helm
-
-### Helm ###
-# Chart dependencies
-**/charts/*.tgz
+# Created by https://www.toptal.com/developers/gitignore/api/linux,windows,macos
+# Edit at https://www.toptal.com/developers/gitignore?templates=linux,windows,macos
 
 ### Linux ###
 *~
