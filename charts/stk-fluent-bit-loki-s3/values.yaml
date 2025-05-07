@@ -6,16 +6,15 @@ fluent-bit:
           Name loki
           Match kube.*
           Host infra-loki-distributor
-          Logstash_Format On
           Retry_Limit False
+          auto_kubernetes_labels true
 
       [OUTPUT]
           Name loki
           Match host.*
           Host infra-loki-distributor
-          Logstash_Format On
-          Logstash_Prefix node
           Retry_Limit False
+          auto_kubernetes_labels true
 
 loki:
   loki:
