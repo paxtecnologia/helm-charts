@@ -5,16 +5,18 @@ fluent-bit:
       [OUTPUT]
           Name loki
           Match kube.*
-          Host infra-loki-distributor
+          Host <loki  distributor svc>
           Retry_Limit False
           auto_kubernetes_labels true
+          tenant_id <EKS Cluster Name>
 
       [OUTPUT]
           Name loki
           Match host.*
-          Host infra-loki-distributor
+          Host <loki  distributor svc>
           Retry_Limit False
           auto_kubernetes_labels true
+          tenant_id <EKS Cluster Name>
 
 loki:
   loki:
