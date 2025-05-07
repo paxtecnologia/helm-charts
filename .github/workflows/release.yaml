@@ -35,6 +35,10 @@ jobs:
           echo "CR_KEYRING=$keyring" >> "$GITHUB_ENV"
         env:
           GPG_KEY_BASE64: '${{ secrets.GPG_KEY_BASE64 }}'
+      
+      - name: helm dependency update
+        run: |
+          helm dependency update
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1
