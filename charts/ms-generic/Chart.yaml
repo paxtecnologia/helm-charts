@@ -25,5 +25,5 @@ version: 1.2.1
 
 dependencies:
   - name: common
-    repository: oci://registry-1.docker.io/bitnamicharts
+    repository: https://charts.bitnami.com/bitnami
     version: 2.*

@@ -26,6 +26,3 @@ dependencies:
 - name: fluent-bit
   version: "*"
   repository: "https://fluent.github.io/helm-charts/"
-# - name: fluent-bit
-#   version: "*"
-#   repository: "https://fluent.github.io/helm-charts"

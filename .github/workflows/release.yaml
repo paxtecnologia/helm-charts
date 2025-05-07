@@ -38,7 +38,8 @@ jobs:
       - name: Add repositories
         run: |
           for dir in $(ls -d charts/*/); do
-            helm dependency list --max-col-width 120 $dir 2> /dev/null | tail +2 | head -n -1 | awk '{ print "helm repo add " $1 " " $3 }' | while read cmd; do $cmd 2> /dev/null; done
+            echo $dir; 
+            helm dependency list --max-col-width 120 $dir 2> /dev/null | tail +2 | head -n -1 | awk '{ print "helm repo add --force-update " $1 " " $3 }' | while read cmd; do $cmd; done
           done
 
       - name: Run chart-releaser
