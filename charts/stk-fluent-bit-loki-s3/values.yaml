@@ -1,0 +1,17 @@
+fluentBit:
+  replicaCount: 2
+  config:
+    outputs: |
+      [OUTPUT]
+          Name es
+          Match kube.*
+          Host loki-master
+          Logstash_Format On
+          Retry_Limit False
+      [OUTPUT]
+          Name es
+          Match host.*
+          Host loki-master
+          Logstash_Format On
+          Logstash_Prefix node
+          Retry_Limit False
