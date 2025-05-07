@@ -1,4 +1,6 @@
-fluentBit:
+
+# O helm do fluent-bit não aceita uso de alias, tem que manter o nome original
+fluent-bit:
   replicaCount: 2
   config:
     outputs: |
