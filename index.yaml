@@ -20,6 +20,22 @@ entries:
   cronjob-generic:
   - apiVersion: v2
     appVersion: 0.1.4
+    created: "2025-05-07T12:09:05.976000283Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    description: A Helm chart for Kubernetes
+    digest: 96e4c7c18bc2ea87e385699abf00931db9611cd0cc81ebe9e2228dfcc7984831
+    name: cronjob-generic
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/cronjob-generic-0.1.5/cronjob-generic-0.1.5.tgz
+    version: 0.1.5
+  - apiVersion: v2
+    appVersion: 0.1.4
     created: "2024-11-07T20:29:05.476266598Z"
     dependencies:
     - name: common
@@ -99,6 +115,22 @@ entries:
     - https://github.com/paxtecnologia/helm-charts/releases/download/cronjob-generic-0.1.0/cronjob-generic-0.1.0.tgz
     version: 0.1.0
   k8s-cfg-base:
+  - apiVersion: v2
+    appVersion: 1.0.7
+    created: "2025-05-07T12:09:06.192474029Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    description: A Helm chart for Kubernetes
+    digest: a3c34bd26499d1566eaec830a1dae759033ef062883bb0a49a397ca23fd43213
+    name: k8s-cfg-base
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/k8s-cfg-base-1.0.9/k8s-cfg-base-1.0.9.tgz
+    version: 1.0.9
   - apiVersion: v2
     appVersion: 1.0.7
     created: "2025-03-20T17:24:11.778448585Z"
@@ -547,6 +579,19 @@ entries:
     - https://github.com/paxtecnologia/helm-charts/releases/download/k8s-cfg-base-0.1.0/k8s-cfg-base-0.1.0.tgz
     version: 0.1.0
   ms-generic:
+  - apiVersion: v2
+    created: "2025-05-07T12:09:06.332917022Z"
+    dependencies:
+    - name: common
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 2.*
+    description: A Helm chart for Kubernetes
+    digest: ff3789a26cead0ad2c1630c221cecdff7294fe6e3d10d6e66a1471030e208386
+    name: ms-generic
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/ms-generic-1.2.1/ms-generic-1.2.1.tgz
+    version: 1.2.1
   - apiVersion: v2
     created: "2025-04-16T07:48:45.140735595Z"
     dependencies:
@@ -2367,4 +2412,4 @@ entries:
     urls:
     - https://github.com/paxtecnologia/helm-charts/releases/download/pax-prometheus-0.1.0/pax-prometheus-0.1.0.tgz
     version: 0.1.0
-generated: "2025-04-25T20:53:12.222168426Z"
+generated: "2025-05-07T12:09:06.333623556Z"
