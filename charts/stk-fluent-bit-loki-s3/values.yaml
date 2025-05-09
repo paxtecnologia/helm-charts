@@ -16,6 +16,7 @@ fluent-bit:
           Tag kube.*
           Mem_Buf_Limit 10MB
           Skip_Long_Lines Off
+      
       [INPUT]
           Name systemd
           Tag host.*

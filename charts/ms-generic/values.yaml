@@ -15,6 +15,7 @@ image:
   tag: ""
 
 container:
+  name: app
   port: 80
   extra:
     ports: []
