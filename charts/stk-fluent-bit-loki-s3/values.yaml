@@ -1,6 +1,27 @@
 # O helm do fluent-bit não aceita uso de alias, tem que manter o nome original
 fluent-bit:
+  resources:
+    requests:
+      cpu: 25m
+      memory: 30Mi
+    limits:
+      cpu: 100m
+      memory: 36Mi
   config:
+    inputs: |
+      [INPUT]
+          Name tail
+          Path /var/log/containers/*.log
+          multiline.parser docker, cri
+          Tag kube.*
+          Mem_Buf_Limit 10MB
+          Skip_Long_Lines Off
+      [INPUT]
+          Name systemd
+          Tag host.*
+          Systemd_Filter _SYSTEMD_UNIT=kubelet.service
+          Read_From_Tail On
+
     outputs: |
       [OUTPUT]
           Name loki
