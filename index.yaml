@@ -1970,6 +1970,20 @@ entries:
   pax-prometheus:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2025-05-12T11:13:33.032620162Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 2.*
+    description: A Helm chart for Kubernetes
+    digest: 4ce0a36a4e82a0942925a774e070cbed68c4141ad03443a5b63fef61d85d3054
+    name: pax-prometheus
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/pax-prometheus-0.1.47/pax-prometheus-0.1.47.tgz
+    version: 0.1.47
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2025-04-25T20:53:12.221672647Z"
     description: A Helm chart for Kubernetes
     digest: 5ab92c423a3620ee2b08acad95a1a34fd95c512d5f9ce47429c3e14adf666435
@@ -2594,4 +2608,4 @@ entries:
     urls:
     - https://github.com/paxtecnologia/helm-charts/releases/download/stk-fluent-bit-loki-s3-0.1.1/stk-fluent-bit-loki-s3-0.1.1.tgz
     version: 0.1.1
-generated: "2025-05-09T17:50:16.659601268Z"
+generated: "2025-05-12T11:13:33.033061104Z"
