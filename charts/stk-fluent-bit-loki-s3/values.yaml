@@ -11,24 +11,48 @@ fluent-bit:
     inputs: |
       [INPUT]
           Name tail
+          Tag kube.<namespace_name>.<pod_name>.<container_name>.<container_id>
+          Tag_Regex (?<pod_name>[a-z0-9](?:[-a-z0-9]*[a-z0-9])?(?:\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)_(?<namespace_name>[^_]+)_(?<container_name>.+)-(?<container_id>[a-z0-9]{64})\.log$
           Path /var/log/containers/*.log
           multiline.parser docker, cri
-          Tag kube.<namespace_name>.<pod_name>.<container_name>
           Mem_Buf_Limit 10MB
           Skip_Long_Lines Off
-          Kubernetes_Meta On    # Habilita metadados do Kubernetes
-          Merge_Log On          # Inclui metadados no registro do log
-          Labels app            # Extrai o label 'app' especificamente
-          K8S-Logging.Parser On # Habilita parsers do Kubernetes
-      
+        
       [INPUT]
           Name systemd
           Tag host.kubelet.<hostname>
           Systemd_Filter _SYSTEMD_UNIT=kubelet.service
           Read_From_Tail On
-          Strip_Underscores On      # Remove underscores dos campos (opcional)
-          DB /var/log/flb_systemd_kubelet.db  # Persistência da posição do log
-          Mem_Buf_Limit 10MB     # Evita estouro de memória
+          Strip_Underscores On
+          DB /var/log/flb_systemd_kubelet.db
+          Mem_Buf_Limit 10MB
+          
+    filters: |
+      [FILTER]
+          Name kubernetes
+          Match kube.*
+          Merge_Log On
+          Keep_Log Off
+          Kube_Tag_Prefix kube.
+          Regex_Parser kube-custom-tag
+          Kube_Meta_Cache_TTL 3600
+          K8S-Logging.Parser On
+          K8S-Logging.Exclude On
+      [FILTER]
+          Name record_modifier
+          Match kube.*
+          Record hostname ${HOSTNAME}
+
+      [FILTER]
+          Name record_modifier
+          Match host.kubelet.*
+          Record hostname ${HOSTNAME}
+
+      [FILTER]
+          Name lua
+          Match *
+          script /fluent-bit/scripts/add_tag.lua
+          call add_tag
 
     outputs: |
       [OUTPUT]
@@ -46,6 +70,26 @@ fluent-bit:
           Retry_Limit False
           auto_kubernetes_labels true
           tenant_id <EKS Cluster Name>
+
+    customParsers: |
+      [PARSER]
+          Name docker_no_time
+          Format json
+          Time_Keep Off
+          Time_Key time
+          Time_Format %Y-%m-%dT%H:%M:%S.%L
+
+      [PARSER]
+          Name    kube-custom-tag
+          Format  regex
+          Regex   ^(?<namespace_name>[^_]+)\.(?<pod_name>[a-z0-9](?:[-a-z0-9]*[a-z0-9])?(?:\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)\.(?<container_name>.+)\.(?<container_id>[a-z0-9]{64})
+  
+  luaScripts:
+    add_tag.lua: |
+      function add_tag(tag, timestamp, record)
+          record["fluentbit_tag"] = tag
+          return 1, timestamp, record
+      end
 
 loki:
   loki:
