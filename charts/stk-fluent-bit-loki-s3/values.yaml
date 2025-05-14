@@ -13,15 +13,22 @@ fluent-bit:
           Name tail
           Path /var/log/containers/*.log
           multiline.parser docker, cri
-          Tag kube.*
+          Tag kube.<namespace_name>.<pod_name>.<container_name>
           Mem_Buf_Limit 10MB
           Skip_Long_Lines Off
+          Kubernetes_Meta On    # Habilita metadados do Kubernetes
+          Merge_Log On          # Inclui metadados no registro do log
+          Labels app            # Extrai o label 'app' especificamente
+          K8S-Logging.Parser On # Habilita parsers do Kubernetes
       
       [INPUT]
           Name systemd
-          Tag host.*
+          Tag host.kubelet.<hostname>
           Systemd_Filter _SYSTEMD_UNIT=kubelet.service
           Read_From_Tail On
+          Strip_Underscores On      # Remove underscores dos campos (opcional)
+          DB /var/log/flb_systemd_kubelet.db  # Persistência da posição do log
+          Mem_Buf_Limit 10MB     # Evita estouro de memória
 
     outputs: |
       [OUTPUT]
