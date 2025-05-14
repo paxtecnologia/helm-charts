@@ -17,7 +17,7 @@ fluent-bit:
           multiline.parser docker, cri
           Mem_Buf_Limit 10MB
           Skip_Long_Lines Off
-        
+      
       [INPUT]
           Name systemd
           Tag host.kubelet.<hostname>
@@ -38,16 +38,17 @@ fluent-bit:
           Kube_Meta_Cache_TTL 3600
           K8S-Logging.Parser On
           K8S-Logging.Exclude On
+      
       [FILTER]
           Name record_modifier
           Match kube.*
           Record hostname ${HOSTNAME}
-
+      
       [FILTER]
           Name record_modifier
           Match host.kubelet.*
           Record hostname ${HOSTNAME}
-
+      
       [FILTER]
           Name lua
           Match *
@@ -78,11 +79,12 @@ fluent-bit:
           Time_Keep Off
           Time_Key time
           Time_Format %Y-%m-%dT%H:%M:%S.%L
-
+      
       [PARSER]
           Name    kube-custom-tag
           Format  regex
           Regex   ^(?<namespace_name>[^_]+)\.(?<pod_name>[a-z0-9](?:[-a-z0-9]*[a-z0-9])?(?:\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)\.(?<container_name>.+)\.(?<container_id>[a-z0-9]{64})
+      
   
   luaScripts:
     add_tag.lua: |
