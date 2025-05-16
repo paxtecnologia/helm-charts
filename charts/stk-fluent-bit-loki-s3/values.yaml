@@ -135,6 +135,14 @@ loki:
     querier:
       max_concurrent: 4
 
+    ring:
+      kvstore:
+        store: memberlist
+
+    memberlist:
+      join_members:
+        - infra-loki-ingester-headless
+
     storage:
       type: s3
       bucketNames:
