@@ -115,6 +115,7 @@ loki:
     pattern_ingester:
       enabled: true
     limits_config:
+      timeout: 5m
       allow_structured_metadata: true
       volume_enabled: true
       retention_period: 672h # 28 days retention
