@@ -63,6 +63,7 @@ fluent-bit:
           Retry_Limit False
           auto_kubernetes_labels true
           tenant_id <EKS Cluster Name>
+          Labels namespace=$kubernetes['namespace_name']
 
       [OUTPUT]
           Name loki
