@@ -78,6 +78,7 @@ spec:
           {{- if .Values.env.enabled }}
             {{- toYaml .Values.env.data | nindent 12 }}
           {{- end }}
+
           {{- if or .Values.secret.enabled .Values.configMap.enabled .Values.envFrom.existingConfigMaps.enabled .Values.envFrom.existingSecrets.enabled  .Values.secretProviderClass.enabled  }}
           envFrom:
             {{- if .Values.secret.enabled }}
@@ -198,6 +199,10 @@ spec:
       {{- end }}
       {{- with .Values.tolerations }}
       tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.hostAliases }}
+      hostAliases:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- if or .Values.secretProviderClass.enabled .Values.configMap.injectFile.enabled .Values.volumes.persistentVolumeClaim.enabled }}
