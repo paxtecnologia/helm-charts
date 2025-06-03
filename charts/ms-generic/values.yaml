@@ -235,6 +235,8 @@ nodeSelector: {}
 
 tolerations: []
 
+hostAliases: []
+
 affinity: {}
 # Força a troca do nome do service
 # serviceFullnameOverride: nomeDoService
