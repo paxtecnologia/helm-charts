@@ -4,16 +4,33 @@
         "dockerfile": "Dockerfile",
         "context": ".."
     },
-	"remoteUser": "dev-user",
+    "remoteUser": "dev-user",
     // https://tutopal.com/solved-fatal-detected-dubious-ownership-in-repository/
-	"postStartCommand": "git config --global --add safe.directory /workspaces/*",
-	"customizations": {
-		"vscode": {
-			"extensions": [
+    "postStartCommand": "git config --global --add safe.directory /workspaces/*",
+    "customizations": {
+        "vscode": {
+            "extensions": [
                 "mhutchie.git-graph",
                 "donjayamanne.githistory",
-                "ms-azuretools.vscode-docker"
-            ]
-		}
-	},
+                "ms-azuretools.vscode-docker",
+                "esbenp.prettier-vscode"
+            ],
+            "settings": {
+                "editor.tabSize": 2,
+                "editor.insertSpaces": true,
+                "workbench.colorCustomizations": {
+                    "activityBar.background": "#ee8905",
+                    "activityBar.activeBackground": "#ee8905",
+                    "activityBar.inactiveForeground": "#ffffff",
+                    "statusBar.background": "#ee8905",
+                    "statusBar.foreground": "#ffffff"
+                },
+                "editor.formatOnSave": true,
+                "editor.defaultFormatter": "esbenp.prettier-vscode",
+                "editor.codeActionsOnSave": [
+                    "source.fixAll.eslint"
+                ],
+            }
+        }
+    },
 }

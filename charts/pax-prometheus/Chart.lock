@@ -2,5 +2,14 @@ dependencies:
 - name: common
   repository: https://charts.bitnami.com/bitnami
   version: 2.31.1
-digest: sha256:bcab8d14b5065b741ae17a9a8f47f981c683a3f0c9581f544ac02ac5c2c6794e
-generated: "2025-05-12T11:12:17.014284872Z"
+- name: kube-prometheus-stack
+  repository: https://prometheus-community.github.io/helm-charts
+  version: 73.2.0
+- name: prometheus-adapter
+  repository: https://prometheus-community.github.io/helm-charts
+  version: 4.14.1
+- name: metrics-server
+  repository: https://kubernetes-sigs.github.io/metrics-server
+  version: 3.12.2
+digest: sha256:c6565373ff28915dc964d65bf6464844e458a7b9e2ab571000f9c5e3db232e0f
+generated: "2025-06-11T18:48:38.960313061Z"

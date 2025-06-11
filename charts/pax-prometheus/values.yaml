@@ -1,4 +1,6 @@
 defaultRules: {}
+
+nameOverride: stk
 prometheusRulePodMemory:
   podOOMKilled:
     enabled: true
@@ -25,8 +27,254 @@ prometheusRulePodMemory:
       pod: ""
   memoryBetweenRequestLimitGreaterThanPercent:
     enabled: true
-    threshold: 20  # 20% acima do request
+    threshold: 20 # 20% acima do request
     for: 1h
     exclude:
       namespace: "kube-system"
       pod: ""
+
+kubePrometheusStack:
+  nameOverride: stk
+  kubeScheduler:
+    enabled: false
+  kubeControllerManager:
+    enabled: false
+  kubeEtcd:
+    enabled: false
+
+  defaultRules:
+    rules:
+      k8sContainerCpuLimits: true
+      k8sContainerCpuRequests: true
+      k8sContainerMemoryRequests: true
+      k8sContainerMemoryLimits: true
+    disabled:
+      KubeletDown: true
+      KubeMemoryOvercommit: true
+
+  prometheusOperator:
+    admissionWebhooks:
+      timeoutSeconds: 30 # the timeout value must be between 1 and 30 seconds
+      deployment:
+        nodeSelector:
+          "topology.node/mntg": monitoring
+        tolerations:
+          - key: "worker.taints/mntg.monitoring"
+            operator: "Equal"
+            value: "true"
+            effect: "NoSchedule"
+      patch:
+        nodeSelector:
+          "topology.node/mntg": monitoring
+        tolerations:
+          - key: "worker.taints/mntg.monitoring"
+            operator: "Equal"
+            value: "true"
+            effect: "NoSchedule"
+    affinity:
+      nodeSelector:
+        "topology.node/mntg": monitoring
+    tolerations:
+      - key: "worker.taints/mntg.monitoring"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"
+
+  prometheus:
+    prometheusSpec:
+      replicas: 1
+      retention: 30d
+      hostNetwork: true
+      storageSpec:
+        volumeClaimTemplate:
+          spec:
+            storageClassName: ebs-gp3
+            accessModes: ["ReadWriteOnce"]
+            resources:
+              requests:
+                storage: 220Gi
+      additionalArgs:
+        ## revisar esses valores quando tiver mais CPUS
+        - name: query.max-concurrency
+          value: "20"
+        - name: storage.tsdb.max-block-duration
+          value: "10h"
+        - name: storage.tsdb.min-block-duration
+          value: "4h"
+      resources:
+        requests:
+          cpu: 500m
+          memory: 2Gi
+        limits:
+          cpu: 1000m
+          memory: 4Gi
+      containers:
+        - name: prometheus
+          livenessProbe:
+            initialDelaySeconds: 60
+          readinessProbe:
+            initialDelaySeconds: 60
+          startupProbe:
+            initialDelaySeconds: 60
+      enableRemoteWriteReceiver: true
+      podMonitorSelectorNilUsesHelmValues: false
+      serviceMonitorSelectorNilUsesHelmValues: false
+      ruleSelectorNilUsesHelmValues: false
+      probeSelectorNilUsesHelmValues: false
+      nodeSelector:
+        "topology.node/mntg": monitoring
+      tolerations:
+        - key: "worker.taints/mntg.monitoring"
+          operator: "Equal"
+          value: "true"
+          effect: "NoSchedule"
+  thanosRuler:
+    thanosRulerSpec:
+      nodeSelector:
+        "topology.node/mntg": monitoring
+      tolerations:
+        - key: "worker.taints/mntg.monitoring"
+          operator: "Equal"
+          value: "true"
+          effect: "NoSchedule"
+  crds:
+    upgradeJob:
+      nodeSelector:
+        "topology.node/mntg": monitoring
+      tolerations:
+        - key: "worker.taints/mntg.monitoring"
+          operator: "Equal"
+          value: "true"
+          effect: "NoSchedule"
+
+  alertmanager:
+    enabled: true
+    config:
+      global:
+        resolve_timeout: 5m
+        slack_api_url: "https://hooks.slack.com/services/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"
+      route:
+        group_by: ["alertname", "namespace"]
+        group_wait: 5s
+        group_interval: 5m
+        repeat_interval: 1h
+    alertmanagerSpec:
+      ## Example which selects all namespaces with label "alertmanagerconfig" set to "enabled"
+      alertmanagerConfigNamespaceSelector:
+        matchLabels:
+          alertmanagerconfig: enabled
+      nodeSelector:
+        "topology.node/mntg": monitoring
+      tolerations:
+        - key: "worker.taints/mntg.monitoring"
+          operator: "Equal"
+          value: "true"
+          effect: "NoSchedule"
+
+  kubeStateMetrics:
+    enabled: true
+  kube-state-metrics:
+    fullnameOverride: kube-state-metrics
+    prometheus:
+      monitor:
+        enabled: true
+        interval: "10s"
+    nodeSelector:
+      "topology.node/mntg": monitoring
+    tolerations:
+      - key: "worker.taints/mntg.monitoring"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"
+
+  nodeExporter:
+    enabled: true
+  prometheus-node-exporter:
+    hostNetwork: true
+    fullnameOverride: node-exporter
+    prometheus:
+      monitor:
+        enabled: true
+        interval: "10s"
+        # https://github.com/lensapp/lens/issues/6541
+        metricRelabelings:
+          - action: replace
+            regex: (.*)
+            replacement: $1
+            sourceLabels:
+              - __meta_kubernetes_pod_node_name
+            targetLabel: kubernetes_node
+
+  grafana:
+    enabled: true
+    adminPassword: _CHANGE_!!ME!!_
+    metrics:
+      enabled: enable
+    plugins:
+      - grafana-clock-panel
+      - flant-statusmap-panel
+      # - devopsprodigy-kubegraf-app
+    serviceMonitor:
+      enabled: true
+    nodeSelector:
+      "topology.node/mntg": monitoring
+    tolerations:
+      - key: "worker.taints/mntg.monitoring"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"
+    assertNoLeakedSecrets: false
+
+metricsServer:
+  enabled: true
+metrics-server:
+  fullnameOverride: metrics-server
+  args:
+    - --kubelet-insecure-tls
+  hostNetwork:
+    enabled: false
+  metrics:
+    enabled: true
+  serviceMonitor:
+    enabled: true
+    interval: "10s"
+  nodeSelector:
+    "topology.node/mntg": monitoring
+  tolerations:
+    - key: "worker.taints/mntg.monitoring"
+      operator: "Equal"
+      value: "true"
+      effect: "NoSchedule"
+
+prometheus-adapter:
+  fullnameOverride: prometheus-adapter
+  prometheus:
+    url: http://infra-stk-prometheus.l4-mntg-prometheus.svc
+    port: 9090
+  rules:
+    default: false
+    custom:
+      - seriesQuery: '{__name__=~"^http_server_requests_seconds_.*",container!="POD",namespace!="",pod!=""}'
+        seriesFilters: []
+        resources:
+          overrides:
+            namespace:
+              resource: namespace
+            pod:
+              resource: pod
+        name:
+          matches: "^http_server_requests_seconds_count$"
+          as: "sum_http_server_requests_seconds_count_filted"
+        metricsQuery: sum(rate(<<.Series>>{<<.LabelMatchers>>,uri!~"UNKNOWN|^/actuator/.*"}[5m])) by (<<.GroupBy>>)
+        # grafana: sum(rate(http_server_requests_seconds_count{uri!~"UNKNOWN|^/actuator/.*"}[5m]))
+  nodeSelector:
+    "topology.node/mntg": monitoring
+  tolerations:
+    - key: "worker.taints/mntg.monitoring"
+      operator: "Equal"
+      value: "true"
+      effect: "NoSchedule"
+
+custom:
+  dashboardsExtra:
+    enabled: true
