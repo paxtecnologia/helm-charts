@@ -88,11 +88,13 @@ kubePrometheusStack:
       storageSpec:
         volumeClaimTemplate:
           spec:
-            storageClassName: ebs-gp3
+            ## Precisa definir o storageClassName para usar o EBS gp3
+            storageClassName: XXXXXXX
             accessModes: ["ReadWriteOnce"]
             resources:
               requests:
-                storage: 220Gi
+                ## Precisa definir o tamanho do volume
+                storage: 1Gi
       additionalArgs:
         ## revisar esses valores quando tiver mais CPUS
         - name: query.max-concurrency
