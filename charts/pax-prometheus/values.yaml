@@ -191,6 +191,8 @@ kubePrometheusStack:
 
   nodeExporter:
     enabled: true
+  windowsMonitoring:
+    enabled: false
   prometheus-node-exporter:
     hostNetwork: true
     fullnameOverride: node-exporter
