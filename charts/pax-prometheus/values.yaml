@@ -71,9 +71,8 @@ kubePrometheusStack:
             operator: "Equal"
             value: "true"
             effect: "NoSchedule"
-    affinity:
-      nodeSelector:
-        "topology.node/mntg": monitoring
+    nodeSelector:
+      "topology.node/mntg": monitoring
     tolerations:
       - key: "worker.taints/mntg.monitoring"
         operator: "Equal"
