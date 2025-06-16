@@ -28,12 +28,12 @@ dependencies:
     version: 2.*
   - name: kube-prometheus-stack
     alias: kubePrometheusStack
-    version: "*"
+    version: "73.*"
     repository: "https://prometheus-community.github.io/helm-charts"
   - name: prometheus-adapter
-    version: "*"
+    version: "4.*"
     repository: "https://prometheus-community.github.io/helm-charts"
   - name: metrics-server
-    version: "*"
+    version: "3.*"
     repository: "https://kubernetes-sigs.github.io/metrics-server"
     condition: metricsServer.enabled
