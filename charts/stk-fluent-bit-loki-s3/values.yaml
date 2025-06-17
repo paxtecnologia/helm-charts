@@ -3,10 +3,10 @@ fluent-bit:
   resources:
     requests:
       cpu: 25m
-      memory: 30Mi
+      memory: 25Mi
     limits:
       cpu: 100m
-      memory: 36Mi
+      memory: 100Mi
   config:
     inputs: |
       [INPUT]
