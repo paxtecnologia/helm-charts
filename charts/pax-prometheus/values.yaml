@@ -1,6 +1,11 @@
 defaultRules: {}
 
 nameOverride: stk
+prometheusRuleIngressController:
+  httpErrorRate:
+    enabled: true
+    for: 5m
+    
 prometheusRulePodMemory:
   podOOMKilled:
     enabled: true

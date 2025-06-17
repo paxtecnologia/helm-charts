@@ -1,0 +1,50 @@
+
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ printf "%s-%s" (include "pax-prometheus.fullname" .) "pax-ingress-controller-response" | trunc 63 | trimSuffix "-" }}
+  namespace: {{ template "pax-prometheus.namespace" . }}
+  labels:
+    app: {{ template "pax-prometheus.name" . }}
+{{- if .Values.defaultRules }}
+{{- if .Values.defaultRules.labels }}
+{{ toYaml .Values.defaultRules.labels | indent 4 }}
+{{- end }}
+{{- if .Values.defaultRules.annotations }}
+  annotations:
+{{ toYaml .Values.defaultRules.annotations | indent 4 }}
+{{- end }}
+{{- end }}
+spec:
+  groups:
+  - name: pax.k8s.ingress_controller.response
+    rules:
+    {{- if .Values.prometheusRuleIngressController.httpErrorRate.enabled }}
+    - alert: httpErrorRate
+      expr: |-
+        (
+        100 -
+          (
+            sum(
+              rate(
+                nginx_ingress_controller_requests{status!~"[4-5].*"}[1m]
+                )
+              ) by (ingress) 
+            / 
+            sum(
+              rate(
+                nginx_ingress_controller_requests{}[1m]
+              )
+            ) by (ingress)
+          ) * 100
+        ) > 0
+      for: {{ .Values.prometheusRuleIngressController.httpErrorRate.for }}
+      labels:
+        severity: critical
+      annotations:
+        summary: > 
+          Alta taxa de erros HTTP no Ingress {{`{{`}} $labels.ingress {{`}}`}} é de {{`{{`}} printf "%.0f" $value {{`}}`}}%
+        description: >
+          A taxa de respostas HTTP com status 4xx ou 5xx no Ingress {{`{{`}} $labels.ingress {{`}}`}} ultrapassou o limite definido. 
+          Isso pode indicar erros nos serviços de backend.
+    {{- end }}
