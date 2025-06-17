@@ -17,7 +17,7 @@ fluent-bit:
           multiline.parser docker, cri
           Mem_Buf_Limit 10MB
           Skip_Long_Lines Off
-      
+
       [INPUT]
           Name systemd
           Tag host.kubelet.<hostname>
@@ -26,7 +26,7 @@ fluent-bit:
           Strip_Underscores On
           DB /var/log/flb_systemd_kubelet.db
           Mem_Buf_Limit 10MB
-          
+
     filters: |
       [FILTER]
           Name kubernetes
@@ -38,17 +38,17 @@ fluent-bit:
           Kube_Meta_Cache_TTL 3600
           K8S-Logging.Parser On
           K8S-Logging.Exclude On
-      
+
       [FILTER]
           Name record_modifier
           Match kube.*
           Record hostname ${HOSTNAME}
-      
+
       [FILTER]
           Name record_modifier
           Match host.kubelet.*
           Record hostname ${HOSTNAME}
-      
+
       [FILTER]
           Name lua
           Match *
@@ -80,13 +80,12 @@ fluent-bit:
           Time_Keep Off
           Time_Key time
           Time_Format %Y-%m-%dT%H:%M:%S.%L
-      
+
       [PARSER]
           Name    kube-custom-tag
           Format  regex
           Regex   ^(?<namespace_name>[^_]+)\.(?<pod_name>[a-z0-9](?:[-a-z0-9]*[a-z0-9])?(?:\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)\.(?<container_name>.+)\.(?<container_id>[a-z0-9]{64})
-      
-  
+
   luaScripts:
     add_tag.lua: |
       function add_tag(tag, timestamp, record)
@@ -98,9 +97,23 @@ loki:
   serviceAccount:
     create: true
     annotations:
-      "eks.amazonaws.com/role-arn": "arn:aws:iam::<Account ID>:role/LokiServiceAccountRole" # The service role you created 
+      "eks.amazonaws.com/role-arn": "arn:aws:iam::<Account ID>:role/LokiServiceAccountRole" # The service role you created
   chunksCache:
-    allocatedMemory: 1024  
+    resources:
+      requests:
+        cpu: 100m
+        memory: 1200Mi
+      limits:
+        cpu: 1000m
+        memory: 1500Mi
+  resultsCache:
+    resources:
+      requests:
+        cpu: 100m
+        memory: 1200Mi
+      limits:
+        cpu: 1000m
+        memory: 1500Mi
   loki:
     auth_enabled: false
     schemaConfig:
@@ -172,7 +185,7 @@ loki:
     replicas: 3 # To ensure data durability with replication
     persistence:
       volumeClaimsEnabled: false
-  
+
       # Zero out replica counts of other deployment modes
   singleBinary:
     replicas: 0
@@ -181,5 +194,3 @@ loki:
   gateway:
     service:
       type: ClusterIP
-
-  
