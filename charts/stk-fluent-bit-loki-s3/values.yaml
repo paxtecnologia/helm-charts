@@ -54,6 +54,12 @@ fluent-bit:
           Match *
           script /fluent-bit/scripts/add_tag.lua
           call add_tag
+      
+      [FILTER]
+        Name lua
+        Match kube.*
+        script /fluent-bit/scripts/all_kube_custom.lua
+        call all_kube_custom
 
     outputs: |
       [OUTPUT]
@@ -63,7 +69,7 @@ fluent-bit:
           Retry_Limit False
           auto_kubernetes_labels true
           tenant_id <EKS Cluster Name>
-          Labels namespace=$kubernetes['namespace_name']
+          Labels namespace=$kubernetes['namespace_name'],nginx_host=$nginx_host
 
       [OUTPUT]
           Name loki
@@ -90,6 +96,18 @@ fluent-bit:
     add_tag.lua: |
       function add_tag(tag, timestamp, record)
           record["fluentbit_tag"] = tag
+          return 1, timestamp, record
+      end
+    all_kube_custom.lua: |
+      function all_kube_custom(tag, timestamp, record)
+          local k8s = record["kubernetes"]
+          if k8s and k8s["labels"] then
+              local app_label = k8s["labels"]["app.kubernetes.io/name"]
+              local nginx_host = record["nginx_host"]
+              if app_label == "ingress-nginx" and nginx_host then
+                  record["nginx_host"] = nginx_host
+              end
+          end
           return 1, timestamp, record
       end
 
