@@ -62,3 +62,14 @@ opentelemetry:
       initialInterval: 10s
       maxInterval: 10s 
       timeout: 10s
+
+networkPolicy:
+  policies: {}
+    # NOME_DA_POLICY:
+    #   policyType: Ingress|Egress
+    #   internalNamespace: true|false
+    #   namespaces:
+    #     - ns
+    #   podSelector: {}
+    #   namespaceSelectorLabel:
+    #     label: value

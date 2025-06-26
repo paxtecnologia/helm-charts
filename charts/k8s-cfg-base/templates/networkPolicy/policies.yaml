@@ -1,0 +1,30 @@
+{{- $policies := .Values.networkPolicy.policies }}
+{{- range $name, $config := $policies }}
+  {{- range $namespace := $config.namespaces }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ $name }}
+  namespace: {{ $namespace }}
+spec:
+  podSelector: {{- toYaml (default dict $config.podSelector) | nindent 4 }}
+  policyTypes:
+    - {{ $config.policyType }}
+  {{- if or $config.namespaceSelectorLabel $config.internalNamespace }}
+  ingress:
+    - from:
+        {{- if $config.namespaceSelectorLabel }}
+        - namespaceSelector:
+            matchLabels:
+              {{- toYaml $config.namespaceSelectorLabel | nindent 14 }}
+        {{- end }}
+        {{- if $config.internalNamespace }}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ $namespace | quote }}
+        {{- end }}
+  {{- end }}
+  {{/* end spec */}}
+  {{- end }}
+{{- end }}
