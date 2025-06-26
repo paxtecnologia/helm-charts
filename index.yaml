@@ -133,6 +133,22 @@ entries:
   k8s-cfg-base:
   - apiVersion: v2
     appVersion: 1.0.7
+    created: "2025-06-26T19:06:53.414185676Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - bitnami-common
+      version: 2.*
+    description: A Helm chart for Kubernetes
+    digest: ed0bd29e4e4728cf98bf76bd353c2c5d9094ff27080f3ea69a5adee82818be78
+    name: k8s-cfg-base
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/k8s-cfg-base-1.0.12/k8s-cfg-base-1.0.12.tgz
+    version: 1.0.12
+  - apiVersion: v2
+    appVersion: 1.0.7
     created: "2025-06-16T18:09:02.587634228Z"
     dependencies:
     - name: common
@@ -627,6 +643,19 @@ entries:
     - https://github.com/paxtecnologia/helm-charts/releases/download/k8s-cfg-base-0.1.0/k8s-cfg-base-0.1.0.tgz
     version: 0.1.0
   ms-generic:
+  - apiVersion: v2
+    created: "2025-06-26T19:06:53.568153343Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 2.*
+    description: A Helm chart for Kubernetes
+    digest: f98151e2f3f7015f1c9639f19dd80914d1a6971f1e45364e74a00908cf8ce1a1
+    name: ms-generic
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/ms-generic-1.2.7/ms-generic-1.2.7.tgz
+    version: 1.2.7
   - apiVersion: v2
     created: "2025-06-16T18:09:02.796524424Z"
     dependencies:
@@ -2982,4 +3011,4 @@ entries:
     urls:
     - https://github.com/paxtecnologia/helm-charts/releases/download/stk-fluent-bit-loki-s3-0.1.1/stk-fluent-bit-loki-s3-0.1.1.tgz
     version: 0.1.1
-generated: "2025-06-18T19:59:09.408610618Z"
+generated: "2025-06-26T19:06:53.568820838Z"
