@@ -242,3 +242,9 @@ affinity: {}
 # serviceFullnameOverride: nomeDoService
 
 commonLabels: {}
+
+networkPolicy:
+  ingress:
+    enabled: false
+  egress:
+    enabled: false

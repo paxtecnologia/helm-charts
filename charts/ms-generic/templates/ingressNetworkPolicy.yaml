@@ -1,25 +1,17 @@
 {{- if .Values.networkPolicy.ingress.enabled }}
-  {{- $policies := .Values.networkPolicy.ingress }}
-  {{- range $name, $config := $policies }}
-    {{- if ne $name "enabled" }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: allow-ingress-{{ $name }}
+  name: allow-ingress-{{ template "common.names.fullname" $ }}
+  namespace: {{ template "common.names.namespace" $ }}
 spec:
-  podSelector: {{- toYaml (default dict $config.podSelector) | nindent 4 }}
+  podSelector: {}
   policyTypes:
     - Ingress
-  {{- if $config.namespaceSelectorLabel }}
   ingress:
     - from:
-        {{- if $config.namespaceSelectorLabel }}
         - namespaceSelector:
             matchLabels:
-              {{- toYaml $config.namespaceSelectorLabel | nindent 14 }}
-        {{- end }}
-  {{- end }}
-    {{- end }}
-  {{- end }}
+              network.policy.ingress/allow: {{ template "common.names.fullname" . }}
 {{- end }}
