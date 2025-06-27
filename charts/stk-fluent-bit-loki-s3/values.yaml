@@ -117,6 +117,7 @@ loki:
     annotations:
       "eks.amazonaws.com/role-arn": "arn:aws:iam::<Account ID>:role/LokiServiceAccountRole" # The service role you created
   chunksCache:
+    allocatedMemory: 1024
     resources:
       requests:
         cpu: 100m
@@ -125,6 +126,7 @@ loki:
         cpu: 1000m
         memory: 1500Mi
   resultsCache:
+    allocatedMemory: 1024
     resources:
       requests:
         cpu: 100m

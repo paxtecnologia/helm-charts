@@ -1,0 +1,25 @@
+{{- if .Values.volumes.persistentVolumeClaim.enabled }}
+{{- $item := .Values.volumes.persistentVolumeClaim }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: redis-insight-data
+  {{- $claimLabels := include "common.tplvalues.merge" ( dict "values" ( list $item.labels $.Values.commonLabels ) "context" . ) }}
+  labels: {{- include "common.labels.matchLabels" ( dict "customLabels" $claimLabels "context" $ ) | nindent 4 }}
+  {{- if .annotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" $item.annotations "context" $) | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ $item.size }}
+  {{- if $item.storageClassName }}
+  storageClassName: {{ $item.storageClassName }}
+  {{- end }}
+  {{- if $item.persistentVolumeReclaimPolicy }}
+  persistentVolumeReclaimPolicy: {{ $item.persistentVolumeReclaimPolicy }}
+  {{- end }}
+{{- end }}
