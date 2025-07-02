@@ -107,6 +107,8 @@ kubePrometheusStack:
           value: "10h"
         - name: storage.tsdb.min-block-duration
           value: "4h"
+        - name: query.timeout
+          value: "5m"
       resources:
         requests:
           cpu: 500m
