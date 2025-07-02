@@ -56,10 +56,10 @@ fluent-bit:
           call add_tag
       
       [FILTER]
-        Name lua
-        Match kube.*
-        script /fluent-bit/scripts/all_kube_custom.lua
-        call all_kube_custom
+          Name lua
+          Match kube.*
+          script /fluent-bit/scripts/all_kube_custom.lua
+          call all_kube_custom
 
     outputs: |
       [OUTPUT]
