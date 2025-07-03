@@ -1,26 +1,17 @@
 {{- if .Values.networkPolicy.egress.enabled }}
-  {{- $policies := .Values.networkPolicy.egress }}
-  {{- range $name, $config := $policies }}
-    {{- if ne $name "enabled" }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: allow-egress-{{ $name }}
-  namespace: {{ .Release.Namespace }}
+  name: allow-egress-{{ template "common.names.name" $ }}
+  namespace: {{ template "common.names.namespace" $ }}
 spec:
-  podSelector: {{- toYaml (default dict $config.podSelector) | nindent 4 }}
+  podSelector: {}
   policyTypes:
     - Egress
-  {{- if $config.namespaceSelectorLabel }}
   egress:
     - from:
-        {{- if $config.namespaceSelectorLabel }}
         - namespaceSelector:
             matchLabels:
-              {{- toYaml $config.namespaceSelectorLabel | nindent 14 }}
-        {{- end }}
-  {{- end }}
-    {{- end }}
-  {{- end }}
+              network.policy.egress/allow: {{ template "common.names.name" . }}
 {{- end }}
