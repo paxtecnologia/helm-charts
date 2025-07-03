@@ -148,7 +148,7 @@ spec:
             initialDelaySeconds: {{ .Values.probe.initialDelaySeconds }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          {{- if or .Values.secretProviderClass.enabled .Values.configMap.injectFile.enabled .Values.volumes.persistentVolumeClaim.enabled }}
+          {{- if or .Values.containers.volumeMounts.extra.enabled .Values.secretProviderClass.enabled .Values.configMap.injectFile.enabled .Values.volumes.persistentVolumeClaim.enabled }}
           volumeMounts:
             {{- range .Values.volumes.persistentVolumeClaim.itens }}
             - name: {{ .name }}
@@ -167,6 +167,9 @@ spec:
               readOnly: true
             {{- end }}
             {{- end }}
+            {{- if .Values.containers.volumeMounts.extra.enabled }}
+              {{- toYaml .Values.containers.volumeMounts.extra.data | nindent 12 }}
+            {{- end }}
           {{- end }}
         {{- range .Values.containers.planList }}
         - {{- toYaml . | nindent 10 }}
@@ -179,12 +182,11 @@ spec:
           imagePullPolicy: IfNotPresent
           command:
             {{- toYaml .Values.initContainers.waitForCmd.command | nindent 12 }}
-        {{- end }}
-        {{- with .Values.initContainers.extras }} 
-          {{- toYaml . | nindent 8 }}
-        {{- end }}    
+        {{- end }} 
+        {{- if .Values.initContainers.extras }} 
+          {{- toYaml .Values.initContainers.extras | nindent 8 }}
+        {{- end }}   
       {{- end }}
-        
       {{- with .Values.topologySpreadConstraints }}
       topologySpreadConstraints:
         {{- toYaml . | nindent 8 }}
@@ -205,7 +207,7 @@ spec:
       hostAliases:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if or .Values.secretProviderClass.enabled .Values.configMap.injectFile.enabled .Values.volumes.persistentVolumeClaim.enabled }}
+      {{- if or .Values.volumes.extra.enabled .Values.secretProviderClass.enabled .Values.configMap.injectFile.enabled .Values.volumes.persistentVolumeClaim.enabled }}
       volumes:
         {{- range .Values.volumes.persistentVolumeClaim.itens }}
         - name: {{ .name }}
@@ -229,5 +231,8 @@ spec:
             volumeAttributes:
               secretProviderClass: {{ include "ms-generic.names.secretProviderClass.name" ( dict "provider" .provider "context" $)  }} 
         {{- end }}
+        {{- end }}
+        {{- with .Values.volumes.extra.data }}
+           {{- toYaml . | nindent 8 }}
         {{- end }}
       {{- end }}

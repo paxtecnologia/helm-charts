@@ -1,0 +1,52 @@
+containers:
+  volumeMounts:
+    extra:
+      enabled: true
+      data:
+        - name: tls-volume
+          mountPath: /tls
+volumes:
+  extra:
+    enabled: true
+    data:
+      - name: tls-volume
+        emptyDir: {}
+      - name: tls-secret
+        secret:
+          secretName: cert-tls-secret
+
+initContainers:
+  enabled : true
+  extras:
+    - name: generate-keystores
+      image: bitnami/openjdk:17  # Imagem com keytool e openssl
+      command:
+        - /bin/bash
+        - -c
+        - |
+          mkdir -p /tls
+          cp /mnt/secret/ca.crt /tls/ca.crt
+          cp /mnt/secret/client.crt /tls/client.crt
+          cp /mnt/secret/client.key /tls/client.key
+      
+          echo "Criando truststore..."
+          keytool -importcert -noprompt \
+            -file /tls/ca.crt \
+            -alias rabbitmq-ca \
+            -keystore /tls/server-truststore.p12 \
+            -storepass changeit \
+            -storetype PKCS12
+
+          echo "Criando keystore..."
+          openssl pkcs12 -export \
+            -in /tls/client.crt \
+            -inkey /tls/client.key \
+            -out /tls/client-keystore.p12 \
+            -name rabbitmq-client \
+            -passout pass:changeit
+
+      volumeMounts:
+        - name: tls-volume
+          mountPath: /tls
+        - name: tls-secret
+          mountPath: /mnt/secret

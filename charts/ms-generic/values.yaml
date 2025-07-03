@@ -22,14 +22,18 @@ container:
 
 containers:
   planList: []
+  volumeMounts:
+    extra:
+      enabled: false
+      data: []
 
 deployment:
   revisionHistoryLimit: 5
   strategy:
-    type: RollingUpdate  # Define a estratégia de atualização (RollingUpdate ou Recreate)
+    type: RollingUpdate # Define a estratégia de atualização (RollingUpdate ou Recreate)
     rollingUpdate:
-      maxSurge: 1         # Número máximo de pods adicionais durante a atualização (se a estratégia for RollingUpdate)
-      maxUnavailable: 0   # Número máximo de pods indisponíveis durante a atualização (se a estratégia for RollingUpdate) 
+      maxSurge: 1 # Número máximo de pods adicionais durante a atualização (se a estratégia for RollingUpdate)
+      maxUnavailable: 0 # Número máximo de pods indisponíveis durante a atualização (se a estratégia for RollingUpdate)
 
 #resources:
 #  limits:
@@ -105,6 +109,9 @@ configMap:
       #   destPath: /app/application2.yaml
 
 volumes:
+  extra:
+    enabled: false
+    data: []
   persistentVolumeClaim:
     enabled: false
     itens: []
@@ -127,9 +134,11 @@ envFrom:
     list:
       []
       # - secretsName
+
 initContainers:
   enabled: false
-  
+  extra: []
+
 secretProviderClass:
   enabled: false
   list:
