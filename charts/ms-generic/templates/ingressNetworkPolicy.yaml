@@ -11,7 +11,7 @@ spec:
     - Ingress
   ingress:
     - from:
-        - namespaceSelector:
-            matchLabels:
-              network.policy.ingress/allow: {{ template "common.names.name" . }}
+      - namespaceSelector:
+          matchLabels:
+            network.policy.ingress/allow: {{ template "common.names.name" . }}
 {{- end }}
