@@ -708,6 +708,19 @@ entries:
     version: 0.1.0
   ms-generic:
   - apiVersion: v2
+    created: "2025-07-03T18:36:26.914938532Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 2.*
+    description: A Helm chart for Kubernetes
+    digest: 461158dfef61e6e5a9201d3de0bde15ede641fec59b62031c4e603ffa9df5fa9
+    name: ms-generic
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/ms-generic-1.2.11/ms-generic-1.2.11.tgz
+    version: 1.2.11
+  - apiVersion: v2
     created: "2025-07-03T17:13:43.607831267Z"
     dependencies:
     - name: common
@@ -3223,4 +3236,4 @@ entries:
     urls:
     - https://github.com/paxtecnologia/helm-charts/releases/download/stk-fluent-bit-loki-s3-0.1.1/stk-fluent-bit-loki-s3-0.1.1.tgz
     version: 0.1.1
-generated: "2025-07-03T18:11:22.655473987Z"
+generated: "2025-07-03T18:36:26.915329554Z"
