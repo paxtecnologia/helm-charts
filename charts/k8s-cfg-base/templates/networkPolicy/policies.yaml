@@ -11,7 +11,7 @@ spec:
   podSelector: {{- toYaml (default dict $config.podSelector) | nindent 4 }}
   policyTypes:
     - {{ $config.policyType }}
-  {{- if or $config.namespaceSelectorLabel $config.internalNamespace }}
+  {{- if and (eq $config.policyType "Ingress") (or $config.namespaceSelectorLabel $config.internalNamespace) }}
   ingress:
     - from:
         {{- if $config.namespaceSelectorLabel }}
@@ -22,9 +22,22 @@ spec:
         {{- if $config.internalNamespace }}
         - namespaceSelector:
             matchLabels:
-              kubernetes.io/metadata.name: {{ $namespace | quote }}
+              kubernetes.io/metadata.name: {{ $namespace }}
         {{- end }}
   {{- end }}
-  {{/* end spec */}}
+  {{- if and (eq $config.policyType "Egress") (or $config.namespaceSelectorLabel $config.internalNamespace) }}
+  egress:
+    - to:
+        {{- if $config.namespaceSelectorLabel }}
+        - namespaceSelector:
+            matchLabels:
+              {{- toYaml $config.namespaceSelectorLabel | nindent 14 }}
+        {{- end }}
+        {{- if $config.internalNamespace }}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ $namespace }}
+        {{- end }}
   {{- end }}
+{{- end }}
 {{- end }}
