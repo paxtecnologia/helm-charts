@@ -14,30 +14,30 @@ spec:
   {{- if and (eq $config.policyType "Ingress") (or $config.namespaceSelectorLabel $config.internalNamespace) }}
   ingress:
     - from:
-  {{- if $config.namespaceSelectorLabel }}
-        - namespaceSelector:
-            matchLabels:
-{{ toYaml $config.namespaceSelectorLabel | indent 12 }}
-  {{- end }}
-  {{- if $config.internalNamespace }}
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: {{ $namespace }}
-  {{- end }}
+      {{- if $config.namespaceSelectorLabel }}
+      - namespaceSelector:
+          matchLabels:
+            {{- toYaml $config.namespaceSelectorLabel | nindent 14 }}
+      {{- end }}
+      {{- if $config.internalNamespace }}
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: {{ $namespace }}
+      {{- end }}
   {{- end }}
   {{- if and (eq $config.policyType "Egress") (or $config.namespaceSelectorLabel $config.internalNamespace) }}
   egress:
     - to:
-  {{- if $config.namespaceSelectorLabel }}
-        - namespaceSelector:
-            matchLabels:
-{{ toYaml $config.namespaceSelectorLabel | indent 12 }}
-  {{- end }}
-  {{- if $config.internalNamespace }}
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: {{ $namespace }}
-  {{- end }}
+      {{- if $config.namespaceSelectorLabel }}
+      - namespaceSelector:
+          matchLabels:
+            {{- toYaml $config.namespaceSelectorLabel | nindent 14 }}
+      {{- end }}
+      {{- if $config.internalNamespace }}
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: {{ $namespace }}
+      {{- end }}
   {{- end }}
 {{- end }}
 {{- end }}
