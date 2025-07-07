@@ -22,7 +22,7 @@ spec:
         {{- if $config.peerSelector }}
         selector: {{ $config.peerSelector | quote }}
         {{- else if $config.namespaceSelectorLabel }}
-        namespaceSelector: "kubernetes.io/metadata.name == '{{ index $config.namespaceSelectorLabel \"kubernetes.io/metadata.name\" }}'"
+        namespaceSelector: {{ printf "\"kubernetes.io/metadata.name == '%s'\"" (index $config.namespaceSelectorLabel "kubernetes.io/metadata.name") }}
         {{- else if $config.internalNamespace }}
         namespaceSelector: "kubernetes.io/metadata.name == '{{ $namespace }}'"
         {{- end }}
@@ -41,7 +41,7 @@ spec:
         {{- if $config.peerSelector }}
         selector: {{ $config.peerSelector | quote }}
         {{- else if $config.namespaceSelectorLabel }}
-        namespaceSelector: "kubernetes.io/metadata.name == '{{ index $config.namespaceSelectorLabel \"kubernetes.io/metadata.name\" }}'"
+        namespaceSelector: {{ printf "\"kubernetes.io/metadata.name == '%s'\"" (index $config.namespaceSelectorLabel "kubernetes.io/metadata.name") }}
         {{- else if $config.internalNamespace }}
         namespaceSelector: "kubernetes.io/metadata.name == '{{ $namespace }}'"
         {{- end }}
