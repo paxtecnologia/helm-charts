@@ -2,41 +2,51 @@
 {{- range $name, $config := $policies }}
   {{- range $namespace := $config.namespaces }}
 ---
-apiVersion: networking.k8s.io/v1
+apiVersion: crd.projectcalico.org/v1
 kind: NetworkPolicy
 metadata:
   name: {{ $name }}
   namespace: {{ $namespace }}
 spec:
-  podSelector: {{- toYaml (default dict $config.podSelector) | nindent 4 }}
-  policyTypes:
+  selector: {{ $config.selector | default "all()" | quote }}
+  types:
     - {{ $config.policyType }}
-  {{- if and (eq $config.policyType "Ingress") (or $config.namespaceSelectorLabel $config.internalNamespace) }}
+  {{- if eq $config.policyType "Ingress" }}
   ingress:
-    - from:
-      {{- if $config.namespaceSelectorLabel }}
-      - namespaceSelector:
-          matchLabels:
-            {{- toYaml $config.namespaceSelectorLabel | nindent 14 }}
+    - action: {{ $config.action | default "Allow" }}
+      {{- if $config.protocol }}
+      protocol: {{ $config.protocol }}
       {{- end }}
-      {{- if $config.internalNamespace }}
-      - namespaceSelector:
-          matchLabels:
-            kubernetes.io/metadata.name: {{ $namespace }}
+      {{- if or $config.peerSelector $config.namespaceSelectorLabel $config.internalNamespace }}
+      source:
+        {{- if $config.peerSelector }}
+        selector: {{ $config.peerSelector | quote }}
+        {{- else if $config.namespaceSelectorLabel }}
+        namespaceSelector: {{ printf "\"kubernetes.io/metadata.name == '%s'\"" (index $config.namespaceSelectorLabel "kubernetes.io/metadata.name") }}
+        {{- else if $config.internalNamespace }}
+        namespaceSelector: "kubernetes.io/metadata.name == '{{ $namespace }}'"
+        {{- end }}
+      {{- else }}
+      source: {}
       {{- end }}
   {{- end }}
-  {{- if and (eq $config.policyType "Egress") (or $config.namespaceSelectorLabel $config.internalNamespace) }}
+  {{- if eq $config.policyType "Egress" }}
   egress:
-    - to:
-      {{- if $config.namespaceSelectorLabel }}
-      - namespaceSelector:
-          matchLabels:
-            {{- toYaml $config.namespaceSelectorLabel | nindent 14 }}
+    - action: {{ $config.action | default "Allow" }}
+      {{- if $config.protocol }}
+      protocol: {{ $config.protocol }}
       {{- end }}
-      {{- if $config.internalNamespace }}
-      - namespaceSelector:
-          matchLabels:
-            kubernetes.io/metadata.name: {{ $namespace }}
+      {{- if or $config.peerSelector $config.namespaceSelectorLabel $config.internalNamespace }}
+      destination:
+        {{- if $config.peerSelector }}
+        selector: {{ $config.peerSelector | quote }}
+        {{- else if $config.namespaceSelectorLabel }}
+        namespaceSelector: {{ printf "\"kubernetes.io/metadata.name == '%s'\"" (index $config.namespaceSelectorLabel "kubernetes.io/metadata.name") }}
+        {{- else if $config.internalNamespace }}
+        namespaceSelector: "kubernetes.io/metadata.name == '{{ $namespace }}'"
+        {{- end }}
+      {{- else }}
+      destination: {}
       {{- end }}
   {{- end }}
 {{- end }}

@@ -1,17 +1,16 @@
 {{- if .Values.networkPolicy.egress.enabled }}
 ---
-apiVersion: networking.k8s.io/v1
+apiVersion: crd.projectcalico.org/v1
 kind: NetworkPolicy
 metadata:
-  name: allow-egress-{{ template "common.names.name" $ }}
-  namespace: {{ template "common.names.namespace" $ }}
+  name: allow-egress-{{ template "common.names.name" . }}
+  namespace: {{ template "common.names.namespace" . }}
 spec:
-  podSelector: {}
-  policyTypes:
+  selector: all()
+  types:
     - Egress
   egress:
-    - from:
-      - namespaceSelector:
-          matchLabels:
-            network.policy.egress/allow: {{ template "common.names.name" . }}
+    - action: Allow
+      source:
+        namespaceSelector: {{ printf "\"network.policy.egress/allow == '%s'\"" (include "common.names.name" .) }}
 {{- end }}
