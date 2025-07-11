@@ -12,5 +12,5 @@ spec:
   ingress:
     - action: Allow
       source:
-        namespaceSelector: {{ printf "\"network.policy.ingress/allow == '%s'\"" (include "common.names.name" .) }}
+        namespaceSelector: {{ printf "\"net.policy/%s.%s == 'allow-ingress'\"" (include "common.names.name" .) (include "common.names.namespace" .) }}
 {{- end }}
