@@ -12,5 +12,5 @@ spec:
   ingress:
     - action: Allow
       source:
-        namespaceSelector: {{ printf "\"net.policy/%s.%s == 'allow-ingress'\"" (include "common.names.name" .) (include "common.names.namespace" .) }}
+        namespaceSelector: {{ printf "\"calico.policy/%s.%s == 'allow-ingress'\"" (include "common.names.name" .) (include "common.names.namespace" .) }}
 {{- end }}

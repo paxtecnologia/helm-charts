@@ -12,5 +12,5 @@ spec:
   egress:
     - action: Allow
       source:
-        namespaceSelector: {{ printf "\"net.policy/%s.%s == 'allow-egress'\"" (include "common.names.name" .) (include "common.names.namespace" .) }}
+        namespaceSelector: {{ printf "\"calico.policy/%s.%s == 'allow-egress'\"" (include "common.names.name" .) (include "common.names.namespace" .) }}
 {{- end }}
