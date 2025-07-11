@@ -88,7 +88,7 @@ kubePrometheusStack:
     prometheusSpec:
       replicas: 1
       retention: 30d
-      hostNetwork: true
+      hostNetwork: false
       storageSpec:
         volumeClaimTemplate:
           spec:
@@ -200,7 +200,7 @@ kubePrometheusStack:
   windowsMonitoring:
     enabled: false
   prometheus-node-exporter:
-    hostNetwork: true
+    hostNetwork: false
     fullnameOverride: node-exporter
     prometheus:
       monitor:
