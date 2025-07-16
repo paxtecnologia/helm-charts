@@ -176,9 +176,9 @@ spec:
         {{- end }}
       {{- if .Values.initContainers.enabled }}
       initContainers:
-        {{- if .Values.initContainers.waitForCmd }}
+        {{- if .Values.initContainers.waitForCmd.command }}
         - name: wait-for-cmd
-          image: busybox
+          image: {{ .Values.initContainers.waitForCmd.image }}
           imagePullPolicy: IfNotPresent
           command:
             {{- toYaml .Values.initContainers.waitForCmd.command | nindent 12 }}

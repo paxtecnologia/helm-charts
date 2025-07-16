@@ -137,6 +137,8 @@ envFrom:
 
 initContainers:
   enabled: false
+  waitForCmd:
+    image: "paxtecnologia/net-tools:v1"
   extra: []
 
 secretProviderClass:
