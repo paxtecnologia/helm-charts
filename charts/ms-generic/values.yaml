@@ -254,7 +254,7 @@ affinity: {}
 
 commonLabels: {}
 
-networkPolicy:
+calicoPolicy:
   ingress:
     enabled: false
   egress:

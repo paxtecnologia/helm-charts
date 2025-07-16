@@ -63,7 +63,7 @@ opentelemetry:
       maxInterval: 10s 
       timeout: 10s
 
-networkPolicy:
+calicoPolicy:
   policies: {}
     # NOME_DA_POLICY:
     #   policyType: Ingress|Egress
