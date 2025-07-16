@@ -2312,6 +2312,31 @@ entries:
   pax-prometheus:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2025-07-16T20:57:05.595576262Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 2.*
+    - alias: kubePrometheusStack
+      name: kube-prometheus-stack
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 75.*
+    - name: prometheus-adapter
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 4.*
+    - condition: metricsServer.enabled
+      name: metrics-server
+      repository: https://kubernetes-sigs.github.io/metrics-server
+      version: 3.*
+    description: A Helm chart for Kubernetes
+    digest: b71e80b6b9d5d2aa1b3e8db1bf57fd486540fa4d6162470fc5ed2233b826e2ce
+    name: pax-prometheus
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/pax-prometheus-0.1.57/pax-prometheus-0.1.57.tgz
+    version: 0.1.57
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2025-07-02T02:53:30.088684845Z"
     dependencies:
     - name: common
@@ -3012,6 +3037,23 @@ entries:
   stk-fluent-bit-loki-s3:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2025-07-16T20:57:05.73709865Z"
+    dependencies:
+    - name: fluent-bit
+      repository: https://fluent.github.io/helm-charts/
+      version: 0.*
+    - name: loki
+      repository: https://grafana.github.io/helm-charts/
+      version: 6.*
+    description: A Helm chart for Kubernetes
+    digest: 747a3f74b65a053829cbf1db3888f29a1ae3ecae3ad4b1e510890089c8c10ce2
+    name: stk-fluent-bit-loki-s3
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/stk-fluent-bit-loki-s3-0.1.26/stk-fluent-bit-loki-s3-0.1.26.tgz
+    version: 0.1.26
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2025-07-11T19:59:06.229951635Z"
     dependencies:
     - name: fluent-bit
@@ -3413,4 +3455,4 @@ entries:
     urls:
     - https://github.com/paxtecnologia/helm-charts/releases/download/stk-fluent-bit-loki-s3-0.1.1/stk-fluent-bit-loki-s3-0.1.1.tgz
     version: 0.1.1
-generated: "2025-07-16T14:56:25.652214302Z"
+generated: "2025-07-16T20:57:05.737540903Z"
