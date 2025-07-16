@@ -1,4 +1,4 @@
-{{- $policies := .Values.networkPolicy.policies }}
+{{- $policies := .Values.calicoPolicy.policies }}
 {{- range $name, $config := $policies }}
   {{- range $namespace := $config.namespaces }}
 ---

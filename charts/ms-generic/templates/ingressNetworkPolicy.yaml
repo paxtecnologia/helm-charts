@@ -1,4 +1,4 @@
-{{- if .Values.networkPolicy.ingress.enabled }}
+{{- if .Values.calicoPolicy.ingress.enabled }}
 ---
 apiVersion: crd.projectcalico.org/v1
 kind: NetworkPolicy
