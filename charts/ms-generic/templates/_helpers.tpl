@@ -113,3 +113,12 @@ Create Service name
 {{- template "common.names.fullname" $ -}}
 {{- end }}
 {{- end }}
+
+
+{{- define "ms-generic.common.fullname" -}}
+{{- template "common.names.fullname" $ -}}
+{{- end }}
+
+{{- define "ms-generic.common.namespace" -}}
+{{- template "common.names.namespace" $ -}}
+{{- end }}
