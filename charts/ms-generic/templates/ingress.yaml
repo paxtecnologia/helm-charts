@@ -1,6 +1,5 @@
 {{- if .Values.ingress.enabled -}}
 {{- $fullName := include "ms-generic.fullname" . -}}
-{{- $svcPort := .Values.service.port -}}
 {{- if and .Values.ingress.className (not (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion)) }}
   {{- if not (hasKey .Values.ingress.annotations "kubernetes.io/ingress.class") }}
   {{- $_ := set .Values.ingress.annotations "kubernetes.io/ingress.class" .Values.ingress.className}}
@@ -59,10 +58,10 @@ spec:
               service:
                 name: {{ template "ms-generic.names.service.name" $ }}
                 port:
-                  number: {{ $svcPort }}
+                  number: {{ include "ms-generic.names.service.port" $ }}
               {{- else }}
               serviceName: {{ template "ms-generic.names.service.name" $ }}
-              servicePort: {{ $svcPort }}
+              servicePort: {{ include "ms-generic.names.service.port" $ }}
               {{- end }}
           {{- end }}
     {{- end }}

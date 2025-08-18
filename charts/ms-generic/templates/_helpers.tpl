@@ -114,6 +114,15 @@ Create Service name
 {{- end }}
 {{- end }}
 
+{{/*
+Create Service port
+*/}}
+{{- define "ms-generic.names.service.port" -}}
+{{- .Values.service.port }}
+{{- end }}
+
+
+
 
 {{- define "ms-generic.common.fullname" -}}
 {{- template "common.names.fullname" $ -}}

@@ -22,7 +22,7 @@ spec:
   type: {{ .Values.service.type }}
   ports:
     - name: http-app
-      port: {{ .Values.service.port }}
+      port: {{ include "ms-generic.names.service.port" $ }}
       protocol: TCP
       targetPort: http-app
       {{- if .Values.service.nodePort }}
