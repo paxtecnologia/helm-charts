@@ -17,7 +17,7 @@ metadata:
 {{- end }}
 spec:
   groups:
-  - name: pax.k8s.ingress_controller.response
+  - name: pax.ingress_controller.response
     rules:
     {{- if .Values.paxRules.ingressController.httpErrorRate.enabled }}
     - alert: httpErrorRate

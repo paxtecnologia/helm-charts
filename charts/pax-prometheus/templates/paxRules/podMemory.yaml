@@ -17,7 +17,7 @@ metadata:
 {{- end }}
 spec:
   groups:
-  - name: pax.k8s.rules.pod_memory
+  - name: pax.k8s.pod_memory
     rules:
     {{- if .Values.paxRules.podMemory.podOOMKilled.enabled }}
     # 1 - Alerta para Pods Finalizados por OOM

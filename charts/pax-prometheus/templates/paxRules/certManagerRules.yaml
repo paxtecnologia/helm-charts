@@ -16,7 +16,7 @@ metadata:
 {{- end }}
 spec:
   groups:
-  - name: pax.k8s.cert-manager.rules
+  - name: pax.cert-manager.rules
     rules:
       {{- if .Values.paxRules.certManager.certificateExpiringSoon.enabled }}
       - alert: CertificateExpiringSoon
