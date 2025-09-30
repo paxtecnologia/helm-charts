@@ -2,7 +2,7 @@
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
-  name: {{ printf "%s-%s" (include "pax-prometheus.fullname" .) "pax-ingress-controller-response" | trunc 63 | trimSuffix "-" }}
+  name: {{ printf "%s-%s" (include "pax-prometheus.fullname" .) "pax-ingress-controller" | trunc 63 | trimSuffix "-" }}
   namespace: {{ template "pax-prometheus.namespace" . }}
   labels:
     app: {{ template "pax-prometheus.name" . }}
@@ -19,7 +19,7 @@ spec:
   groups:
   - name: pax.k8s.ingress_controller.response
     rules:
-    {{- if .Values.prometheusRuleIngressController.httpErrorRate.enabled }}
+    {{- if .Values.paxRules.ingressController.httpErrorRate.enabled }}
     - alert: httpErrorRate
       expr: |-
         (
@@ -38,7 +38,7 @@ spec:
             ) by (ingress)
           ) * 100
         ) > 0
-      for: {{ .Values.prometheusRuleIngressController.httpErrorRate.for }}
+      for: {{ .Values.paxRules.ingressController.httpErrorRate.for }}
       labels:
         severity: critical
       annotations:

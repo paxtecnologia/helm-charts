@@ -19,19 +19,19 @@ spec:
   groups:
   - name: pax.k8s.rules.pod_memory
     rules:
-    {{- if .Values.prometheusRulePodMemory.podOOMKilled.enabled }}
+    {{- if .Values.paxRules.podMemory.podOOMKilled.enabled }}
     # 1 - Alerta para Pods Finalizados por OOM
     - alert: PodOOMKilled
       expr: |-
         kube_pod_container_status_last_terminated_reason{reason="OOMKilled"} == 1
-      for: {{ .Values.prometheusRulePodMemory.podOOMKilled.for }}
+      for: {{ .Values.paxRules.podMemory.podOOMKilled.for }}
       labels:
         severity: critical
       annotations:
         summary: "Pod finalizado por OOM (Out of Memory)"
         description: "O container {{`{{`}} $labels.container {{`}}`}} no pod {{`{{`}} $labels.pod {{`}}`}} (namespace: {{`{{`}} $labels.namespace {{`}}`}}) foi finalizado por OOMKilled. Workload: {{`{{`}} $labels.owner_kind {{`}}`}}/{{`{{`}} $labels.owner_name {{`}}`}}"
     {{- end }}
-    {{- if .Values.prometheusRulePodMemory.podMemoryRequestUnderutilized.enabled }}
+    {{- if .Values.paxRules.podMemory.podMemoryRequestUnderutilized.enabled }}
     # 2 - Alerta para Subutilização de Memória (vs Request)
     - alert: PodMemoryRequestUnderutilized
       expr: >-
@@ -41,8 +41,8 @@ spec:
               container_memory_working_set_bytes{
                 container!="",
                 image!="",
-                namespace!~"{{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.exclude.namespace }}",
-                pod!~"{{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.exclude.pod }}"
+                namespace!~"{{ .Values.paxRules.podMemory.podMemoryUsageNearLimit.exclude.namespace }}",
+                pod!~"{{ .Values.paxRules.podMemory.podMemoryUsageNearLimit.exclude.pod }}"
               }[1h]
             )
           )
@@ -51,13 +51,13 @@ spec:
             kube_pod_container_resource_requests{
               resource="memory",
               unit="byte",
-              namespace!~"{{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.exclude.namespace }}",
-              pod!~"{{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.exclude.pod }}"
+              namespace!~"{{ .Values.paxRules.podMemory.podMemoryUsageNearLimit.exclude.namespace }}",
+              pod!~"{{ .Values.paxRules.podMemory.podMemoryUsageNearLimit.exclude.pod }}"
             }
           )) * 100
         )
-        < {{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.threshold }}
-      for: {{ .Values.prometheusRulePodMemory.podMemoryRequestUnderutilized.for }}
+        < {{ .Values.paxRules.podMemory.podMemoryUsageNearLimit.threshold }}
+      for: {{ .Values.paxRules.podMemory.podMemoryRequestUnderutilized.for }}
       labels:
         severity: warning
       annotations:
@@ -66,26 +66,26 @@ spec:
           Container {{`{{`}} $labels.container {{`}}`}} (pod: {{`{{`}} $labels.pod {{`}}`}}, ns: {{`{{`}} $labels.namespace {{`}}`}}) 
           está usando apenas {{`{{`}} printf "%.1f" $value {{`}}`}}% do memory request. Considere reduzir os requests e limits para otimizar recursos.
     {{- end }}
-    {{- if .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.enabled }}
+    {{- if .Values.paxRules.podMemory.podMemoryUsageNearLimit.enabled }}
     # 3 - Alerta para Uso Alto de Memória (vs Limit)
     - alert: PodMemoryUsageNearLimit
       expr: >-
         ((       
-        sum(container_memory_working_set_bytes{container!="", image!="", namespace!~"{{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.exclude.namespace }}", pod!~"{{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.exclude.pod }}"}) by (namespace, pod, container)
+        sum(container_memory_working_set_bytes{container!="", image!="", namespace!~"{{ .Values.paxRules.podMemory.podMemoryUsageNearLimit.exclude.namespace }}", pod!~"{{ .Values.paxRules.podMemory.podMemoryUsageNearLimit.exclude.pod }}"}) by (namespace, pod, container)
         /
-        sum(kube_pod_container_resource_limits{resource="memory", unit="byte", namespace!~"{{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.exclude.namespace }}", pod!~"{{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.exclude.pod }}"} > 0) by (namespace, pod, container)
+        sum(kube_pod_container_resource_limits{resource="memory", unit="byte", namespace!~"{{ .Values.paxRules.podMemory.podMemoryUsageNearLimit.exclude.namespace }}", pod!~"{{ .Values.paxRules.podMemory.podMemoryUsageNearLimit.exclude.pod }}"} > 0) by (namespace, pod, container)
         ) * 100)
-        > {{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.threshold }}
-      for: {{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.for }}
+        > {{ .Values.paxRules.podMemory.podMemoryUsageNearLimit.threshold }}
+      for: {{ .Values.paxRules.podMemory.podMemoryUsageNearLimit.for }}
       labels:
         severity: warning
       annotations:
-        summary: "Uso de memória próximo ao limite ({{ .Values.prometheusRulePodMemory.podMemoryUsageNearLimit.threshold }}%)"
+        summary: "Uso de memória próximo ao limite ({{ .Values.paxRules.podMemory.podMemoryUsageNearLimit.threshold }}%)"
         description: |-
           Container {{`{{`}} $labels.container {{`}}`}} (pod: {{`{{`}} $labels.pod {{`}}`}}, ns: {{`{{`}} $labels.namespace {{`}}`}})
           está usando {{`{{`}} printf "%.1f" $value {{`}}`}}% do memory limit. Risco de OOMKilled. Considere aumentar o limit ou otimizar a aplicação.
     {{- end }}
-    {{- if .Values.prometheusRulePodMemory.podMemoryRequestLow.enabled }}
+    {{- if .Values.paxRules.podMemory.podMemoryRequestLow.enabled }}
     # 4 - Alerta para Consistente Excesso de Consumo de Memória sobre Request
     - alert: PodMemoryRequestLow
       expr: >-
@@ -95,8 +95,8 @@ spec:
               container_memory_working_set_bytes{
                 container!="",
                 image!="",
-                namespace!~"{{ .Values.prometheusRulePodMemory.podMemoryRequestLow.exclude.namespace }}",
-                pod!~"{{ .Values.prometheusRulePodMemory.podMemoryRequestLow.exclude.pod }}"
+                namespace!~"{{ .Values.paxRules.podMemory.podMemoryRequestLow.exclude.namespace }}",
+                pod!~"{{ .Values.paxRules.podMemory.podMemoryRequestLow.exclude.pod }}"
               }[1h]
             )
           )
@@ -105,12 +105,12 @@ spec:
             kube_pod_container_resource_requests{
               resource="memory",
               unit="byte",
-              namespace!~"{{ .Values.prometheusRulePodMemory.podMemoryRequestLow.exclude.namespace }}",
-              pod!~"{{ .Values.prometheusRulePodMemory.podMemoryRequestLow.exclude.pod }}"
+              namespace!~"{{ .Values.paxRules.podMemory.podMemoryRequestLow.exclude.namespace }}",
+              pod!~"{{ .Values.paxRules.podMemory.podMemoryRequestLow.exclude.pod }}"
             }
           )
         )
-      for: {{ .Values.prometheusRulePodMemory.podMemoryRequestLow.for }}
+      for: {{ .Values.paxRules.podMemory.podMemoryRequestLow.for }}
       labels:
         severity: warning
       annotations:
@@ -121,24 +121,24 @@ spec:
           Média de consumo na última hora: {{`{{`}} printf "%.1f" $value {{`}}`}} bytes.
           Considere aumentar o memory request para evitar problemas de performance.
     {{- end }}
-    {{- if .Values.prometheusRulePodMemory.memoryBetweenRequestLimitGreaterThanPercent.enabled }}
+    {{- if .Values.paxRules.podMemory.memoryBetweenRequestLimitGreaterThanPercent.enabled }}
     # 5 - Alerta quando o Limite de Memória excede o Request pelo percentual configurado
     - alert: MemoryBetweenRequestLimitGreaterThanPercent
       expr: >-
         (
           (
-            kube_pod_container_resource_limits{resource="memory", unit="byte", namespace!~"{{ .Values.prometheusRulePodMemory.memoryBetweenRequestLimitGreaterThanPercent.exclude.namespace }}", pod!~"{{ .Values.prometheusRulePodMemory.memoryBetweenRequestLimitGreaterThanPercent.exclude.pod }}"}
+            kube_pod_container_resource_limits{resource="memory", unit="byte", namespace!~"{{ .Values.paxRules.podMemory.memoryBetweenRequestLimitGreaterThanPercent.exclude.namespace }}", pod!~"{{ .Values.paxRules.podMemory.memoryBetweenRequestLimitGreaterThanPercent.exclude.pod }}"}
             /
-            kube_pod_container_resource_requests{resource="memory", unit="byte", namespace!~"{{ .Values.prometheusRulePodMemory.memoryBetweenRequestLimitGreaterThanPercent.exclude.namespace }}", pod!~"{{ .Values.prometheusRulePodMemory.memoryBetweenRequestLimitGreaterThanPercent.exclude.pod }}"}
+            kube_pod_container_resource_requests{resource="memory", unit="byte", namespace!~"{{ .Values.paxRules.podMemory.memoryBetweenRequestLimitGreaterThanPercent.exclude.namespace }}", pod!~"{{ .Values.paxRules.podMemory.memoryBetweenRequestLimitGreaterThanPercent.exclude.pod }}"}
             - 1
           ) * 100
-        ) > {{ .Values.prometheusRulePodMemory.memoryBetweenRequestLimitGreaterThanPercent.threshold }}
-      for: {{ .Values.prometheusRulePodMemory.memoryBetweenRequestLimitGreaterThanPercent.for }}
+        ) > {{ .Values.paxRules.podMemory.memoryBetweenRequestLimitGreaterThanPercent.threshold }}
+      for: {{ .Values.paxRules.podMemory.memoryBetweenRequestLimitGreaterThanPercent.for }}
       labels:
         severity: warning
       annotations:
-        summary: 'Limite de memória excede o request em {{`{{`}} printf "%.0f" $value {{`}}`}}% (threshold: {{ .Values.prometheusRulePodMemory.memoryBetweenRequestLimitGreaterThanPercent.threshold }}%)'
+        summary: 'Limite de memória excede o request em {{`{{`}} printf "%.0f" $value {{`}}`}}% (threshold: {{ .Values.paxRules.podMemory.memoryBetweenRequestLimitGreaterThanPercent.threshold }}%)'
         description: |-
-          Container {{`{{`}} $labels.container {{`}}`}} (Pod: {{`{{`}} $labels.pod {{`}}`}}, Namespace: {{`{{`}} $labels.namespace {{`}}`}}) o limite de memória excede o request em {{`{{`}} printf "%.0f" $value {{`}}`}}% (threshold: {{ .Values.prometheusRulePodMemory.memoryBetweenRequestLimitGreaterThanPercent.threshold }}%)', considere reduzir o limit.
+          Container {{`{{`}} $labels.container {{`}}`}} (Pod: {{`{{`}} $labels.pod {{`}}`}}, Namespace: {{`{{`}} $labels.namespace {{`}}`}}) o limite de memória excede o request em {{`{{`}} printf "%.0f" $value {{`}}`}}% (threshold: {{ .Values.paxRules.podMemory.memoryBetweenRequestLimitGreaterThanPercent.threshold }}%)', considere reduzir o limit.
     {{- end }}
   

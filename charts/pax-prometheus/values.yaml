@@ -1,42 +1,50 @@
 defaultRules: {}
 
 nameOverride: stk
-prometheusRuleIngressController:
-  httpErrorRate:
-    enabled: true
-    for: 5m
-    
-prometheusRulePodMemory:
-  podOOMKilled:
-    enabled: true
-    for: 1m
-  podMemoryRequestUnderutilized:
-    enabled: true
-    threshold: 80
-    for: 6h
-    exclude:
-      namespace: "kube-system"
-      pod: ""
-  podMemoryUsageNearLimit:
-    enabled: true
-    threshold: 96
-    for: 10m
-    exclude:
-      namespace: ""
-      pod: ""
-  podMemoryRequestLow:
-    enabled: true
-    for: 1h
-    exclude:
-      namespace: "kube-system"
-      pod: ""
-  memoryBetweenRequestLimitGreaterThanPercent:
-    enabled: true
-    threshold: 20 # 20% acima do request
-    for: 1h
-    exclude:
-      namespace: "kube-system"
-      pod: ""
+
+paxRules:
+  certManager:
+    certificateExpiringSoon:
+      enabled: true
+      for: 6h
+      days: 30
+
+  ingressController:
+    httpErrorRate:
+      enabled: true
+      for: 5m
+
+  podMemory:
+    podOOMKilled:
+      enabled: true
+      for: 1m
+    podMemoryRequestUnderutilized:
+      enabled: true
+      threshold: 80
+      for: 6h
+      exclude:
+        namespace: "kube-system"
+        pod: ""
+    podMemoryUsageNearLimit:
+      enabled: true
+      threshold: 96
+      for: 10m
+      exclude:
+        namespace: ""
+        pod: ""
+    podMemoryRequestLow:
+      enabled: true
+      for: 1h
+      exclude:
+        namespace: "kube-system"
+        pod: ""
+    memoryBetweenRequestLimitGreaterThanPercent:
+      enabled: true
+      threshold: 20 # 20% acima do request
+      for: 1h
+      exclude:
+        namespace: "kube-system"
+        pod: ""
 
 kubePrometheusStack:
   nameOverride: stk
