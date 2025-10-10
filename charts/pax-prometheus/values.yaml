@@ -18,6 +18,10 @@ paxRules:
     podOOMKilled:
       enabled: true
       for: 1m
+      exclude:
+        namespace: ""
+        pod: ""
+
     podMemoryRequestUnderutilized:
       enabled: true
       threshold: 80
@@ -47,6 +51,9 @@ paxRules:
         pod: ""
 
 kubePrometheusStack:
+  crds:
+    upgradeJob:
+      enabled: true
   nameOverride: stk
   kubeScheduler:
     enabled: false

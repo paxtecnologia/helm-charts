@@ -22,8 +22,11 @@ spec:
     {{- if .Values.paxRules.podMemory.podOOMKilled.enabled }}
     # 1 - Alerta para Pods Finalizados por OOM
     - alert: PodOOMKilled
-      expr: |-
-        kube_pod_container_status_last_terminated_reason{reason="OOMKilled"} == 1
+      expr: >-
+        kube_pod_container_status_last_terminated_reason{
+          reason="OOMKilled",
+          namespace!~"{{ .Values.paxRules.podMemory.podOOMKilled.exclude.namespace }}",
+          pod!~"{{ .Values.paxRules.podMemory.podOOMKilled.exclude.pod }}"} == 1
       for: {{ .Values.paxRules.podMemory.podOOMKilled.for }}
       labels:
         severity: critical
