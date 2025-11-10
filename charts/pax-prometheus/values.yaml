@@ -175,7 +175,6 @@ kubePrometheusStack:
     config:
       global:
         resolve_timeout: 5m
-        slack_api_url: "https://hooks.slack.com/services/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"
       route:
         group_by: ["alertname", "namespace"]
         group_wait: 5s
