@@ -4,12 +4,12 @@ dependencies:
   version: 2.31.4
 - name: kube-prometheus-stack
   repository: https://prometheus-community.github.io/helm-charts
-  version: 78.0.0
+  version: 79.4.1
 - name: prometheus-adapter
   repository: https://prometheus-community.github.io/helm-charts
-  version: 5.1.0
+  version: 5.2.0
 - name: metrics-server
   repository: https://kubernetes-sigs.github.io/metrics-server
   version: 3.13.0
-digest: sha256:52de21215638f23d04e8704967e3f828b60976fdf6692fc671f7fe4036614bf6
-generated: "2025-10-10T15:20:27.509191183-03:00"
+digest: sha256:c8d035c6056d8dcadbccdb31773a1aba93dcac359110b4cab824e85c6347e419
+generated: "2025-11-10T23:45:15.753865075Z"
