@@ -3371,6 +3371,23 @@ entries:
   stk-fluent-bit-loki-s3:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2025-12-29T19:16:18.689424993Z"
+    dependencies:
+    - name: fluent-bit
+      repository: https://fluent.github.io/helm-charts/
+      version: 0.*
+    - name: loki
+      repository: https://grafana.github.io/helm-charts/
+      version: 6.*
+    description: A Helm chart for Kubernetes
+    digest: b563d7b03787bc22f3ad4c04af993d7ee983ed5e53d52022ff4f7ab1cbe0b8a0
+    name: stk-fluent-bit-loki-s3
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/stk-fluent-bit-loki-s3-0.1.37/stk-fluent-bit-loki-s3-0.1.37.tgz
+    version: 0.1.37
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2025-12-29T19:01:11.38665817Z"
     dependencies:
     - name: fluent-bit
@@ -3942,4 +3959,4 @@ entries:
     urls:
     - https://github.com/paxtecnologia/helm-charts/releases/download/stk-fluent-bit-loki-s3-0.1.1/stk-fluent-bit-loki-s3-0.1.1.tgz
     version: 0.1.1
-generated: "2025-12-29T19:01:11.387091212Z"
+generated: "2025-12-29T19:16:18.689958032Z"
