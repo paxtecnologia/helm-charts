@@ -3,7 +3,6 @@ kind: ConfigMap
 metadata:
   name: fluent-bit-namespace-config
   namespace: {{ .Release.Namespace }}
-  labels: {{ - include "stk-fluent-bit-loki-s3.labels" . | nindent 4 }}
 data:
   excluded_namespaces.txt: |
     # Start - Lista de namespaces para excluir dos logs
