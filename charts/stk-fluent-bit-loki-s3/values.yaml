@@ -1,6 +1,7 @@
 # O helm do fluent-bit não aceita uso de alias, tem que manter o nome original
 # Configuração para filtrar namespaces
 namespaceFilter:
+  enabled: true
   # Lista de namespaces para EXCLUIR logs (vazio = coleta todos os namespaces)
   excludedNamespaces: []
   # Exemplo: ["kube-system", "kube-public", "kube-node-lease"]
@@ -134,14 +135,18 @@ fluent-bit:
       end
     namespace_filter.lua: |
       function namespace_filter(tag, timestamp, record)
-          -- Carrega lista de namespaces excluídos do JSON
-          local config_file = io.open("/fluent-bit/config-map/excluded_namespaces.json", "r")
-          local json_content = config_file:read("*all")
-          config_file:close()
-          
+          -- Carrega lista de namespaces excluídos de arquivo de texto
+          local config_file = io.open("/fluent-bit/config-map/excluded_namespaces.txt", "r")
           local excluded_namespaces = {}
-          if json_content and json_content ~= "" then
-              excluded_namespaces = require("cjson").decode(json_content)
+          
+          if config_file then
+              for line in config_file:lines() do
+                  line = line:match("^%s*(.-)%s*$") -- trim whitespace
+                  if line ~= "" and not line:match("^#") then -- ignora linhas vazias e comentários
+                      excluded_namespaces[line] = true
+                  end
+              end
+              config_file:close()
           end
           
           local k8s = record["kubernetes"]
