@@ -2,8 +2,7 @@
 # Configuração para filtrar namespaces
 namespaceFilter:
   # Lista de namespaces para EXCLUIR logs (vazio = coleta todos os namespaces)
-  excludedNamespaces: []
-  # Exemplo: ["kube-system", "kube-public", "kube-node-lease"]
+  excludedNamespaces:  ["kube-system", "kube-public"]
 
 fluent-bit:
   # Volumes extras para carregar configuração de namespaces
