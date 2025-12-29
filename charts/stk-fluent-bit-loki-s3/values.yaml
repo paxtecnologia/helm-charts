@@ -1,7 +1,6 @@
 # O helm do fluent-bit não aceita uso de alias, tem que manter o nome original
 # Configuração para filtrar namespaces
 namespaceFilter:
-  enabled: true
   # Lista de namespaces para EXCLUIR logs (vazio = coleta todos os namespaces)
   excludedNamespaces: []
   # Exemplo: ["kube-system", "kube-public", "kube-node-lease"]
@@ -12,13 +11,12 @@ fluent-bit:
     - name: namespace-config
       configMap:
         name: fluent-bit-namespace-config
-        optional: true
-  
+
   extraVolumeMounts:
     - name: namespace-config
       mountPath: /fluent-bit/config-map
       readOnly: true
-  
+
   config:
     inputs: |
       [INPUT]
@@ -73,7 +71,7 @@ fluent-bit:
           Match *
           script /fluent-bit/scripts/add_tag.lua
           call add_tag
-      
+
       [FILTER]
           Name lua
           Match kube.*
