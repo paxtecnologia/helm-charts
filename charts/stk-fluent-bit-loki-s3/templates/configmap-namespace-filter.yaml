@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fluent-bit-namespace-config
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "stk-fluent-bit-loki-s3.labels" . | nindent 4 }}
+data:
+  excluded_namespaces.json: |
+    {
+      {{- range $index, $namespace := .Values.namespaceFilter.excludedNamespaces }}
+      {{- if $index }},{{ end }}
+      "{{ $namespace }}": true
+      {{- end }}
+    }
