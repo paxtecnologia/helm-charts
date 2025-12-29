@@ -1,4 +1,11 @@
 # O helm do fluent-bit não aceita uso de alias, tem que manter o nome original
+# Configuração para filtrar namespaces
+namespaceFilter:
+  enabled: true
+  # Lista de namespaces para coletar logs (vazio = todos os namespaces)
+  allowedNamespaces: []
+  # Exemplo: ["default", "kube-system", "monitoring"]
+
 fluent-bit:
   config:
     inputs: |
@@ -12,7 +19,9 @@ fluent-bit:
           Rotate_Wait 10
           DB /var/log/flb_tail.db
           DB.Sync Normal
-          Mem_Buf_Limit 100MB
+          Mem_Buf_Limit 200MB
+          Buffer_Chunk_Size 2MB
+          Buffer_Max_Size 50MB
           Skip_Long_Lines Off
 
       [INPUT]
@@ -23,7 +32,7 @@ fluent-bit:
           Strip_Underscores On
           DB /var/log/flb_systemd_kubelet.db
           DB.Sync Normal
-          Mem_Buf_Limit 30MB
+          Mem_Buf_Limit 50MB
 
     filters: |
       [FILTER]
@@ -56,6 +65,12 @@ fluent-bit:
       [FILTER]
           Name lua
           Match kube.*
+          script /fluent-bit/scripts/namespace_filter.lua
+          call namespace_filter
+
+      [FILTER]
+          Name lua
+          Match kube.*
           script /fluent-bit/scripts/all_kube_custom.lua
           call all_kube_custom
 
@@ -64,7 +79,12 @@ fluent-bit:
           Name loki
           Match kube.*
           Host <loki  distributor svc>
-          Retry_Limit False
+          Workers 6
+          Retry_Limit 5
+          Batch_Size 2000
+          Batch_Wait 2s
+          Connection_Timeout 10s
+          Keep_Alive On
           auto_kubernetes_labels true
           tenant_id <EKS Cluster Name>
           Labels namespace=$kubernetes['namespace_name'],nginx_host=$nginx_host
@@ -73,7 +93,12 @@ fluent-bit:
           Name loki
           Match host.*
           Host <loki  distributor svc>
-          Retry_Limit False
+          Workers 6
+          Retry_Limit 5
+          Batch_Size 2000
+          Batch_Wait 2s
+          Connection_Timeout 10s
+          Keep_Alive On
           auto_kubernetes_labels true
           tenant_id <EKS Cluster Name>
 
@@ -94,6 +119,29 @@ fluent-bit:
     add_tag.lua: |
       function add_tag(tag, timestamp, record)
           record["fluentbit_tag"] = tag
+          return 1, timestamp, record
+      end
+    namespace_filter.lua: |
+      function namespace_filter(tag, timestamp, record)
+          local allowed_namespaces = {{{- if .Values.namespaceFilter.enabled and .Values.namespaceFilter.allowedNamespaces }}{{- range $ns := .Values.namespaceFilter.allowedNamespaces }}"{{ $ns }}",{{- end }}{{- end }}}
+          
+          -- Se a lista estiver vazia, permite todos os namespaces
+          if #allowed_namespaces == 0 then
+              return 1, timestamp, record
+          end
+          
+          local k8s = record["kubernetes"]
+          if k8s and k8s["namespace_name"] then
+              local namespace = k8s["namespace_name"]
+              for _, allowed_ns in ipairs(allowed_namespaces) do
+                  if namespace == allowed_ns then
+                      return 1, timestamp, record
+                  end
+              end
+              -- Namespace não está na lista permitida, descarta o log
+              return -1, timestamp, record
+          end
+          
           return 1, timestamp, record
       end
     all_kube_custom.lua: |
