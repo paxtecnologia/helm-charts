@@ -15,22 +15,6 @@
                 "ms-azuretools.vscode-docker",
                 "esbenp.prettier-vscode"
             ],
-            "settings": {
-                "editor.tabSize": 2,
-                "editor.insertSpaces": true,
-                "workbench.colorCustomizations": {
-                    "activityBar.background": "#ee8905",
-                    "activityBar.activeBackground": "#ee8905",
-                    "activityBar.inactiveForeground": "#ffffff",
-                    "statusBar.background": "#ee8905",
-                    "statusBar.foreground": "#ffffff"
-                },
-                "editor.formatOnSave": true,
-                "editor.defaultFormatter": "esbenp.prettier-vscode",
-                "editor.codeActionsOnSave": [
-                    "source.fixAll.eslint"
-                ],
-            }
         }
     },
 }
