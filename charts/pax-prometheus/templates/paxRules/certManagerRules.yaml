@@ -26,5 +26,5 @@ spec:
           severity: warning
         annotations:
           summary: "Certificado expira em menos de {{ .Values.paxRules.certManager.certificateExpiringSoon.days }} dias"
-          description: "O certificado {{`{{`}} $labels.name {{`}}`}} no namespace {{`{{`}} $labels.namespace {{`}}`}} expira em {{`{{`}} $value | humanizeDuration {{`}}`}}."
+          description: "O certificado {{`{{`}} $labels.name {{`}}`}} no namespace {{`{{`}} $labels.exported_namespace {{`}}`}} expira em {{`{{`}} $value | humanizeDuration {{`}}`}}."
       {{- end }}
