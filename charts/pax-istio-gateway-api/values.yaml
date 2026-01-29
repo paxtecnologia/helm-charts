@@ -1,0 +1,7 @@
+# istiod params
+istiod:
+  autoscaleMin: 2
+  resources:
+    requests:
+      cpu: 250m
+      memory: 500Mi
