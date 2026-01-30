@@ -1,0 +1,11 @@
+gateway:
+  service:
+    type: NodePort
+
+  autoscaling:
+    minReplicas: 2
+
+  resources:
+    requests:
+      cpu: 250m
+      memory: 500Mi
