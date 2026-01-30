@@ -2451,6 +2451,21 @@ entries:
     urls:
     - https://github.com/paxtecnologia/helm-charts/releases/download/pax-istio-gateway-api-0.1.0/pax-istio-gateway-api-0.1.0.tgz
     version: 0.1.0
+  pax-istio-ingressgateway:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2026-01-30T14:57:29.925033669Z"
+    dependencies:
+    - name: gateway
+      repository: https://istio-release.storage.googleapis.com/charts
+      version: 1.28.*
+    description: A Helm chart for Kubernetes
+    digest: 84ede489d26fe2f55ef2c1c295434112346b0108ffc027085020548f7e7794e4
+    name: pax-istio-ingressgateway
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/pax-istio-ingressgateway-0.1.0/pax-istio-ingressgateway-0.1.0.tgz
+    version: 0.1.0
   pax-prometheus:
   - apiVersion: v2
     appVersion: 1.16.0
@@ -4059,4 +4074,4 @@ entries:
     urls:
     - https://github.com/paxtecnologia/helm-charts/releases/download/stk-fluent-bit-loki-s3-0.1.1/stk-fluent-bit-loki-s3-0.1.1.tgz
     version: 0.1.1
-generated: "2026-01-30T14:46:13.746510779Z"
+generated: "2026-01-30T14:57:29.925403086Z"
