@@ -2396,6 +2396,27 @@ entries:
   pax-istio-gateway-api:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2026-01-30T12:41:27.277310879Z"
+    dependencies:
+    - name: base
+      repository: https://istio-release.storage.googleapis.com/charts
+      version: 1.28.*
+    - alias: istiod
+      name: istiod
+      repository: https://istio-release.storage.googleapis.com/charts
+      version: 1.28.*
+    - name: gateway
+      repository: https://istio-release.storage.googleapis.com/charts
+      version: 1.28.*
+    description: A Helm chart for Kubernetes
+    digest: 804559d061c79666982f4e1c12f86b0cb809499a93a25ce9b9e1b137ff245026
+    name: pax-istio-gateway-api
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/pax-istio-gateway-api-0.1.1/pax-istio-gateway-api-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2026-01-29T19:10:31.340248224Z"
     dependencies:
     - name: base
@@ -4020,4 +4041,4 @@ entries:
     urls:
     - https://github.com/paxtecnologia/helm-charts/releases/download/stk-fluent-bit-loki-s3-0.1.1/stk-fluent-bit-loki-s3-0.1.1.tgz
     version: 0.1.1
-generated: "2026-01-29T19:10:31.34065692Z"
+generated: "2026-01-30T12:41:27.277647856Z"
