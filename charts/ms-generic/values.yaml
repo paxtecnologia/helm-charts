@@ -206,6 +206,22 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
+httpRoute:
+  enabled: false
+  appendNamespace: false
+  # annotations: {}
+  # parentRefs:
+  #   - name: gateway-name
+  #     namespace: istio-system
+  #     sectionName: https
+  # hostnames:
+  #   - chart-example.local
+  # rules:
+  #   - matches:
+  #       - path:
+  #           type: PathPrefix
+  #           value: /
+
 resources:
   {}
   # We usually recommend not to specify default resources and to leave this as a conscious
