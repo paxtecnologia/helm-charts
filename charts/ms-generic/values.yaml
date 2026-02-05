@@ -213,7 +213,7 @@ ingress:
 httpRoute:
   enabled: false
   appendNamespace: false
-  # annotations: {}
+  annotations: {}
   # parentRefs:
   #   - name: gateway-name
   #     namespace: istio-system
@@ -225,6 +225,17 @@ httpRoute:
   #       - path:
   #           type: PathPrefix
   #           value: /
+  #     filters:
+  #       - type: CORS
+  #         cors:
+  #           allowOrigins:
+  #             - https://app.example
+  #           allowCredentials: false
+  #           allowMethods:
+  #             - GET
+  #             - POST
+  #           allowHeaders:
+  #             - Content-Type
 
 resources:
   {}

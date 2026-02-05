@@ -33,6 +33,10 @@ spec:
             type: {{ .path.type | default "PathPrefix" }}
             value: {{ .path.value | default "/" }}
         {{- end }}
+      {{- with .filters }}
+      filters:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       backendRefs:
         - name: {{ template "ms-generic.names.service.name" $ }}
           port: {{ include "ms-generic.names.service.port" $ }}
