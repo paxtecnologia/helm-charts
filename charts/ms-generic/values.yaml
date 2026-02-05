@@ -17,6 +17,10 @@ image:
 container:
   name: app
   port: 80
+  args: []
+  # args:
+  #   - "--config=/etc/app/config.yaml"
+  #   - "--verbose"
   extra:
     ports: []
 
