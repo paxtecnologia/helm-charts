@@ -225,6 +225,9 @@ httpRoute:
   #       - path:
   #           type: PathPrefix
   #           value: /
+  #     backendRefs:
+  #     - name: service-name
+  #       port: 80
   #     filters:
   #       - type: CORS
   #         cors:
