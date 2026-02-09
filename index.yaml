@@ -3,6 +3,22 @@ entries:
   cronjob-generic:
   - apiVersion: v2
     appVersion: 0.1.5
+    created: "2026-02-09T13:45:12.571342873Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - bitnami-common
+      version: 2.*
+    description: A Helm chart for Kubernetes
+    digest: b5e2202ea7499fa2c08bf86c9950b65c8a0e42045c316e3a1dfa57696453cadf
+    name: cronjob-generic
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/cronjob-generic-0.1.10/cronjob-generic-0.1.10.tgz
+    version: 0.1.10
+  - apiVersion: v2
+    appVersion: 0.1.5
     created: "2026-02-09T13:39:14.692473045Z"
     dependencies:
     - name: common
@@ -18,6 +34,22 @@ entries:
     - https://github.com/paxtecnologia/helm-charts/releases/download/cronjob-generic-0.1.9/cronjob-generic-0.1.9.tgz
     version: 0.1.9
   k8s-cfg-base:
+  - apiVersion: v2
+    appVersion: 1.0.7
+    created: "2026-02-09T13:45:12.730076572Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - bitnami-common
+      version: 2.*
+    description: A Helm chart for Kubernetes
+    digest: eab1ecb9d3787d66163c2ee39ed6f130967c2d08f4a0136abe5a06209f5c64ac
+    name: k8s-cfg-base
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/k8s-cfg-base-1.0.24/k8s-cfg-base-1.0.24.tgz
+    version: 1.0.24
   - apiVersion: v2
     appVersion: 1.0.7
     created: "2026-02-09T13:39:14.915854827Z"
@@ -36,6 +68,19 @@ entries:
     version: 1.0.23
   ms-generic:
   - apiVersion: v2
+    created: "2026-02-09T13:45:12.938094399Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 2.*
+    description: A Helm chart for Kubernetes
+    digest: 8166f711a41d8b91e2c749f2f620866a5428d88e32f65e83423ea406b5e2ae7d
+    name: ms-generic
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/ms-generic-1.2.27/ms-generic-1.2.27.tgz
+    version: 1.2.27
+  - apiVersion: v2
     created: "2026-02-09T13:39:15.154047922Z"
     dependencies:
     - name: common
@@ -49,6 +94,24 @@ entries:
     - https://github.com/paxtecnologia/helm-charts/releases/download/ms-generic-1.2.26/ms-generic-1.2.26.tgz
     version: 1.2.26
   pax-istio-gateway-api:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2026-02-09T13:45:13.223388624Z"
+    dependencies:
+    - name: base
+      repository: https://istio-release.storage.googleapis.com/charts
+      version: 1.28.*
+    - alias: istiod
+      name: istiod
+      repository: https://istio-release.storage.googleapis.com/charts
+      version: 1.28.*
+    description: A Helm chart for Kubernetes
+    digest: 79f60374d9b068d95e3774b0f98a029262b7b87b54daa04b3afcb900932221e7
+    name: pax-istio-gateway-api
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/pax-istio-gateway-api-0.1.6/pax-istio-gateway-api-0.1.6.tgz
+    version: 0.1.6
   - apiVersion: v2
     appVersion: 1.16.0
     created: "2026-02-09T13:39:15.383398749Z"
@@ -68,6 +131,31 @@ entries:
     - https://github.com/paxtecnologia/helm-charts/releases/download/pax-istio-gateway-api-0.1.5/pax-istio-gateway-api-0.1.5.tgz
     version: 0.1.5
   pax-prometheus:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2026-02-09T13:45:13.449919757Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 2.*
+    - alias: kubePrometheusStack
+      name: kube-prometheus-stack
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 80.*
+    - name: prometheus-adapter
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 5.*
+    - condition: metricsServer.enabled
+      name: metrics-server
+      repository: https://kubernetes-sigs.github.io/metrics-server
+      version: 3.*
+    description: A Helm chart for Kubernetes
+    digest: c06786d5ae66ecf5b4144c1f384389c0632f522fe8b4018b157c4b4b14b878c4
+    name: pax-prometheus
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/pax-prometheus-0.4.4/pax-prometheus-0.4.4.tgz
+    version: 0.4.4
   - apiVersion: v2
     appVersion: 1.16.0
     created: "2026-02-09T13:39:15.659328357Z"
@@ -96,6 +184,23 @@ entries:
   stk-fluent-bit-loki-s3:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2026-02-09T13:45:13.681299893Z"
+    dependencies:
+    - name: fluent-bit
+      repository: https://fluent.github.io/helm-charts/
+      version: 0.*
+    - name: loki
+      repository: https://grafana.github.io/helm-charts/
+      version: 6.*
+    description: A Helm chart for Kubernetes
+    digest: 196580f3d78934b478769afc241194b21652cce1a5cf8b33f0730d75a226b093
+    name: stk-fluent-bit-loki-s3
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/stk-fluent-bit-loki-s3-0.1.41/stk-fluent-bit-loki-s3-0.1.41.tgz
+    version: 0.1.41
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2026-02-09T13:39:15.903738528Z"
     dependencies:
     - name: fluent-bit
@@ -111,4 +216,4 @@ entries:
     urls:
     - https://github.com/paxtecnologia/helm-charts/releases/download/stk-fluent-bit-loki-s3-0.1.40/stk-fluent-bit-loki-s3-0.1.40.tgz
     version: 0.1.40
-generated: "2026-02-09T13:39:15.903747034Z"
+generated: "2026-02-09T13:45:13.681324809Z"
