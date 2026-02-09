@@ -1,6 +1,10 @@
 # The repo admins team will be the default owners for everything in the repo. Unless a later match takes precedence, they will be requested for review when someone opens a pull request.
 
-- @paxtecnologia/helm-charts-admins
+* @paxtecnologia/helm-charts-admins
 
-/charts/ms-java-spring-boot/ @pauloferreira25
-/charts/ms-nginx/ @pauloferreira25
+/charts/cron-job/ @pauloferreira25
+/charts/k8s-cfg-base/ @pauloferreira25
+/charts/ms-generic/ @pauloferreira25
+/charts/pax-istio-gateway-api/ @pauloferreira25
+/charts/pax-prometheus/ @pauloferreira25
+/charts/stk-fluent-bit-loki-s3/ @pauloferreira25
