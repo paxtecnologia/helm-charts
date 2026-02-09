@@ -1,0 +1,114 @@
+apiVersion: v1
+entries:
+  cronjob-generic:
+  - apiVersion: v2
+    appVersion: 0.1.5
+    created: "2026-02-09T13:39:14.692473045Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - bitnami-common
+      version: 2.*
+    description: A Helm chart for Kubernetes
+    digest: 3df907c166575fe4d3abc591dbb3156b21ab63a817140579a7bc5d28d009f307
+    name: cronjob-generic
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/cronjob-generic-0.1.9/cronjob-generic-0.1.9.tgz
+    version: 0.1.9
+  k8s-cfg-base:
+  - apiVersion: v2
+    appVersion: 1.0.7
+    created: "2026-02-09T13:39:14.915854827Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - bitnami-common
+      version: 2.*
+    description: A Helm chart for Kubernetes
+    digest: f5ebd948c8125e677e548e0b1b9285e159e84918292d30eae11d8d2f744a4c3d
+    name: k8s-cfg-base
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/k8s-cfg-base-1.0.23/k8s-cfg-base-1.0.23.tgz
+    version: 1.0.23
+  ms-generic:
+  - apiVersion: v2
+    created: "2026-02-09T13:39:15.154047922Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 2.*
+    description: A Helm chart for Kubernetes
+    digest: 444675a9075776dbb91d741000895480893f977cbc651239b23f00bfccf82780
+    name: ms-generic
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/ms-generic-1.2.26/ms-generic-1.2.26.tgz
+    version: 1.2.26
+  pax-istio-gateway-api:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2026-02-09T13:39:15.383398749Z"
+    dependencies:
+    - name: base
+      repository: https://istio-release.storage.googleapis.com/charts
+      version: 1.28.*
+    - alias: istiod
+      name: istiod
+      repository: https://istio-release.storage.googleapis.com/charts
+      version: 1.28.*
+    description: A Helm chart for Kubernetes
+    digest: 11ac681beb05ff9b6b2b5661ae105dc87f8d73a69dd0bb7d05c7872640b7d0a4
+    name: pax-istio-gateway-api
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/pax-istio-gateway-api-0.1.5/pax-istio-gateway-api-0.1.5.tgz
+    version: 0.1.5
+  pax-prometheus:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2026-02-09T13:39:15.659328357Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 2.*
+    - alias: kubePrometheusStack
+      name: kube-prometheus-stack
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 80.*
+    - name: prometheus-adapter
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 5.*
+    - condition: metricsServer.enabled
+      name: metrics-server
+      repository: https://kubernetes-sigs.github.io/metrics-server
+      version: 3.*
+    description: A Helm chart for Kubernetes
+    digest: 465ac4c2dcac24b4751f5a8abb8d746d2951840f81af5d50b3ac064afc38883c
+    name: pax-prometheus
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/pax-prometheus-0.4.3/pax-prometheus-0.4.3.tgz
+    version: 0.4.3
+  stk-fluent-bit-loki-s3:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2026-02-09T13:39:15.903738528Z"
+    dependencies:
+    - name: fluent-bit
+      repository: https://fluent.github.io/helm-charts/
+      version: 0.*
+    - name: loki
+      repository: https://grafana.github.io/helm-charts/
+      version: 6.*
+    description: A Helm chart for Kubernetes
+    digest: 5681fc444f1f095ee281896a4189f9f1e9e766c034c76c1cdfa15cb4d2ce850c
+    name: stk-fluent-bit-loki-s3
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/stk-fluent-bit-loki-s3-0.1.40/stk-fluent-bit-loki-s3-0.1.40.tgz
+    version: 0.1.40
+generated: "2026-02-09T13:39:15.903747034Z"
