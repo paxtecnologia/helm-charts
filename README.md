@@ -27,3 +27,4 @@ We'd love to have you contribute! Please refer to our [contribution guidelines](
 
 <!-- Keep full URL links to repo files because this README syncs from main to gh-pages.  -->
 [MIT](https://github.com/paxtecnologia/helm-charts/blob/main/LICENSE).
+
