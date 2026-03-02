@@ -250,6 +250,9 @@ kubePrometheusStack:
     assertNoLeakedSecrets: false
     ingress:
       annotations:
+        nginx.org/proxy-connect-timeout: "360s"
+        nginx.org/proxy-read-timeout: "360s"
+        nginx.org/proxy-send-timeout: "360s"
         nginx.ingress.kubernetes.io/proxy-connect-timeout: "360"
         nginx.ingress.kubernetes.io/proxy-send-timeout: "360"
         nginx.ingress.kubernetes.io/proxy-read-timeout: "360"
