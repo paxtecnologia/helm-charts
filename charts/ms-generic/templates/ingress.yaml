@@ -1,50 +1,49 @@
 {{- if .Values.ingress.enabled -}}
 {{- $fullName := include "ms-generic.fullname" . -}}
-{{- if and .Values.ingress.className (not (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion)) }}
-  {{- if not (hasKey .Values.ingress.annotations "kubernetes.io/ingress.class") }}
-  {{- $_ := set .Values.ingress.annotations "kubernetes.io/ingress.class" .Values.ingress.className}}
+{{- range .Values.ingress.items }}
+---
+{{- if and .className (not (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion)) }}
+  {{- if not (hasKey .annotations "kubernetes.io/ingress.class") }}
+  {{- $_ := set .annotations "kubernetes.io/ingress.class" .className}}
   {{- end }}
 {{- end }}
-{{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion -}}
+{{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion -}}
 apiVersion: networking.k8s.io/v1
-{{- else if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
+{{- else if semverCompare ">=1.14-0" $.Capabilities.KubeVersion.GitVersion -}}
 apiVersion: networking.k8s.io/v1beta1
 {{- else -}}
 apiVersion: extensions/v1beta1
 {{- end }}
 kind: Ingress
 metadata:
-  {{- if .Values.ingress.appendNamespace }}
-  name: {{ template "common.names.fullname" $ }}-{{ template "common.names.namespace" $ }}
+  {{- if $.Values.ingress.appendNamespace }}
+  name: {{ template "common.names.fullname" $ }}-{{ template "common.names.namespace" $ }}{{- if .className }}-{{ .className }}{{- end }}
   {{- else }}
-  name: {{ template "common.names.fullname" $ }}
+  name: {{ template "common.names.fullname" $ }}{{- if .className }}-{{ .className }}{{- end }}
   {{- end }}
   labels: {{- include "common.labels.standard" $ | nindent 4 }}
   {{- include "ms-generic.labels.AppVersion" $ | nindent 4 }}
   {{- include "ms-generic.labels.kiali" $ | nindent 4 }}
-  {{- with .Values.ingress.annotations }}
+  {{- with .annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- if and .Values.ingress.className (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion) }}
-  ingressClassName: {{ .Values.ingress.className }}
+  {{- if and .className (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
+  ingressClassName: {{ .className }}
   {{- end }}
-  {{- if .Values.ingress.tls }}
+  {{- if .tls }}
   tls:
-    {{- range .Values.ingress.tls }}
+    {{- range .tls }}
     - hosts:
         {{- range .hosts }}
         - {{ . | quote }}
         {{- end }}
       secretName: {{ .secretName }}
     {{- end }}
-  {{- if .Values.ingress.tls.extra }}
-    {{- toYaml .Values.ingress.tls.extra | nindent 4 }}
-  {{- end }}
   {{- end }}
   rules:
-    {{- range .Values.ingress.hosts }}
+    {{- range .hosts }}
     - host: {{ .host | quote }}
       http:
         paths:
@@ -65,4 +64,5 @@ spec:
               {{- end }}
           {{- end }}
     {{- end }}
+{{- end }}
 {{- end }}
