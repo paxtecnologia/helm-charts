@@ -196,6 +196,31 @@ entries:
   pax-prometheus:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2026-03-02T17:04:40.284043075Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 2.*
+    - alias: kubePrometheusStack
+      name: kube-prometheus-stack
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 80.*
+    - name: prometheus-adapter
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 5.*
+    - condition: metricsServer.enabled
+      name: metrics-server
+      repository: https://kubernetes-sigs.github.io/metrics-server
+      version: 3.*
+    description: A Helm chart for Kubernetes
+    digest: ec97ac521e1df63c1e3fc39006b7c577a76ba7d30cb960c507ea9f93e288df0d
+    name: pax-prometheus
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/pax-prometheus-0.4.6/pax-prometheus-0.4.6.tgz
+    version: 0.4.6
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2026-02-27T13:06:20.254369649Z"
     dependencies:
     - name: common
@@ -321,4 +346,4 @@ entries:
     urls:
     - https://github.com/paxtecnologia/helm-charts/releases/download/stk-fluent-bit-loki-s3-0.1.40/stk-fluent-bit-loki-s3-0.1.40.tgz
     version: 0.1.40
-generated: "2026-02-27T13:06:20.432435901Z"
+generated: "2026-03-02T17:04:40.284074734Z"
