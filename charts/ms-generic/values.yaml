@@ -200,6 +200,7 @@ ingress:
   #   nginx.ingress.kubernetes.io/enable-cors: "true"
   # items:
   #   - className: nginx
+  #     ingressNameOverride: custom-ingress-name
   #     annotations: {}
   #     hosts:
   #       - host: chart-example.local

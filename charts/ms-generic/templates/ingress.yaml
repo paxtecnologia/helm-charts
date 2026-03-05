@@ -17,7 +17,9 @@ apiVersion: extensions/v1beta1
 {{- end }}
 kind: Ingress
 metadata:
-  {{- if $.Values.ingress.appendNamespace }}
+  {{- if .ingressNameOverride }}
+  name: {{ .ingressNameOverride }}
+  {{- else if $.Values.ingress.appendNamespace }}
   name: {{ template "common.names.fullname" $ }}-{{ template "common.names.namespace" $ }}{{- if .className }}-{{ .className }}{{- end }}
   {{- else }}
   name: {{ template "common.names.fullname" $ }}{{- if .className }}-{{ .className }}{{- end }}
