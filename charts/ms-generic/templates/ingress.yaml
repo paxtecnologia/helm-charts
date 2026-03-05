@@ -2,9 +2,10 @@
 {{- $fullName := include "ms-generic.fullname" . -}}
 {{- range .Values.ingress.items }}
 ---
+{{- $annotations := merge (default dict .annotations) (default dict $.Values.ingress.commonAnnotations) }}
 {{- if and .className (not (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion)) }}
-  {{- if not (hasKey .annotations "kubernetes.io/ingress.class") }}
-  {{- $_ := set .annotations "kubernetes.io/ingress.class" .className}}
+  {{- if not (hasKey $annotations "kubernetes.io/ingress.class") }}
+  {{- $_ := set $annotations "kubernetes.io/ingress.class" .className}}
   {{- end }}
 {{- end }}
 {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion -}}
@@ -25,9 +26,9 @@ metadata:
   labels: {{- include "common.labels.standard" $ | nindent 4 }}
   {{- include "ms-generic.labels.AppVersion" $ | nindent 4 }}
   {{- include "ms-generic.labels.kiali" $ | nindent 4 }}
-  {{- with .annotations }}
+  {{- if $annotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
+    {{- toYaml $annotations | nindent 4 }}
   {{- end }}
 spec:
   {{- if and .className (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}

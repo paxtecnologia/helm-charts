@@ -195,6 +195,9 @@ service:
 ingress:
   enabled: false
   appendNamespace: false
+  commonAnnotations: {}
+  # commonAnnotations:
+  #   nginx.ingress.kubernetes.io/enable-cors: "true"
   # items:
   #   - className: nginx
   #     annotations: {}
