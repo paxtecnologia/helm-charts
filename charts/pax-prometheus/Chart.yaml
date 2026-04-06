@@ -25,15 +25,15 @@ appVersion: "1.16.0"
 dependencies:
   - name: common
     repository: https://charts.bitnami.com/bitnami
-    version: "*"
+    version: "2.0"
   - name: kube-prometheus-stack
     alias: kubePrometheusStack
-    version: "*"
+    version: "82.*"
     repository: "https://prometheus-community.github.io/helm-charts"
   - name: prometheus-adapter
-    version: "*"
+    version: "5.*"
     repository: "https://prometheus-community.github.io/helm-charts"
   - name: metrics-server
-    version: "*"
+    version: "3.*"
     repository: "https://kubernetes-sigs.github.io/metrics-server"
     condition: metricsServer.enabled
