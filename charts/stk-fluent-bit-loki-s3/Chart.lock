@@ -1,9 +1,9 @@
 dependencies:
 - name: fluent-bit
   repository: https://fluent.github.io/helm-charts/
-  version: 0.58.2
+  version: 0.58.3
 - name: loki
   repository: https://grafana.github.io/helm-charts/
   version: 7.3.0
-digest: sha256:63b366edb0fd02b8b0c2808856b2cfe64fd8871c45c31e7cdf611da909f602d2
-generated: "2026-09-15T08:40:14.551319411-03:00"
+digest: sha256:46ffaac686fb29a1817a6cb98353bfd599bc933c4dcc9077640ea45d65fa6734
+generated: "2026-10-19T14:23:29.465893317-03:00"
