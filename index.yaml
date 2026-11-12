@@ -238,6 +238,24 @@ entries:
   pax-istio-gateway-api:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2026-11-12T17:19:52.296783492Z"
+    dependencies:
+    - name: base
+      repository: https://istio-release.storage.googleapis.com/charts
+      version: 1.30.*
+    - alias: istiod
+      name: istiod
+      repository: https://istio-release.storage.googleapis.com/charts
+      version: 1.30.*
+    description: A Helm chart for Kubernetes
+    digest: c541b0ba33d9ae4ffb84aeedb6c383a382625487b29cf4e264dfde889d6d12fb
+    name: pax-istio-gateway-api
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/pax-istio-gateway-api-0.1.15/pax-istio-gateway-api-0.1.15.tgz
+    version: 0.1.15
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2026-11-12T16:37:14.328994198Z"
     dependencies:
     - name: base
@@ -399,6 +417,31 @@ entries:
     - https://github.com/paxtecnologia/helm-charts/releases/download/pax-istio-gateway-api-0.1.5/pax-istio-gateway-api-0.1.5.tgz
     version: 0.1.5
   pax-prometheus:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2026-11-12T17:19:52.624599919Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 2.*
+    - alias: kubePrometheusStack
+      name: kube-prometheus-stack
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 93.*
+    - name: prometheus-adapter
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 5.*
+    - condition: metricsServer.enabled
+      name: metrics-server
+      repository: https://kubernetes-sigs.github.io/metrics-server
+      version: 3.*
+    description: A Helm chart for Kubernetes
+    digest: 9691e802b74f54da2cfd83250e2b0ec6e5094ffad33580f0e43ea10fd4b58d09
+    name: pax-prometheus
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/pax-prometheus-0.7.7/pax-prometheus-0.7.7.tgz
+    version: 0.7.7
   - apiVersion: v2
     appVersion: 1.16.0
     created: "2026-11-12T16:37:14.580353504Z"
@@ -826,6 +869,23 @@ entries:
     version: 0.4.3
   stk-fluent-bit-loki-s3:
   - apiVersion: v2
+    appVersion: 1.16.1
+    created: "2026-11-12T17:19:52.848104874Z"
+    dependencies:
+    - name: fluent-bit
+      repository: https://fluent.github.io/helm-charts/
+      version: 0.*
+    - name: loki
+      repository: https://grafana.github.io/helm-charts/
+      version: 7.*
+    description: A Helm chart for Kubernetes
+    digest: 1f3318c3841ca112941b19c0de6d285802037499784640458d872e245bbd23a9
+    name: stk-fluent-bit-loki-s3
+    type: application
+    urls:
+    - https://github.com/paxtecnologia/helm-charts/releases/download/stk-fluent-bit-loki-s3-0.2.5/stk-fluent-bit-loki-s3-0.2.5.tgz
+    version: 0.2.5
+  - apiVersion: v2
     appVersion: 1.16.0
     created: "2026-10-27T13:16:53.975280302Z"
     dependencies:
@@ -978,4 +1038,4 @@ entries:
     urls:
     - https://github.com/paxtecnologia/helm-charts/releases/download/stk-fluent-bit-loki-s3-0.1.40/stk-fluent-bit-loki-s3-0.1.40.tgz
     version: 0.1.40
-generated: "2026-11-12T16:37:14.580513115Z"
+generated: "2026-11-12T17:19:52.848225527Z"
